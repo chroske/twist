@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MyUnitAinmationController : MonoBehaviour {
+public class MyUnitAnimationController : MonoBehaviour {
 
 	public GameObject pullArrow;
 	private Animator animator;
