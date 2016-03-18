@@ -17,7 +17,7 @@ public class MyUnitController : MonoBehaviour {
 
 	//減速を始める速度(velocity.magnitude)
 	private float decelerateLimitSpeed = 1.5f;
-	private float decelerateSpeedRate = 0.93f;
+	private float decelerateSpeedRate = 0.90f;
 
 	private float effectDestroyTime = 0.8f;
 
@@ -60,51 +60,55 @@ public class MyUnitController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D collider2d){
-		//爆発コンボに当たったらコンボ発動
-		if(collider2d.gameObject.tag == "explosion" && unitParamManager.maxComboNum >= comboNum){
-			//コンボエフェクト
-			if(startEffectFlag){
-				GameObject effect = Instantiate(comboEffect ,
-					transform.position,
-					Quaternion.identity
-				) as GameObject;
+		if(this.tag == "controllUnit"){
+			//爆発コンボに当たったらコンボ発動
+			if(collider2d.gameObject.tag == "explosion" && unitParamManager.maxComboNum >= comboNum){
+				//コンボエフェクト
+				if(startEffectFlag){
+					GameObject effect = Instantiate(comboEffect ,
+						transform.position,
+						Quaternion.identity
+					) as GameObject;
 
-				//エフェクトと判定をユニットに追従させるため子にする
-				effect.transform.parent = transform;
+					//エフェクトと判定をユニットに追従させるため子にする
+					effect.transform.parent = transform;
 
-				//コンボのダメージ値をセット
-				effect.transform.SendMessage ("SetParameter", unitParamManager.comboAttack);
+					//コンボのダメージ値をセット
+					effect.transform.SendMessage ("SetParameter", unitParamManager.comboAttack);
 
-				//コンボ２回
-				comboNum++;
-				startEffectFlag = false;
+					//コンボ２回
+					comboNum++;
+					startEffectFlag = false;
 
-				//エフェクトが消えるまで次のコンボ発生を待たせる
-				StartCoroutine (DelayNextCombo());
+					//エフェクトが消えるまで次のコンボ発生を待たせる
+					StartCoroutine (DelayNextCombo());
+				}
 			}
 		}
 	}
 		
 
 	void OnCollisionEnter2D(Collision2D collision2d) {
-		if (collision2d.gameObject.tag == "wall") {
-			GameObject effect = Instantiate(wallHitEffect ,
-				collision2d.contacts[0].point,
-				Quaternion.identity
-			) as GameObject;
+		if (this.tag == "controllUnit") {
+			if (collision2d.gameObject.tag == "wall") {
+				GameObject effect = Instantiate (wallHitEffect,
+					                    collision2d.contacts [0].point,
+					                    Quaternion.identity
+				                    ) as GameObject;
 
-			Destroy(effect , 0.2f);
-		} else if(collision2d.gameObject.tag == "enemy") {
-			//effect発生
-			GameObject effect = Instantiate(enemyHitEffect ,
-				collision2d.contacts[0].point,
-				Quaternion.identity
-			) as GameObject;	
+				Destroy (effect, 0.2f);
+			} else if (collision2d.gameObject.tag == "enemy") {
+				//effect発生
+				GameObject effect = Instantiate (enemyHitEffect,
+					                    collision2d.contacts [0].point,
+					                    Quaternion.identity
+				                    ) as GameObject;	
 
-			Destroy(effect , 0.2f);
+				Destroy (effect, 0.2f);
 
-			//attack分ダメージを与える
-			collision2d.gameObject.SendMessage("Damage",unitParamManager.attack);
+				//attack分ダメージを与える
+				collision2d.gameObject.SendMessage ("Damage", unitParamManager.attack);
+			}
 		}
 	}
 

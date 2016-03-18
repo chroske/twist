@@ -17,13 +17,15 @@ public class MyUnitAnimationController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		pullDistance = pullArrow.GetComponent<RectTransform> ().sizeDelta.y;
+		if(this.tag == "controllUnit"){
+			pullDistance = pullArrow.GetComponent<RectTransform> ().sizeDelta.y;
 
-		animator.SetFloat ("pullDistance", pullArrow.GetComponent<RectTransform> ().sizeDelta.y);
-		if (pullDistance >= animationTrigerPullDistance) {
-			animator.speed = pullDistance / 50;
-		} else {
-			animator.speed = 1;
+			animator.SetFloat ("pullDistance", pullArrow.GetComponent<RectTransform> ().sizeDelta.y);
+			if (pullDistance >= animationTrigerPullDistance) {
+				animator.speed = pullDistance / 50;
+			} else {
+				animator.speed = 1;
+			}
 		}
 	}
 }
