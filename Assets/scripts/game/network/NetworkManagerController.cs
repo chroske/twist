@@ -5,52 +5,102 @@ using UnityEngine.Networking;
 
 public class NetworkManagerController : NetworkBehaviour {
 
-	[SyncVar] private Quaternion syncPlayerRotation;
-	[SyncVar] private Vector3 syncPlayerPosition;
-	[SyncVar] private Vector2 syncPlayerSize;
+	public GameObject arrow;
 
-	public GameObject arrow; 
+	public Vector3 arrowPos;
+	public Quaternion arrowRot;
+	public Vector2 arrowSize;
+	public bool arrowShotFlag;
+	public Vector2 arrowDistance;
 
-	public bool isLocalPlayer;
+	[SyncVar] public Vector3 syncArrowPos;
+	[SyncVar] public Quaternion syncArrowRot;
+	[SyncVar] public Vector2 syncArrowSize;
+	[SyncVar] public bool syncArrowShotFlag;
+	[SyncVar] public Vector2 syncArrowDistance;
 
-	// Use this for initialization
-	void Start () {
+	private PullArrow pullArrow;
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	private bool remoteShotFlag;
+
+	void Start(){
+		arrow = GameObject.Find("GameCanvas/Arrow");
+		pullArrow = arrow.GetComponent<PullArrow> ();
+		remoteShotFlag = true;
+
 	}
 
 	void FixedUpdate(){
-		TransmitRotations();
+		//このスクリプトの付随するオブジェクトが別のネットワーク端末から作られたものでないことの確認
+		if (isLocalPlayer) {
+			TransmitArrowData ();
+		}
 
-		if(!isLocalPlayer){
-			//Debug.Log (syncPlayerSize.y);
-			Debug.Log (syncPlayerRotation.z);
-			arrow.transform.rotation = syncPlayerRotation;
-			arrow.transform.position = syncPlayerPosition;
-			RectTransform rectTrans = arrow.transform.GetComponent <RectTransform>();
-			rectTrans.sizeDelta = syncPlayerSize;
+		//自分のターン以外であれば受け手にまわる
+		//どのユーザオブジェクトからもいじれる
+		if (!pullArrow.MyTurn) {
+			ReceveArrowData ();
 		}
 	}
 
-	[Command]
-	void CmdProvideRotationsToServer (Quaternion playerRot, Vector3 playerPos, Vector2 playerSize)
-	{
-		syncPlayerRotation = playerRot;
-		syncPlayerPosition = playerPos;
-		syncPlayerSize = playerSize;
-	}
 
 	[Client]
-	void TransmitRotations ()
+	void TransmitArrowData()
 	{
-		if (isLocalPlayer) {
-			RectTransform rectTrans = GetComponent <RectTransform>();
-			CmdProvideRotationsToServer(transform.rotation, transform.position, rectTrans.sizeDelta);
+		if (pullArrow.tapFlag) {
+			//Turnプレイヤーのタップが検出された時点からArrowのパラメータをサーバに送る
+			RectTransform rectTrans = arrow.transform.GetComponent <RectTransform> ();
+
+			arrowPos = arrow.transform.position;
+			arrowRot = arrow.transform.rotation;
+			arrowSize = rectTrans.sizeDelta;
+			arrowShotFlag = false;
+			//arrowShotFlag = pullArrow.shotFlag;
+			arrowDistance = new Vector2 (pullArrow.dx, pullArrow.dy);
+
+			//サーバにパラメータ送信
+			CmdProvideArrowDataToServer (arrowPos, arrowRot, arrowSize, arrowShotFlag, arrowDistance);
+		} else {
+			//Turnプレイヤーのタップがはなれた時点でArrowのSizeを0にしてその時点のarrowDistanceをsyncに入れる
+			if(arrowPos != Vector3.zero && arrowSize != Vector2.zero){
+				arrowPos = Vector3.zero;
+				arrowSize = Vector2.zero;
+				arrowShotFlag = true;
+				//arrowShotFlag = pullArrow.shotFlag;
+
+				//サーバにパラメータ送信
+				CmdProvideArrowDataToServer (arrowPos, arrowRot, arrowSize, arrowShotFlag, arrowDistance);
+			}
+
 		}
 	}
 
+	//クライアント側から受け取ったパラメータをサーバ側でsyncにつめる
+	[Command]
+	void CmdProvideArrowDataToServer (Vector3 arrowPos, Quaternion arrowRot, Vector2 arrowSize, bool arrowShotFlag, Vector2 arrowDistance){
+		syncArrowPos = arrowPos;
+		syncArrowRot = arrowRot;
+		syncArrowSize = arrowSize;
+		syncArrowShotFlag = arrowShotFlag;
+		syncArrowDistance = arrowDistance;
+	}
+		
+
+	void ReceveArrowData(){
+		RectTransform rectTrans = arrow.transform.GetComponent <RectTransform>();
+
+		arrow.transform.position = syncArrowPos;
+		arrow.transform.rotation = syncArrowRot;
+		rectTrans.sizeDelta = syncArrowSize;
+
+		//remoteShotFlagは２回呼ばせないために設定
+		if (syncArrowShotFlag) {
+			if (remoteShotFlag) {
+				remoteShotFlag = false;
+				pullArrow.RemoteShot (syncArrowDistance);
+			}
+		} else {
+			remoteShotFlag = true;
+		}
+	}
 }

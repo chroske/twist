@@ -28,19 +28,27 @@ public class PullArrow : MonoBehaviour {
 
 	public bool MyTurn;
 
+	public bool shotFlag;
+	public bool tapFlag;
+
 
 	// Use this for initialization
 	void Start () {
-		
+		shotFlag = false;
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if(MyTurn){
+			
+
 			rectTrans = GetComponent <RectTransform>();
 
 			//タップ
 			if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began || Input.GetMouseButtonDown (0)) {
+				tapFlag = true;
+				shotFlag = false;
+				
 				mouseDownPositionX = Input.mousePosition.x;
 				mouseDownPositionY = Input.mousePosition.y;
 
@@ -48,6 +56,8 @@ public class PullArrow : MonoBehaviour {
 			}
 			//ドラッグ
 			if ((Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Moved) || Input.GetMouseButton (0)) {
+				tapFlag = true;
+				shotFlag = false;
 
 				dx = Input.mousePosition.x - mouseDownPositionX;
 				dy = Input.mousePosition.y - mouseDownPositionY;
@@ -63,8 +73,12 @@ public class PullArrow : MonoBehaviour {
 
 				//アンタップ
 			} else if((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp (0)) {
+				tapFlag = false;
+
 				//矢印の長さがminimumに達していなければ飛ばさない
 				if(arrowDistance > minimumDistance){
+					shotFlag = true;
+
 					Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
 					myUnitRigidbody2D.AddForce(new Vector2 (-Mathf.Clamp (dx,-maxDistance,maxDistance), -Mathf.Clamp (dy,-maxDistance,maxDistance)) * power);
 
@@ -89,12 +103,13 @@ public class PullArrow : MonoBehaviour {
 		}
 	}
 
-	public void RemoteShot(float dx,float dy){
-		arrowDistance = Vector2.Distance (new Vector2 (dx, dy), new Vector2 (0, 0));
+	public void RemoteShot(Vector2 pullDistance){
+		//floatに変換
+		arrowDistance = Vector2.Distance (pullDistance, new Vector2 (0, 0));
 
 		if(arrowDistance > minimumDistance){
 			Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
-			myUnitRigidbody2D.AddForce(new Vector2 (-Mathf.Clamp (dx,-maxDistance,maxDistance), -Mathf.Clamp (dy,-maxDistance,maxDistance)) * power);
+			myUnitRigidbody2D.AddForce(new Vector2 (-Mathf.Clamp (pullDistance.x,-maxDistance,maxDistance), -Mathf.Clamp (pullDistance.y,-maxDistance,maxDistance)) * power);
 
 			arrowDistance = 0;
 			arrowUiDistance = 0;
