@@ -6,6 +6,10 @@ public class GameSceneManager : MonoBehaviour {
 	public GameObject Unit_1;
 	public GameObject Unit_2;
 	public GameObject arrow;
+	public bool myTurnFlag;
+	public int myPlayerNetIdInt;
+	public int turnPlayerId;
+	public int firstTurnPlayerId;
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +20,17 @@ public class GameSceneManager : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	public void TurnChange(int newTurnPlayerId){
+		turnPlayerId = newTurnPlayerId;
+
+		if (myPlayerNetIdInt == newTurnPlayerId) {
+			myTurnFlag = true;
+		} else {
+			myTurnFlag = false;
+		}
+	}
+
 
 	private void ChangeControllUnit(){
 		PullArrow pullArrow = arrow.transform.GetComponent<PullArrow>();
@@ -56,8 +71,6 @@ public class GameSceneManager : MonoBehaviour {
 			Unit_1.transform.GetComponent<MyUnitController>().enabled = true;
 			Unit_2.transform.GetComponent<MyPartyUnitController>().enabled = true;
 			Unit_2.transform.GetComponent<MyUnitController>().enabled = false;
-
-
 
 			pullArrow.myUnit = Unit_1;
 		}

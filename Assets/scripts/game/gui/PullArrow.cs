@@ -23,11 +23,9 @@ public class PullArrow : MonoBehaviour {
 	public float arrowUiDistanceRate;
 
 	public GameObject myUnit;
+	public GameObject gameSceneManager;
 
 	private RectTransform rectTrans;
-
-	public bool MyTurn;
-
 	public bool shotFlag;
 	public bool tapFlag;
 
@@ -39,9 +37,7 @@ public class PullArrow : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(MyTurn){
-			
-
+		if(gameSceneManager.GetComponent<GameSceneManager>().myTurnFlag){
 			rectTrans = GetComponent <RectTransform>();
 
 			//タップ
@@ -73,10 +69,11 @@ public class PullArrow : MonoBehaviour {
 
 				//アンタップ
 			} else if((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp (0)) {
-				tapFlag = false;
+				
 
 				//矢印の長さがminimumに達していなければ飛ばさない
 				if(arrowDistance > minimumDistance){
+					tapFlag = false;
 					shotFlag = true;
 
 					Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
