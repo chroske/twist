@@ -12,6 +12,7 @@ public class NetworkManagerController : NetworkBehaviour {
 	[SyncVar] public Vector2 syncArrowDistance;
 	[SyncVar] public Vector3 syncUnitPos;
 	[SyncVar] public int syncTurnPlayerId;
+	[SyncVar] public bool syncTurnEnd;
 	//[SyncVar] private int playerUniqueIdentity;
 
 	//ゲームオブジェクトとコンポーネント
@@ -32,6 +33,9 @@ public class NetworkManagerController : NetworkBehaviour {
 	private Transform myTransform;
 	public int playerNetIdInt;
 	public bool startUnitStopCheckFlag;
+
+
+	private bool turnChangeFlag;
 
 	void Awake () {
 		//自分の名前を取得する時に使う
@@ -100,14 +104,30 @@ public class NetworkManagerController : NetworkBehaviour {
 
 
 
-		このへんおかしいぞ
-		//syncTurnPlayerIdが変更されたら
-		if(/*turnPlayerId*/gameSceneManager.turnPlayerId != syncTurnPlayerId){
-			Debug.Log("turn end");
-			syncTurnPlayerId = gameSceneManager.turnPlayerId;
-			turnPlayerId = syncTurnPlayerId;
-			gameSceneManager.TurnChange (syncTurnPlayerId);
+		//プレイヤーとサーバユーザ以外のターンエンド判定、syncTurnPlayerIdが変更されたら
+		if(syncTurnEnd == true){
+			if(turnChangeFlag){
+				
+				turnChangeFlag = false;
+				gameSceneManager.turnPlayerId = syncTurnPlayerId;
+				gameSceneManager.TurnChange (syncTurnPlayerId);
+
+				pullArrow.myUnit.transform.position = syncUnitPos;
+
+				//ターン終了をお知らせ
+				Debug.Log("turn end");
+
+				Invoke("ChangeSyncTurnEndFlag", 1.0f);
+				//DeleyAction (0.1f, ChangeSyncTurnEndFlag);
+			}
+		} else {
+			turnChangeFlag = true;
 		}
+	}
+
+	[Server]
+	void ChangeSyncTurnEndFlag(){
+		syncTurnEnd = false;
 	}
 
 
@@ -273,5 +293,6 @@ public class NetworkManagerController : NetworkBehaviour {
 
 		syncUnitPos = unitPos;
 		syncTurnPlayerId = InclementTurnPlayerId (gameSceneManager.turnPlayerId/*syncTurnPlayerId*/);
+		syncTurnEnd = true;
 	}
 }

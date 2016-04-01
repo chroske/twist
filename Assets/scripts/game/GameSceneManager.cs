@@ -9,7 +9,9 @@ public class GameSceneManager : MonoBehaviour {
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
 	public int turnPlayerId;
+	public int beforeTurnPlayerId; //比較用
 	public int firstTurnPlayerId;
+	public bool TurnEnd;
 
 	// Use this for initialization
 	void Start () {
