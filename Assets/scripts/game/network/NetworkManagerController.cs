@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Networking;
 
 
@@ -19,6 +20,7 @@ public class NetworkManagerController : NetworkBehaviour {
 	public GameObject arrow;
 	private PullArrow pullArrow;
 	private GameSceneManager gameSceneManager;
+	private NetworkManager networkManager;
 
 	//Arrow関連データ
 	public Vector3 arrowPos;
@@ -27,33 +29,30 @@ public class NetworkManagerController : NetworkBehaviour {
 	public bool arrowShotFlag;
 	public Vector2 arrowDistance;
 
-	private int turnPlayerId;
 	private bool remoteShotFlag;
 	private NetworkInstanceId playerNetID;
 	private Transform myTransform;
 	public int playerNetIdInt;
 	public bool startUnitStopCheckFlag;
 
-
 	private bool turnChangeFlag;
+
 
 	void Awake () {
 		//自分の名前を取得する時に使う
 		myTransform = transform;
-	}
 
-
-	void Start(){
+		gameSceneManager = GameObject.Find("GameSceneManager").GetComponent<GameSceneManager>();
 		arrow = GameObject.Find("GameCanvas/Arrow");
 		pullArrow = arrow.GetComponent<PullArrow> ();
-		gameSceneManager = GameObject.Find("GameSceneManager").GetComponent<GameSceneManager>();
+		networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+
+		SetDefaultSyncParam();
+	}
+
+	void Start(){
 		remoteShotFlag = true;
 		startUnitStopCheckFlag = false;
-
-		SetDefaultServerParam ();
-
-
-		turnPlayerId = syncTurnPlayerId;
 
 		//NetIdを取得してファイル名を設定
 		GetNetIdentity();
@@ -63,6 +62,7 @@ public class NetworkManagerController : NetworkBehaviour {
 			gameSceneManager.myPlayerNetIdInt = playerNetIdInt;
 		}
 
+		//syncTurnPlayerId届くまでタイムラグあるっぽい　ちょっと待ってから実行しないとだめかも
 		gameSceneManager.TurnChange (syncTurnPlayerId);
 	}
 		
@@ -75,22 +75,13 @@ public class NetworkManagerController : NetworkBehaviour {
 		}
 	}
 		
-
-	void SetIdentity ()
-	{
-		myTransform.name = "NetworkPlayerManager" + GetComponent<NetworkIdentity>().netId.ToString();
-	}
-		
-
 	void FixedUpdate(){
 		//このスクリプトの付随するオブジェクトが別のネットワーク端末から作られたものでないことの確認
 		if (isLocalPlayer) {
 			//自分のターンならArrowのパラメータをサーバに送る
-			if(gameSceneManager.myTurnFlag){
+			if(gameSceneManager.myTurnFlag && playerNetIdInt == gameSceneManager.turnPlayerId){
 				TransmitArrowData();
 			}
-
-			CheckNextTurnPlayer();
 		}
 
 		//ターンエンド判定(サーバのみ)
@@ -98,43 +89,19 @@ public class NetworkManagerController : NetworkBehaviour {
 
 		//自分のターン以外であれば受け手にまわる
 		//どのユーザオブジェクトからもいじれる
-		if (!gameSceneManager.myTurnFlag && !isLocalPlayer/* && syncTurnPlayerId == playerNetIdInt*/) {
+		if (!gameSceneManager.myTurnFlag && !isLocalPlayer && playerNetIdInt == gameSceneManager.turnPlayerId) {
 			ReceveArrowData ();
 		}
-
-
-
-		//プレイヤーとサーバユーザ以外のターンエンド判定、syncTurnPlayerIdが変更されたら
-		if(syncTurnEnd == true){
-			if(turnChangeFlag){
-				
-				turnChangeFlag = false;
-				gameSceneManager.turnPlayerId = syncTurnPlayerId;
-				gameSceneManager.TurnChange (syncTurnPlayerId);
-
-				pullArrow.myUnit.transform.position = syncUnitPos;
-
-				//ターン終了をお知らせ
-				Debug.Log("turn end");
-
-				Invoke("ChangeSyncTurnEndFlag", 1.0f);
-				//DeleyAction (0.1f, ChangeSyncTurnEndFlag);
-			}
-		} else {
-			turnChangeFlag = true;
-		}
 	}
 
-	[Server]
-	void ChangeSyncTurnEndFlag(){
-		syncTurnEnd = false;
+	private void SetIdentity (){
+		myTransform.name = "NetworkPlayerManager" + GetComponent<NetworkIdentity>().netId.ToString();
 	}
-
-
+		
 	//次のプレイヤーIDを吐き出す
 	private int InclementTurnPlayerId(int id){
 		//４人プレイなので
-		if(id+1 >= 3){
+		if(id+1 > networkManager.numPlayers){
 			id = 1;
 		} else {
 			id++;
@@ -142,18 +109,8 @@ public class NetworkManagerController : NetworkBehaviour {
 
 		return id;
 	}
+		
 
-	//Unitが発射後止まっているか確認
-	private void UnitStopCheck ()
-	{
-		//速度が０でshotFlagがtrue(発射後)なら
-		if(pullArrow.myUnit.GetComponent<Rigidbody2D> ().velocity.magnitude == 0){
-			//呼ばれるのは一回だけでいい
-			arrowShotFlag = false;
-			startUnitStopCheckFlag = false;
-			CmdProvideTurnEndToServer(pullArrow.myUnit.transform.position, playerNetIdInt);
-		}
-	}
 
 
 	private void DeleyUnitStopCheck(){
@@ -167,6 +124,7 @@ public class NetworkManagerController : NetworkBehaviour {
 	{
 		yield return new WaitForSeconds(waitTime);
 		act();
+		yield break;
 	}
 
 	//syncで受け取ったデータをarrowに反映する
@@ -191,14 +149,14 @@ public class NetworkManagerController : NetworkBehaviour {
 ////////////////////////////////////////////////////////[Server]/////////////////////////////////////////////////////////////////
 
 	[Server]
-	void SetDefaultServerParam(){
+	void SetDefaultSyncParam(){
 		syncTurnPlayerId = gameSceneManager.firstTurnPlayerId;
 	}
 
 	//サーバのUnitが停止したら強制的に次のターンへ移項
 	[Server]
 	void TurnEndCheck(){
-		if(playerNetIdInt == gameSceneManager.turnPlayerId/*syncTurnPlayerId*/){
+		if(playerNetIdInt == gameSceneManager.turnPlayerId){
 			if (syncArrowShotFlag == true) {
 				if (startUnitStopCheckFlag) {
 					//Unitが移動いてるのかどうかのチェック
@@ -208,6 +166,23 @@ public class NetworkManagerController : NetworkBehaviour {
 					StartCoroutine(DeleyAction (0.1f, DeleyUnitStopCheck));
 				}
 			}
+		}
+	}
+
+	//Unitが発射後止まっているか確認
+	[Server]
+	private void UnitStopCheck (){
+		//速度が０でshotFlagがtrue(発射後)なら
+		if(pullArrow.myUnit.GetComponent<Rigidbody2D> ().velocity.magnitude == 0){
+			//呼ばれるのは一回だけでいい
+			arrowShotFlag = false;
+			startUnitStopCheckFlag = false;
+			//CmdProvideTurnEndToServer(pullArrow.myUnit.transform.position, playerNetIdInt);
+
+			int nextTurnPlayerId = InclementTurnPlayerId(gameSceneManager.turnPlayerId);
+			//クライアントをターンエンドさせる
+			RpcTurnEndClient(pullArrow.myUnit.transform.position, nextTurnPlayerId);
+			syncArrowShotFlag = arrowShotFlag;
 		}
 	}
 		
@@ -220,21 +195,8 @@ public class NetworkManagerController : NetworkBehaviour {
 		//NetworkIdentityのNetID取得
 		playerNetID = GetComponent<NetworkIdentity>().netId;
 		playerNetIdInt =  int.Parse(playerNetID.ToString());
-		//名前を付けるメソッド実行
-		//CmdTellServerMyIdentity(playerNetIdInt);
 	}
-
-
-
-	[Client]
-	void CheckNextTurnPlayer(){
-//		if (syncTurnPlayerId == playerNetIdInt) {
-//			gameSceneManager.myTurnFlag = true;
-//		} else {
-//			gameSceneManager.myTurnFlag = false;
-//		}
-	}
-
+		
 	[Client]
 	void TransmitArrowData()
 	{
@@ -267,13 +229,6 @@ public class NetworkManagerController : NetworkBehaviour {
 
 
 ////////////////////////////////////////////////////////[Command]/////////////////////////////////////////////////////////////////
-
-	//Command: SyncVar変数を変更し、変更結果を全クライアントへ送る
-	[Command]
-	void CmdTellServerMyIdentity (int nid)
-	{
-		//playerUniqueIdentity = nid;
-	}
 		
 
 	//クライアント側から受け取ったパラメータをサーバ側でsyncにつめる
@@ -285,14 +240,19 @@ public class NetworkManagerController : NetworkBehaviour {
 		syncArrowShotFlag = arrowShotFlag;
 		syncArrowDistance = arrowDistance;
 	}
-		
-	//サーバでターンエンドした時の情報を全クライアントに送る
-	[Command]
-	void CmdProvideTurnEndToServer (Vector3 unitPos, int playerNetIdInt){
-		syncArrowShotFlag = arrowShotFlag;
 
-		syncUnitPos = unitPos;
-		syncTurnPlayerId = InclementTurnPlayerId (gameSceneManager.turnPlayerId/*syncTurnPlayerId*/);
-		syncTurnEnd = true;
+////////////////////////////////////////////////////////[ClientRpc]/////////////////////////////////////////////////////////////////
+
+	[ClientRpc]
+	void RpcTurnEndClient(Vector3 unitPos, int nextTurnPlayerId){
+		//ターン終了をお知らせ
+		Debug.Log("turn end");
+
+		//サーバの停止位置を反映
+		pullArrow.myUnit.transform.position = unitPos;
+		//TurnPlayerIdを１増やしてsyncにつめる
+		gameSceneManager.turnPlayerId =nextTurnPlayerId;
+		//ターンチェンジ判定
+		gameSceneManager.TurnChange (gameSceneManager.turnPlayerId);
 	}
 }
