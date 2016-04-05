@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 
@@ -28,6 +29,9 @@ public class PullArrow : MonoBehaviour {
 	private RectTransform rectTrans;
 	public bool shotFlag;
 	public bool tapFlag;
+
+
+	private Vector2 shotVector;
 
 
 	// Use this for initialization
@@ -61,30 +65,30 @@ public class PullArrow : MonoBehaviour {
 				float rad = Mathf.Atan2 (dx, -dy);
 				steerAngle = rad * Mathf.Rad2Deg;
 
+				//rad(角度)から発射用ベクトルを作成
+				double addforceX = Math.Cos((90*Mathf.Deg2Rad)+rad) * power;
+				double addforceY = Math.Sin((90*Mathf.Deg2Rad)+rad) * power;
+				shotVector = new Vector2((float)addforceX, (float)addforceY);
+
+				//矢印の長さ
 				arrowDistance = Vector2.Distance (new Vector2 (dx, dy), new Vector2 (0, 0));
 
 				rectTrans.position = new Vector3(myUnit.transform.position.x, myUnit.transform.position.y, 0);
-				//rectTrans.position = new Vector2(myUnit.transform.position.x, myUnit.transform.position.y);
 
-
-				//アンタップ
+			//アンタップ
 			} else if((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp (0)) {
-				
-
 				//矢印の長さがminimumに達していなければ飛ばさない
 				if(arrowDistance > minimumDistance){
 					tapFlag = false;
 					shotFlag = true;
 
 					Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
-					myUnitRigidbody2D.AddForce(new Vector2 (-Mathf.Clamp (dx,-maxDistance,maxDistance), -Mathf.Clamp (dy,-maxDistance,maxDistance)) * power);
+
+					myUnitRigidbody2D.AddForce(shotVector);
 
 					arrowDistance = 0;
 					arrowUiDistance = 0;
 				}
-
-				//相手にアンタップしたことを通知
-				//SendMessage("SendUnTouchFlag",new Vector2 (-Mathf.Clamp (dx,-maxDistance,maxDistance), -Mathf.Clamp (dy,-maxDistance,maxDistance)) * power)
 			}
 
 			//矢印をドラッグ距離にあわせて変形させる
@@ -104,9 +108,15 @@ public class PullArrow : MonoBehaviour {
 		//floatに変換
 		arrowDistance = Vector2.Distance (pullDistance, new Vector2 (0, 0));
 
+		//発射用ベクトル作成
+		float rad = Mathf.Atan2 (pullDistance.x, -pullDistance.y);
+		double addforceX = Math.Cos((90*Mathf.Deg2Rad)+rad) * power;
+		double addforceY = Math.Sin((90*Mathf.Deg2Rad)+rad) * power;
+		shotVector = new Vector2((float)addforceX, (float)addforceY);
+
 		if(arrowDistance > minimumDistance){
 			Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
-			myUnitRigidbody2D.AddForce(new Vector2 (-Mathf.Clamp (pullDistance.x,-maxDistance,maxDistance), -Mathf.Clamp (pullDistance.y,-maxDistance,maxDistance)) * power);
+			myUnitRigidbody2D.AddForce(shotVector);
 
 			arrowDistance = 0;
 			arrowUiDistance = 0;

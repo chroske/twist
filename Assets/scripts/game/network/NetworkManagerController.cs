@@ -17,7 +17,9 @@ public class NetworkManagerController : NetworkBehaviour {
 	//[SyncVar] private int playerUniqueIdentity;
 
 	//ゲームオブジェクトとコンポーネント
-	public GameObject arrow;
+	private GameObject arrow;
+	private GameObject myUnit;
+	private Rigidbody2D myUnitRigidbody;
 	private PullArrow pullArrow;
 	private GameSceneManager gameSceneManager;
 	private NetworkManager networkManager;
@@ -35,7 +37,6 @@ public class NetworkManagerController : NetworkBehaviour {
 	public int playerNetIdInt;
 	public bool startUnitStopCheckFlag;
 
-	private bool turnChangeFlag;
 
 
 	void Awake () {
@@ -61,8 +62,7 @@ public class NetworkManagerController : NetworkBehaviour {
 		if(isLocalPlayer){
 			gameSceneManager.myPlayerNetIdInt = playerNetIdInt;
 		}
-
-		//syncTurnPlayerId届くまでタイムラグあるっぽい　ちょっと待ってから実行しないとだめかも
+			
 		gameSceneManager.TurnChange (syncTurnPlayerId);
 	}
 		
@@ -84,8 +84,10 @@ public class NetworkManagerController : NetworkBehaviour {
 			}
 		}
 
-		//ターンエンド判定(サーバのみ)
-		TurnEndCheck();
+		if(gameSceneManager.myTurnFlag && isLocalPlayer){
+			CheckUnitStop ();
+		}
+
 
 		//自分のターン以外であれば受け手にまわる
 		//どのユーザオブジェクトからもいじれる
@@ -100,18 +102,13 @@ public class NetworkManagerController : NetworkBehaviour {
 		
 	//次のプレイヤーIDを吐き出す
 	private int InclementTurnPlayerId(int id){
-		//４人プレイなので
 		if(id+1 > networkManager.numPlayers){
 			id = 1;
 		} else {
 			id++;
 		}
-
 		return id;
 	}
-		
-
-
 
 	private void DeleyUnitStopCheck(){
 		if(!startUnitStopCheckFlag){
@@ -152,37 +149,18 @@ public class NetworkManagerController : NetworkBehaviour {
 	void SetDefaultSyncParam(){
 		syncTurnPlayerId = gameSceneManager.firstTurnPlayerId;
 	}
+		
 
-	//サーバのUnitが停止したら強制的に次のターンへ移項
-	[Server]
-	void TurnEndCheck(){
-		if(playerNetIdInt == gameSceneManager.turnPlayerId){
-			if (syncArrowShotFlag == true) {
-				if (startUnitStopCheckFlag) {
-					//Unitが移動いてるのかどうかのチェック
-					UnitStopCheck ();
-				} else {
-					//ちょっと遅らせてstartUnitStopCheckFlagをtrueにする
-					StartCoroutine(DeleyAction (0.1f, DeleyUnitStopCheck));
-				}
-			}
-		}
-	}
-
-	//Unitが発射後止まっているか確認
-	[Server]
-	private void UnitStopCheck (){
-		//速度が０でshotFlagがtrue(発射後)なら
-		if(pullArrow.myUnit.GetComponent<Rigidbody2D> ().velocity.magnitude == 0){
-			//呼ばれるのは一回だけでいい
-			arrowShotFlag = false;
+	//Unitが発射後の停止を確認
+	private void CheckUnitStop(){
+		//if(gameSceneManager.turnPlayerId == playerNetIdInt){
+		if(pullArrow.myUnit.GetComponent<Rigidbody2D> ().velocity.magnitude != 0 && startUnitStopCheckFlag == false){ //unitが動き出した時に判定フラグをtrueに
+			startUnitStopCheckFlag = true;
+		} else if(pullArrow.myUnit.GetComponent<Rigidbody2D> ().velocity.magnitude == 0 && startUnitStopCheckFlag == true){ //速度が０で発射後なら
 			startUnitStopCheckFlag = false;
-			//CmdProvideTurnEndToServer(pullArrow.myUnit.transform.position, playerNetIdInt);
 
-			int nextTurnPlayerId = InclementTurnPlayerId(gameSceneManager.turnPlayerId);
-			//クライアントをターンエンドさせる
-			RpcTurnEndClient(pullArrow.myUnit.transform.position, nextTurnPlayerId);
-			syncArrowShotFlag = arrowShotFlag;
+			//サーバに停止をお知らせ
+			CmdProvideTurnEndToServer(pullArrow.myUnit.transform.position);
 		}
 	}
 		
@@ -241,8 +219,21 @@ public class NetworkManagerController : NetworkBehaviour {
 		syncArrowDistance = arrowDistance;
 	}
 
+	[Command]
+	void CmdProvideTurnEndToServer(Vector3 unitPos){
+		
+		if(playerNetIdInt == gameSceneManager.turnPlayerId){
+			//次のplayerIdを生成
+			int nextTurnPlayerId = InclementTurnPlayerId(gameSceneManager.turnPlayerId);
+			//全クライアントをターンエンドさせる
+			RpcTurnEndClient(pullArrow.myUnit.transform.position, nextTurnPlayerId);
+		}
+
+	}
+
 ////////////////////////////////////////////////////////[ClientRpc]/////////////////////////////////////////////////////////////////
 
+	//全クライアントをターンエンドさせる
 	[ClientRpc]
 	void RpcTurnEndClient(Vector3 unitPos, int nextTurnPlayerId){
 		//ターン終了をお知らせ
@@ -250,9 +241,13 @@ public class NetworkManagerController : NetworkBehaviour {
 
 		//サーバの停止位置を反映
 		pullArrow.myUnit.transform.position = unitPos;
+		//移動してたら止める
+		pullArrow.myUnit.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 		//TurnPlayerIdを１増やしてsyncにつめる
 		gameSceneManager.turnPlayerId =nextTurnPlayerId;
 		//ターンチェンジ判定
 		gameSceneManager.TurnChange (gameSceneManager.turnPlayerId);
+		//コントロールするユニットも変更
+		gameSceneManager.ChangeControllUnit (gameSceneManager.turnPlayerId);
 	}
 }

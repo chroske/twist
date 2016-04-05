@@ -1,17 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameSceneManager : MonoBehaviour {
 
 	public GameObject Unit_1;
 	public GameObject Unit_2;
+	public GameObject Unit_3;
+	public GameObject Unit_4;
 	public GameObject arrow;
+
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
 	public int turnPlayerId;
 	public int beforeTurnPlayerId; //比較用
 	public int firstTurnPlayerId;
 	public bool TurnEnd;
+
+	private GameObject controllUnit;
+	private List<GameObject> partyUnitList;
 
 	// Use this for initialization
 	void Start () {
@@ -24,6 +31,12 @@ public class GameSceneManager : MonoBehaviour {
 	}
 
 	public void TurnChange(int newTurnPlayerId){
+		//全ユニットの移動を完全に止める(変更後即判定されないようにするため)
+		Unit_1.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		Unit_2.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		Unit_3.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		Unit_4.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+
 		turnPlayerId = newTurnPlayerId;
 
 		if (myPlayerNetIdInt == newTurnPlayerId) {
@@ -34,51 +47,48 @@ public class GameSceneManager : MonoBehaviour {
 	}
 
 
-	private void ChangeControllUnit(){
+	public void ChangeControllUnit(int UnitControllPlayerId){
 		PullArrow pullArrow = arrow.transform.GetComponent<PullArrow>();
 
-		if(Unit_1.tag == "controllUnit" && Unit_2.tag == "partyUnit" ){
+		if (UnitControllPlayerId == 1) {
+			controllUnit = Unit_1;
+			partyUnitList = new List<GameObject> (){Unit_2, Unit_3, Unit_4};
+		} else if (UnitControllPlayerId == 2) {
+			controllUnit = Unit_2;
+			partyUnitList = new List<GameObject> (){Unit_1, Unit_3, Unit_4};
+		} else if (UnitControllPlayerId == 3) {
+			controllUnit = Unit_3;
+			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_4};
+		} else if (UnitControllPlayerId == 4) {
+			controllUnit = Unit_4;
+			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_3};
+		}
+
+		//controllUnit設定
+		controllUnit.tag = "controllUnit";
+		foreach (Transform child in controllUnit.transform){
+			child.tag = "controllUnit";
+		}
+		controllUnit.transform.GetComponent<MyPartyUnitController>().enabled =false;
+		controllUnit.transform.GetComponent<MyUnitController>().enabled = true;
+
+		pullArrow.myUnit = controllUnit;
+
+		//partyUnit設定
+		foreach (GameObject partyUnit in partyUnitList)
+		{
 			//タグを切り替え
-			Unit_1.tag = "partyUnit";
-			foreach (Transform child in Unit_1.transform){
+			partyUnit.tag = "partyUnit";
+			foreach (Transform child in partyUnit.transform){
 				child.tag = "partyUnit";
 			}
 
-			Unit_2.tag = "controllUnit";
-			foreach (Transform child in Unit_2.transform){
-				child.tag = "controllUnit";
-			}
-
-			//スクリプトをenabled&disabled
-			Unit_1.transform.GetComponent<MyPartyUnitController>().enabled =true;
-			Unit_1.transform.GetComponent<MyUnitController>().enabled = false;
-			Unit_2.transform.GetComponent<MyPartyUnitController>().enabled =false;
-			Unit_2.transform.GetComponent<MyUnitController>().enabled = true;
-
-			//arrowにオブジェクトをアタッチ
-			pullArrow.myUnit = Unit_2;
-		} else if(Unit_2.tag == "controllUnit" && Unit_1.tag == "partyUnit"){
-			Unit_1.tag = "controllUnit";
-			foreach (Transform child in Unit_1.transform){
-				child.tag = "controllUnit";
-			}
-
-			Unit_2.tag = "partyUnit";
-			foreach (Transform child in Unit_2.transform){
-				child.tag = "partyUnit";
-			}
-
-			//スクリプトをenabled&disabled
-			Unit_1.transform.GetComponent<MyPartyUnitController>().enabled = false;
-			Unit_1.transform.GetComponent<MyUnitController>().enabled = true;
-			Unit_2.transform.GetComponent<MyPartyUnitController>().enabled = true;
-			Unit_2.transform.GetComponent<MyUnitController>().enabled = false;
-
-			pullArrow.myUnit = Unit_1;
+			partyUnit.transform.GetComponent<MyPartyUnitController>().enabled =true;
+			partyUnit.transform.GetComponent<MyUnitController>().enabled = false;
 		}
 	}
 
 	public void OnClickButton(){
-		ChangeControllUnit();
+		ChangeControllUnit(2);
 	}
 }
