@@ -9,12 +9,11 @@ public class NetworkManagerController : NetworkBehaviour {
 	[SyncVar] public Vector3 syncArrowPos;
 	[SyncVar] public Quaternion syncArrowRot;
 	[SyncVar] public Vector2 syncArrowSize;
-	[SyncVar] public bool syncArrowShotFlag;
-	[SyncVar] public Vector2 syncArrowDistance;
+	[SyncVar/*(hook="ReceveShotFlag")*/] public bool syncArrowShotFlag;
+
+	[SyncVar(hook="ReceveShotFlag")] public Vector2 syncArrowDistance;
 	[SyncVar] public Vector3 syncUnitPos;
 	[SyncVar] public int syncTurnPlayerId;
-	[SyncVar] public bool syncTurnEnd;
-	//[SyncVar] private int playerUniqueIdentity;
 
 	//ゲームオブジェクトとコンポーネント
 	private GameObject arrow;
@@ -31,7 +30,6 @@ public class NetworkManagerController : NetworkBehaviour {
 	public bool arrowShotFlag;
 	public Vector2 arrowDistance;
 
-	private bool remoteShotFlag;
 	private NetworkInstanceId playerNetID;
 	private Transform myTransform;
 	public int playerNetIdInt;
@@ -48,11 +46,11 @@ public class NetworkManagerController : NetworkBehaviour {
 		pullArrow = arrow.GetComponent<PullArrow> ();
 		networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 
+		//サーバに初期データセット
 		SetDefaultSyncParam();
 	}
 
 	void Start(){
-		remoteShotFlag = true;
 		startUnitStopCheckFlag = false;
 
 		//NetIdを取得してファイル名を設定
@@ -88,7 +86,6 @@ public class NetworkManagerController : NetworkBehaviour {
 			CheckUnitStop ();
 		}
 
-
 		//自分のターン以外であれば受け手にまわる
 		//どのユーザオブジェクトからもいじれる
 		if (!gameSceneManager.myTurnFlag && !isLocalPlayer && playerNetIdInt == gameSceneManager.turnPlayerId) {
@@ -110,12 +107,6 @@ public class NetworkManagerController : NetworkBehaviour {
 		return id;
 	}
 
-	private void DeleyUnitStopCheck(){
-		if(!startUnitStopCheckFlag){
-			startUnitStopCheckFlag = true;
-		}
-	}
-
 	//メソッドを渡して処理をwaitTimeだけ遅延させる
 	IEnumerator DeleyAction (float waitTime, Action act)
 	{
@@ -124,32 +115,32 @@ public class NetworkManagerController : NetworkBehaviour {
 		yield break;
 	}
 
+
 	//syncで受け取ったデータをarrowに反映する
 	void ReceveArrowData(){
-		RectTransform rectTrans = arrow.transform.GetComponent <RectTransform>();
+		RectTransform rectTrans = arrow.transform.GetComponent <RectTransform> ();
 
 		arrow.transform.position = syncArrowPos;
 		arrow.transform.rotation = syncArrowRot;
 		rectTrans.sizeDelta = syncArrowSize;
+	}
 
-		//remoteShotFlagは２回呼ばせないために設定
-		if (syncArrowShotFlag) {
-			if (remoteShotFlag) {
-				remoteShotFlag = false;
-				pullArrow.RemoteShot (syncArrowDistance);
+	//フラグを受け取ったらショットする
+	void ReceveShotFlag(Vector2 shotVector){
+		if(!isLocalPlayer){
+			if (shotVector != Vector2.zero) {
+				pullArrow.RemoteShot (shotVector);
 			}
-		} else {
-			remoteShotFlag = true;
 		}
 	}
 
-////////////////////////////////////////////////////////[Server]/////////////////////////////////////////////////////////////////
-
-	[Server]
-	void SetDefaultSyncParam(){
-		syncTurnPlayerId = gameSceneManager.firstTurnPlayerId;
-	}
-		
+//	void ReceveShotFlag(bool arrowShotFlag){
+//		if(!isLocalPlayer){
+//			if (arrowShotFlag) {
+//				pullArrow.RemoteShot (syncArrowDistance);
+//			}
+//		}
+//	}
 
 	//Unitが発射後の停止を確認
 	private void CheckUnitStop(){
@@ -163,7 +154,13 @@ public class NetworkManagerController : NetworkBehaviour {
 			CmdProvideTurnEndToServer(pullArrow.myUnit.transform.position);
 		}
 	}
-		
+
+////////////////////////////////////////////////////////[Server]/////////////////////////////////////////////////////////////////
+
+	[Server]
+	void SetDefaultSyncParam(){
+		syncTurnPlayerId = gameSceneManager.firstTurnPlayerId;
+	}
 
 ////////////////////////////////////////////////////////[Client]/////////////////////////////////////////////////////////////////
 
@@ -198,7 +195,7 @@ public class NetworkManagerController : NetworkBehaviour {
 				arrowShotFlag = pullArrow.shotFlag;
 
 				//サーバにパラメータ送信
-				CmdProvideArrowDataToServer (arrowPos, arrowRot, arrowSize, arrowShotFlag, arrowDistance);
+				CmdProvideArrowDataToServer (arrowPos, arrowRot, arrowSize, arrowShotFlag, pullArrow.shotVector);
 			}
 		}
 	}
@@ -215,8 +212,13 @@ public class NetworkManagerController : NetworkBehaviour {
 		syncArrowPos = arrowPos;
 		syncArrowRot = arrowRot;
 		syncArrowSize = arrowSize;
+		//syncArrowDistance = arrowDistance;
+
+
+		if(arrowShotFlag){
+			syncArrowDistance = arrowDistance;
+		}
 		syncArrowShotFlag = arrowShotFlag;
-		syncArrowDistance = arrowDistance;
 	}
 
 	[Command]
@@ -228,7 +230,6 @@ public class NetworkManagerController : NetworkBehaviour {
 			//全クライアントをターンエンドさせる
 			RpcTurnEndClient(pullArrow.myUnit.transform.position, nextTurnPlayerId);
 		}
-
 	}
 
 ////////////////////////////////////////////////////////[ClientRpc]/////////////////////////////////////////////////////////////////

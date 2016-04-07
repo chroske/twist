@@ -31,7 +31,7 @@ public class PullArrow : MonoBehaviour {
 	public bool tapFlag;
 
 
-	private Vector2 shotVector;
+	public Vector2 shotVector;
 
 
 	// Use this for initialization
@@ -51,7 +51,6 @@ public class PullArrow : MonoBehaviour {
 				
 				mouseDownPositionX = Input.mousePosition.x;
 				mouseDownPositionY = Input.mousePosition.y;
-
 				rectTrans.position = new Vector3(myUnit.transform.position.x, myUnit.transform.position.y, 0);
 			}
 			//ドラッグ
@@ -66,13 +65,12 @@ public class PullArrow : MonoBehaviour {
 				steerAngle = rad * Mathf.Rad2Deg;
 
 				//rad(角度)から発射用ベクトルを作成
-				double addforceX = Math.Cos((90*Mathf.Deg2Rad)+rad) * power;
-				double addforceY = Math.Sin((90*Mathf.Deg2Rad)+rad) * power;
-				shotVector = new Vector2((float)addforceX, (float)addforceY);
+				double addforceX = Math.Sin(rad) * power;
+				double addforceY = Math.Cos(rad) * power;
+				shotVector = new Vector2(-(float)addforceX, (float)addforceY);
 
 				//矢印の長さ
 				arrowDistance = Vector2.Distance (new Vector2 (dx, dy), new Vector2 (0, 0));
-
 				rectTrans.position = new Vector3(myUnit.transform.position.x, myUnit.transform.position.y, 0);
 
 			//アンタップ
@@ -104,22 +102,11 @@ public class PullArrow : MonoBehaviour {
 		}
 	}
 
-	public void RemoteShot(Vector2 pullDistance){
-		//floatに変換
-		arrowDistance = Vector2.Distance (pullDistance, new Vector2 (0, 0));
+	public void RemoteShot(Vector2 shotVector){
+		Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
+		myUnitRigidbody2D.AddForce(shotVector);
 
-		//発射用ベクトル作成
-		float rad = Mathf.Atan2 (pullDistance.x, -pullDistance.y);
-		double addforceX = Math.Cos((90*Mathf.Deg2Rad)+rad) * power;
-		double addforceY = Math.Sin((90*Mathf.Deg2Rad)+rad) * power;
-		shotVector = new Vector2((float)addforceX, (float)addforceY);
-
-		if(arrowDistance > minimumDistance){
-			Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
-			myUnitRigidbody2D.AddForce(shotVector);
-
-			arrowDistance = 0;
-			arrowUiDistance = 0;
-		}
+		arrowDistance = 0;
+		arrowUiDistance = 0;
 	}
 }
