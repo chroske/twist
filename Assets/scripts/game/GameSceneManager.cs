@@ -9,6 +9,7 @@ public class GameSceneManager : MonoBehaviour {
 	public GameObject Unit_3;
 	public GameObject Unit_4;
 	public GameObject arrow;
+	public GameObject turnEndText;
 
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
@@ -28,6 +29,13 @@ public class GameSceneManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public IEnumerator DisplayTurnEndText(float displayTime){
+		turnEndText.SetActive(true);
+		yield return new WaitForSeconds(displayTime);
+		turnEndText.SetActive(false);
+		yield break;
 	}
 
 	public void TurnChange(int newTurnPlayerId){

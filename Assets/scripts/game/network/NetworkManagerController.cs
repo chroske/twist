@@ -239,6 +239,7 @@ public class NetworkManagerController : NetworkBehaviour {
 	void RpcTurnEndClient(Vector3 unitPos, int nextTurnPlayerId){
 		//ターン終了をお知らせ
 		Debug.Log("turn end");
+		StartCoroutine (gameSceneManager.DisplayTurnEndText(1.0f));
 
 		//サーバの停止位置を反映
 		pullArrow.myUnit.transform.position = unitPos;

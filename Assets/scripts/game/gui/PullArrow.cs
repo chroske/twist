@@ -70,7 +70,7 @@ public class PullArrow : MonoBehaviour {
 				shotVector = new Vector2(-(float)addforceX, (float)addforceY);
 
 				//矢印の長さ
-				arrowDistance = Vector2.Distance (new Vector2 (dx, dy), new Vector2 (0, 0));
+				arrowDistance = Vector2.Distance (new Vector2 (dx, -dy), new Vector2 (0, 0));
 				rectTrans.position = new Vector3(myUnit.transform.position.x, myUnit.transform.position.y, 0);
 
 			//アンタップ
