@@ -97,6 +97,6 @@ public class GameSceneManager : MonoBehaviour {
 	}
 
 	public void OnClickButton(){
-		ChangeControllUnit(2);
+		//ChangeControllUnit(2);
 	}
 }

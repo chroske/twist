@@ -41,7 +41,7 @@ public class PullArrow : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(gameSceneManager.GetComponent<GameSceneManager>().myTurnFlag){
+		if(gameSceneManager.GetComponent<GameSceneManager>().myTurnFlag && shotFlag == false){
 			rectTrans = GetComponent <RectTransform>();
 
 			//タップ

@@ -14,6 +14,7 @@ public class NetworkManagerController : NetworkBehaviour {
 	[SyncVar(hook="ReceveShotFlag")] public Vector2 syncArrowDistance;
 	[SyncVar] public Vector3 syncUnitPos;
 	[SyncVar] public int syncTurnPlayerId;
+	[SyncVar] public int syncPlayerNetID;
 
 	//ゲームオブジェクトとコンポーネント
 	private GameObject arrow;
@@ -44,7 +45,9 @@ public class NetworkManagerController : NetworkBehaviour {
 		gameSceneManager = GameObject.Find("GameSceneManager").GetComponent<GameSceneManager>();
 		arrow = GameObject.Find("GameCanvas/Arrow");
 		pullArrow = arrow.GetComponent<PullArrow> ();
-		networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+		//networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+		networkManager = GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>();
+
 
 		//サーバに初期データセット
 		SetDefaultSyncParam();
@@ -58,7 +61,7 @@ public class NetworkManagerController : NetworkBehaviour {
 		SetIdentity();
 
 		if(isLocalPlayer){
-			gameSceneManager.myPlayerNetIdInt = playerNetIdInt;
+			gameSceneManager.myPlayerNetIdInt = syncPlayerNetID;
 		}
 			
 		gameSceneManager.TurnChange (syncTurnPlayerId);
@@ -77,7 +80,7 @@ public class NetworkManagerController : NetworkBehaviour {
 		//このスクリプトの付随するオブジェクトが別のネットワーク端末から作られたものでないことの確認
 		if (isLocalPlayer) {
 			//自分のターンならArrowのパラメータをサーバに送る
-			if(gameSceneManager.myTurnFlag && playerNetIdInt == gameSceneManager.turnPlayerId){
+			if(gameSceneManager.myTurnFlag && syncPlayerNetID == gameSceneManager.turnPlayerId){
 				TransmitArrowData();
 			}
 		}
@@ -88,13 +91,13 @@ public class NetworkManagerController : NetworkBehaviour {
 
 		//自分のターン以外であれば受け手にまわる
 		//どのユーザオブジェクトからもいじれる
-		if (!gameSceneManager.myTurnFlag && !isLocalPlayer && playerNetIdInt == gameSceneManager.turnPlayerId) {
+		if (!gameSceneManager.myTurnFlag && !isLocalPlayer && syncPlayerNetID == gameSceneManager.turnPlayerId) {
 			ReceveArrowData ();
 		}
 	}
 
 	private void SetIdentity (){
-		myTransform.name = "NetworkPlayerManager" + GetComponent<NetworkIdentity>().netId.ToString();
+		//myTransform.name = "NetworkPlayerManager" + GetComponent<NetworkIdentity>().netId.ToString();
 	}
 		
 	//次のプレイヤーIDを吐き出す
@@ -134,14 +137,6 @@ public class NetworkManagerController : NetworkBehaviour {
 		}
 	}
 
-//	void ReceveShotFlag(bool arrowShotFlag){
-//		if(!isLocalPlayer){
-//			if (arrowShotFlag) {
-//				pullArrow.RemoteShot (syncArrowDistance);
-//			}
-//		}
-//	}
-
 	//Unitが発射後の停止を確認
 	private void CheckUnitStop(){
 		//if(gameSceneManager.turnPlayerId == playerNetIdInt){
@@ -168,8 +163,10 @@ public class NetworkManagerController : NetworkBehaviour {
 	void GetNetIdentity()
 	{
 		//NetworkIdentityのNetID取得
-		playerNetID = GetComponent<NetworkIdentity>().netId;
-		playerNetIdInt =  int.Parse(playerNetID.ToString());
+
+		//ゲームシーンが読まれた時にlobbyplayerのnetidをplayerNetIDに入れるスクリプトを書く
+//		playerNetID = GetComponent<NetworkIdentity>().netId;
+//		playerNetIdInt =  int.Parse(playerNetID.ToString());
 	}
 		
 	[Client]
@@ -224,7 +221,7 @@ public class NetworkManagerController : NetworkBehaviour {
 	[Command]
 	void CmdProvideTurnEndToServer(Vector3 unitPos){
 		
-		if(playerNetIdInt == gameSceneManager.turnPlayerId){
+		if(syncPlayerNetID == gameSceneManager.turnPlayerId){
 			//次のplayerIdを生成
 			int nextTurnPlayerId = InclementTurnPlayerId(gameSceneManager.turnPlayerId);
 			//全クライアントをターンエンドさせる
@@ -239,12 +236,14 @@ public class NetworkManagerController : NetworkBehaviour {
 	void RpcTurnEndClient(Vector3 unitPos, int nextTurnPlayerId){
 		//ターン終了をお知らせ
 		Debug.Log("turn end");
-		StartCoroutine (gameSceneManager.DisplayTurnEndText(1.0f));
+		StartCoroutine (gameSceneManager.DisplayTurnEndText(0.7f));
 
 		//サーバの停止位置を反映
 		pullArrow.myUnit.transform.position = unitPos;
 		//移動してたら止める
 		pullArrow.myUnit.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		//shotFlagをfalse(まだshotしてない)に
+		pullArrow.shotFlag = false;
 		//TurnPlayerIdを１増やしてsyncにつめる
 		gameSceneManager.turnPlayerId =nextTurnPlayerId;
 		//ターンチェンジ判定
