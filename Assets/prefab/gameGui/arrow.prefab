@@ -38,6 +38,7 @@ MonoBehaviour:
   syncArrowDistance: {x: 0, y: 0}
   syncUnitPos: {x: 0, y: 0, z: 0}
   syncTurnPlayerId: 0
+  syncPlayerNetID: 0
   arrowPos: {x: 0, y: 0, z: 0}
   arrowRot: {x: 0, y: 0, z: 0, w: 0}
   arrowSize: {x: 0, y: 0}
