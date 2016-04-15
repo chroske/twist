@@ -209,8 +209,6 @@ public class NetworkManagerController : NetworkBehaviour {
 		syncArrowPos = arrowPos;
 		syncArrowRot = arrowRot;
 		syncArrowSize = arrowSize;
-		//syncArrowDistance = arrowDistance;
-
 
 		if(arrowShotFlag){
 			syncArrowDistance = arrowDistance;
@@ -220,12 +218,11 @@ public class NetworkManagerController : NetworkBehaviour {
 
 	[Command]
 	void CmdProvideTurnEndToServer(Vector3 unitPos){
-		
 		if(syncPlayerNetID == gameSceneManager.turnPlayerId){
 			//次のplayerIdを生成
 			int nextTurnPlayerId = InclementTurnPlayerId(gameSceneManager.turnPlayerId);
 			//全クライアントをターンエンドさせる
-			RpcTurnEndClient(pullArrow.myUnit.transform.position, nextTurnPlayerId);
+			RpcTurnEndClient(unitPos, nextTurnPlayerId);
 		}
 	}
 

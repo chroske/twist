@@ -115,7 +115,7 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -25.6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &167204310
@@ -379,7 +379,7 @@ MonoBehaviour:
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 1
-  m_LobbyPlayerPrefab: {fileID: 11452576, guid: a658bf2d3591e47d0a9d4d18ec117789,
+  m_LobbyPlayerPrefab: {fileID: 11438418, guid: e14e2e52d6df848b781ace1b9721ce20,
     type: 2}
   m_GamePlayerPrefab: {fileID: 172698, guid: 33be396e6a1574d5f93704c22c2d1ba6, type: 2}
   m_LobbyScene: GameLobby
@@ -391,6 +391,7 @@ MonoBehaviour:
   matchPanel4: {fileID: 522513016}
   lobbyContent: {fileID: 2049291619}
   ScrollViewContent: {fileID: 257516863}
+  lobbyPlayerListNode: {fileID: 175594, guid: de715a5f74bf845c89d4363df8811af3, type: 2}
 --- !u!1 &388614377
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,7 +492,7 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -25.6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &484387997
@@ -800,7 +801,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -25.6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &547800224
@@ -1536,7 +1537,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -25.6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1074857303

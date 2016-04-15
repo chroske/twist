@@ -7,11 +7,12 @@ using System.Linq;
 
 public class CustamNetworkLobbyPlayer : NetworkLobbyPlayer
 {
-	[SerializeField]
-	private GameObject LobbyPlayerNameText;
-
 	public override void OnClientEnterLobby()
 	{
+		if(isLocalPlayer){
+			
+		}
+
 		GameObject lobbyManager = GameObject.Find("LobbyManager");
 		lobbyManager.transform.GetComponent<CustomNetworkLobbyManager> ().CreateLobbyPlayerListPrefab();
 	}

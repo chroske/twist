@@ -19,6 +19,8 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	private GameObject ScrollViewContent;
 	[SerializeField]
 	private GameObject lobbyPlayerListNode;
+	[SerializeField]
+	private GameObject accountDataManager;
 
 	//protected LobbyHook _lobbyHooks;
 
@@ -46,6 +48,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 		//GUIで表示メソッド実行
 		ScrollViewContent.GetComponent<GenMatchListController>().GenMatchList (matchList);
+	}
+
+	public override void OnLobbyClientEnter(){
+		AccountDataManager _accountDataManager = accountDataManager.GetComponent<AccountDataManager> ();
+		//_accountDataManager.AccountName;
+		Debug.Log("OOOONOOONON");
 	}
 
 	public void StartTheGame(){
