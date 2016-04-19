@@ -7,18 +7,16 @@ using System.Linq;
 
 public class CustamNetworkLobbyPlayer : NetworkLobbyPlayer
 {
+	private LobbyPlayerController lobbyPlayerController;
+
 	public override void OnClientEnterLobby()
 	{
-		if(isLocalPlayer){
-			
-		}
-
-		GameObject lobbyManager = GameObject.Find("LobbyManager");
-		lobbyManager.transform.GetComponent<CustomNetworkLobbyManager> ().CreateLobbyPlayerListPrefab();
 	}
 
-	//命名
-	public void SetLobbyPlayerName(string PlayerName){
-		//LobbyPlayerNameText.GetComponentInChildren<Text>().text = PlayerName;
+	//ローカルプレイヤーのinstanceが作られたら実行される
+	public override void OnStartLocalPlayer(){
+		
+		LobbyPlayerController lobbyPlayerController = transform.GetComponent<LobbyPlayerController> ();
+		lobbyPlayerController.ProvideLobbyPlayerNameToServer ();
 	}
 }

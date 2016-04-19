@@ -379,7 +379,7 @@ MonoBehaviour:
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 1
-  m_LobbyPlayerPrefab: {fileID: 11438418, guid: e14e2e52d6df848b781ace1b9721ce20,
+  m_LobbyPlayerPrefab: {fileID: 11461870, guid: e14e2e52d6df848b781ace1b9721ce20,
     type: 2}
   m_GamePlayerPrefab: {fileID: 172698, guid: 33be396e6a1574d5f93704c22c2d1ba6, type: 2}
   m_LobbyScene: GameLobby
@@ -664,6 +664,48 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 486418011}
+--- !u!1 &492227631
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 492227633}
+  - 114: {fileID: 492227632}
+  m_Layer: 0
+  m_Name: AccountDataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &492227632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 492227631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c641cb6f7f51245dab0285a57397e04f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AccountId: 0
+  AccountName: AAAAA
+  partyUnitParamList1: []
+--- !u!4 &492227633
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 492227631}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 189.96497, y: 128.40407, z: 175.6875}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
 --- !u!1 &518361339
 GameObject:
   m_ObjectHideFlags: 0

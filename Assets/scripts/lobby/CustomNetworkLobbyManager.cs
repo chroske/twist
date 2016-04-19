@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
@@ -19,10 +20,9 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	private GameObject ScrollViewContent;
 	[SerializeField]
 	private GameObject lobbyPlayerListNode;
-	[SerializeField]
-	private GameObject accountDataManager;
 
-	//protected LobbyHook _lobbyHooks;
+	private string lobbyPlayerName;
+
 
 	void Start(){
 		networkManager = GetComponent<NetworkManager> ();
@@ -51,9 +51,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	}
 
 	public override void OnLobbyClientEnter(){
-		AccountDataManager _accountDataManager = accountDataManager.GetComponent<AccountDataManager> ();
-		//_accountDataManager.AccountName;
-		Debug.Log("OOOONOOONON");
+		Debug.Log("OnLobbyClientEnter");
 	}
 
 	public void StartTheGame(){
@@ -71,13 +69,10 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 //		return obj;
 //	}
 
-	public void CreateLobbyPlayerListPrefab(){
+	public void CreateLobbyPlayerListPrefab(string lobbyPlayerName){
 		GameObject prefab = Instantiate (lobbyPlayerListNode);
 		prefab.transform.SetParent (lobbyContent.transform,false);
-
-
-//		lobbyPlayer.transform.SetParent (lobbyContent.transform,false);
-//		lobbyPlayer.transform.GetComponent<CustamNetworkLobbyPlayer> ().SetLobbyPlayerName("あーてすてす");
+		prefab.transform.GetComponentInChildren<Text>().text = lobbyPlayerName;
 	}
 
 	public void OnStartMatchMakeButton(){
