@@ -15,7 +15,6 @@ public class CustamNetworkLobbyPlayer : NetworkLobbyPlayer
 
 	//ローカルプレイヤーのinstanceが作られたら実行される
 	public override void OnStartLocalPlayer(){
-		
 		LobbyPlayerController lobbyPlayerController = transform.GetComponent<LobbyPlayerController> ();
 		lobbyPlayerController.ProvideLobbyPlayerNameToServer ();
 	}

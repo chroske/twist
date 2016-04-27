@@ -18,18 +18,9 @@ public class GameSceneManager : MonoBehaviour {
 	public int firstTurnPlayerId;
 	public bool TurnEnd;
 
-	private GameObject controllUnit;
+
 	private List<GameObject> partyUnitList;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	public IEnumerator DisplayTurnEndText(float displayTime){
 		turnEndText.SetActive(true);
@@ -56,6 +47,7 @@ public class GameSceneManager : MonoBehaviour {
 
 
 	public void ChangeControllUnit(int UnitControllPlayerId){
+		GameObject controllUnit = new GameObject();
 		PullArrow pullArrow = arrow.transform.GetComponent<PullArrow>();
 
 		if (UnitControllPlayerId == 1) {
@@ -72,15 +64,18 @@ public class GameSceneManager : MonoBehaviour {
 			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_3};
 		}
 
-		//controllUnit設定
-		controllUnit.tag = "controllUnit";
-		foreach (Transform child in controllUnit.transform){
-			child.tag = "controllUnit";
-		}
-		controllUnit.transform.GetComponent<MyPartyUnitController>().enabled =false;
-		controllUnit.transform.GetComponent<MyUnitController>().enabled = true;
+		if (controllUnit != null) {
+			//controllUnit設定
+			controllUnit.tag = "controllUnit";
+			foreach (Transform child in controllUnit.transform){
+				child.tag = "controllUnit";
+			}
+			controllUnit.transform.GetComponent<MyPartyUnitController>().enabled =false;
+			controllUnit.transform.GetComponent<MyUnitController>().enabled = true;
 
-		pullArrow.myUnit = controllUnit;
+			pullArrow.myUnit = controllUnit;
+		}
+
 
 		//partyUnit設定
 		foreach (GameObject partyUnit in partyUnitList)
@@ -94,9 +89,43 @@ public class GameSceneManager : MonoBehaviour {
 			partyUnit.transform.GetComponent<MyPartyUnitController>().enabled =true;
 			partyUnit.transform.GetComponent<MyUnitController>().enabled = false;
 		}
+			
+		ResetComboNumAllUnit();
 	}
 
-	public void OnClickButton(){
-		//ChangeControllUnit(2);
+	//全ユニットのComboNumを初期化
+	private void ResetComboNumAllUnit(){
+		Unit_1.GetComponent<MyUnitController> ().ResetComboNum ();
+		Unit_1.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+
+		Unit_2.GetComponent<MyUnitController> ().ResetComboNum ();
+		Unit_2.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+
+		Unit_3.GetComponent<MyUnitController> ().ResetComboNum ();
+		Unit_3.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+
+		Unit_4.GetComponent<MyUnitController> ().ResetComboNum ();
+		Unit_4.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+	}
+
+	//ユニットのパラメータとそれに対応するComboEffectをセット
+	public void SetUnitParamatorByNetId(int netId, UnitStatus myUnitParam){
+		GameObject controllUnit = new GameObject();
+		if (netId == 1) {
+			controllUnit = Unit_1;
+		} else if (netId == 2) {
+			controllUnit = Unit_2;
+		} else if (netId == 3) {
+			controllUnit = Unit_3;
+		} else if (netId == 4) {
+			controllUnit = Unit_4;
+		}
+
+		if(controllUnit != null){
+			controllUnit.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam);
+			controllUnit.GetComponent<MyUnitController> ().SetComboEffect ();
+			controllUnit.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+		}
+
 	}
 }

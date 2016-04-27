@@ -43,6 +43,4 @@ public class GenMatchListController: MonoBehaviour {
 	public void OnJoinMatchButton(int ListId){
 		lobbyManager.GetComponent<CustomNetworkLobbyManager>().OnJoinMatchButton(ListId);
 	}
-
-
 }

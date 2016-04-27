@@ -9,17 +9,31 @@ public class NetworkManagerController : NetworkBehaviour {
 	[SyncVar] public Vector3 syncArrowPos;
 	[SyncVar] public Quaternion syncArrowRot;
 	[SyncVar] public Vector2 syncArrowSize;
-	[SyncVar/*(hook="ReceveShotFlag")*/] public bool syncArrowShotFlag;
+	[SyncVar] public bool syncArrowShotFlag;
 
 	[SyncVar(hook="ReceveShotFlag")] public Vector2 syncArrowDistance;
 	[SyncVar] public Vector3 syncUnitPos;
 	[SyncVar] public int syncTurnPlayerId;
 	[SyncVar] public int syncPlayerNetID;
 
+	//LobbyPlayerからわたってくるUnitのパラメータ
+	[SyncVar] public int syncUnitId;
+	[SyncVar] public int syncUnitAttack;
+	[SyncVar] public int syncUnitHitpoint;
+	[SyncVar] public float syncUnitSpeed;
+	[SyncVar] public int syncUnitType;
+	[SyncVar] public int syncUnitLevel;
+	[SyncVar] public int syncUnitCombo;
+	[SyncVar] public int syncUintAbbility_1;
+	[SyncVar] public int syncUintAbbility_2;
+	[SyncVar] public int syncUintAbbility_3;
+	[SyncVar] public int syncUintStrikeShot;
+	[SyncVar] public int syncUintComboType;
+	[SyncVar] public int syncUintComboAttack;
+	[SyncVar] public int syncUintMaxComboNum;
+
 	//ゲームオブジェクトとコンポーネント
 	private GameObject arrow;
-	private GameObject myUnit;
-	private Rigidbody2D myUnitRigidbody;
 	private PullArrow pullArrow;
 	private GameSceneManager gameSceneManager;
 	private NetworkManager networkManager;
@@ -31,9 +45,7 @@ public class NetworkManagerController : NetworkBehaviour {
 	public bool arrowShotFlag;
 	public Vector2 arrowDistance;
 
-	private NetworkInstanceId playerNetID;
 	private Transform myTransform;
-	public int playerNetIdInt;
 	public bool startUnitStopCheckFlag;
 
 
@@ -47,7 +59,6 @@ public class NetworkManagerController : NetworkBehaviour {
 		pullArrow = arrow.GetComponent<PullArrow> ();
 		//networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 		networkManager = GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>();
-
 
 		//サーバに初期データセット
 		SetDefaultSyncParam();
@@ -63,6 +74,8 @@ public class NetworkManagerController : NetworkBehaviour {
 		if(isLocalPlayer){
 			gameSceneManager.myPlayerNetIdInt = syncPlayerNetID;
 		}
+
+		SetUnitParamator();
 			
 		gameSceneManager.TurnChange (syncTurnPlayerId);
 	}
@@ -148,6 +161,30 @@ public class NetworkManagerController : NetworkBehaviour {
 			//サーバに停止をお知らせ
 			CmdProvideTurnEndToServer(pullArrow.myUnit.transform.position);
 		}
+	}
+
+	public void SetUnitParamator(){
+		//MyUnitController myUnitController = myUnit.GetComponent<MyUnitController> ();
+		MyUnitController myUnitController = pullArrow.myUnit.GetComponent<MyUnitController> ();
+
+		UnitStatus myUnitParam = new UnitStatus(
+			syncUnitId,
+			syncUnitAttack,
+			syncUnitHitpoint,
+			syncUnitSpeed,
+			syncUnitType,
+			syncUnitLevel,
+			syncUnitCombo,
+			syncUintAbbility_1,
+			syncUintAbbility_2,
+			syncUintAbbility_3,
+			syncUintStrikeShot,
+			syncUintComboType,
+			syncUintComboAttack,
+			syncUintMaxComboNum
+		);
+
+		gameSceneManager.SetUnitParamatorByNetId (syncPlayerNetID, myUnitParam);
 	}
 
 ////////////////////////////////////////////////////////[Server]/////////////////////////////////////////////////////////////////

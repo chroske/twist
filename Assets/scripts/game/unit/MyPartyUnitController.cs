@@ -20,26 +20,17 @@ public class MyPartyUnitController : MonoBehaviour {
 	public GameObject UnitParamManager;
 	private UnitParamManager unitParamManager;
 
+	void Awake(){
+		unitParamManager = UnitParamManager.GetComponent<UnitParamManager>();
+	}
+
 	// Use this for initialization
 	void Start () {
-		unitParamManager = UnitParamManager.GetComponent<UnitParamManager>();
-
 		comboNum = 1;
 		startEffectFlag = true;
 
-		//コンボタイプをセット
-		if (unitParamManager.comboType == 0) {
-			//ビーム
-			comboEffect = beam;
-		} else if (unitParamManager.comboType == 1) {
-			//爆発
-			comboEffect = explosion;
-		} else if (unitParamManager.comboType == 2) {
-			//上下ビーム
-			comboEffect = beamType2;
-		} else {
-			comboEffect = null;
-		}
+		//現在はプレイヤーキャラ以外もいるのでeffectが空にならないように暫定処理
+		SetComboEffect();
 	}
 	
 	// Update is called once per frame
@@ -102,6 +93,27 @@ public class MyPartyUnitController : MonoBehaviour {
 
 				Destroy (effect, 0.2f);
 			}
+		}
+	}
+
+	//初期値1に戻す
+	public void ResetComboNum(){
+		comboNum = 1;
+	}
+
+	public void SetComboEffect(){
+		//コンボタイプをセット
+		if (unitParamManager.comboType == 0) {
+			//ビーム
+			comboEffect = beam;
+		} else if (unitParamManager.comboType == 1) {
+			//爆発
+			comboEffect = explosion;
+		} else if (unitParamManager.comboType == 2) {
+			//上下ビーム
+			comboEffect = beamType2;
+		} else {
+			comboEffect = null;
 		}
 	}
 }

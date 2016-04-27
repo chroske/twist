@@ -13,7 +13,7 @@ public class MyUnitController : MonoBehaviour {
 	public GameObject beamType2;
 
 	public GameObject UnitParamManager;
-	private UnitParamManager unitParamManager;
+	public UnitParamManager unitParamManager;
 
 	//減速を始める速度(velocity.magnitude)
 	private float decelerateLimitSpeed = 1.5f;
@@ -25,25 +25,16 @@ public class MyUnitController : MonoBehaviour {
 	private bool startEffectFlag;
 	private GameObject comboEffect;
 
-	void Start () {
+	void Awake(){
 		unitParamManager = UnitParamManager.GetComponent<UnitParamManager>();
+	}
 
+	void Start () {
 		comboNum = 1;
 		startEffectFlag = true;
 
-		//コンボタイプをセット
-		if (unitParamManager.comboType == 0) {
-			//ビーム
-			comboEffect = beam;
-		} else if (unitParamManager.comboType == 1) {
-			//爆発
-			comboEffect = explosion;
-		} else if (unitParamManager.comboType == 2) {
-			//上下ビーム
-			comboEffect = beamType2;
-		} else {
-			comboEffect = null;
-		}
+		//現在はプレイヤーキャラ以外もいるのでeffectが空にならないように暫定処理
+		SetComboEffect();
 	}
 
 	void FixedUpdate() {
@@ -53,10 +44,6 @@ public class MyUnitController : MonoBehaviour {
 		if(rigidbody2d.velocity.magnitude < decelerateLimitSpeed && rigidbody2d.velocity.magnitude > 0f){
 			rigidbody2d.velocity = rigidbody2d.velocity * decelerateSpeedRate;
 		}
-	}
-
-	void Update () {
-		
 	}
 
 	void OnTriggerEnter2D(Collider2D collider2d){
@@ -116,5 +103,26 @@ public class MyUnitController : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(effectDestroyTime);
 		startEffectFlag = true;
+	}
+
+	//初期値1に戻す
+	public void ResetComboNum(){
+		comboNum = 1;
+	}
+
+	public void SetComboEffect(){
+		//コンボタイプをセット
+		if (unitParamManager.comboType == 0) {
+			//ビーム
+			comboEffect = beam;
+		} else if (unitParamManager.comboType == 1) {
+			//爆発
+			comboEffect = explosion;
+		} else if (unitParamManager.comboType == 2) {
+			//上下ビーム
+			comboEffect = beamType2;
+		} else {
+			comboEffect = null;
+		}
 	}
 }
