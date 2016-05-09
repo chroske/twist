@@ -16,28 +16,13 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	[SerializeField]
 	private GameObject lobbyContent;
-	[SerializeField]
-	private GameObject roomListContent;
+
 	[SerializeField]
 	private GameObject lobbyPlayerListNode;
 
-	private string lobbyPlayerName;
-
-	[SerializeField]
-	private GameObject lobbyScrollRect;
-
-	[SerializeField]
-	private GameObject roomListScrollRect;
-
-	[SerializeField]
-	private GameObject nodeGroup;
-
-
 	void Start(){
 		networkManager = GetComponent<NetworkManager> ();
-		//_lobbyHooks = GetComponent<UnityStandardAssets.Network.LobbyHook>();
 	}
-
 
 	//クライアントがロビーのシーンからゲームプレイヤーシーンに切り替えが終了したことを伝えられたときサーバー上で呼び出し
 	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
@@ -50,22 +35,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 		//ユニットのパラメータをlobbyPlayerからgamePlayerに渡す
 		LobbyPlayerController lobbyPlayerController = lobbyPlayer.GetComponent<LobbyPlayerController>();
-//		UnitStatus unitStatus = new UnitStatus (
-//			lobbyPlayerController.unitParamsClass[0].unit_id,
-//			lobbyPlayerController.unitParamsClass[0].attack,
-//			lobbyPlayerController.unitParamsClass[0].hitPoint,
-//			lobbyPlayerController.unitParamsClass[0].speed,
-//			lobbyPlayerController.unitParamsClass[0].type,
-//			lobbyPlayerController.unitParamsClass[0].Level,
-//			lobbyPlayerController.unitParamsClass[0].combo,
-//			lobbyPlayerController.unitParamsClass[0].ability_1,
-//			lobbyPlayerController.unitParamsClass[0].ability_2,
-//			lobbyPlayerController.unitParamsClass[0].ability_3,
-//			lobbyPlayerController.unitParamsClass[0].strikeShot,
-//			lobbyPlayerController.unitParamsClass[0].comboType,
-//			lobbyPlayerController.unitParamsClass[0].comboAttack,
-//			lobbyPlayerController.unitParamsClass[0].maxComboNum
-//		);
 
 		//networkManagerControllerでsyncの構造体を定義すると何故か落ちるのでバラで渡す
 		networkManagerController.syncUnitId = lobbyPlayerController.unitParamsClass [0].unit_id;
@@ -91,11 +60,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		matches = matchList.matches;
 
-		//GUIで表示メソッド実行
-		roomListContent.GetComponent<GenMatchListController>().GenMatchList (matchList);
-
-		//flag = true;
-		StartCoroutine (PullBackScrollView ());
+		StartCoroutine (matchPanel3.GetComponent<RoomListController>().PullBackScrollView (matchList));
 	}
 
 	public override void OnLobbyClientEnter(){
@@ -165,44 +130,5 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 		matchPanel3.SetActive (false);
 		matchPanel4.SetActive (true);
-	}
-
-	private bool flag = true;
-	private int defaultRoomListScrollViewHeight = -135;
-
-	public void OnChangedScrollPosition(Vector2 position){
-		if (roomListContent.GetComponent<RectTransform> ().anchoredPosition.y < 0.0f && roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition.y > -270) {
-			roomListScrollRect.GetComponent<ScrollRect> ().elasticity = 0.01f;
-
-			roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (0, roomListContent.GetComponent<RectTransform> ().anchoredPosition.y + defaultRoomListScrollViewHeight);
-			nodeGroup.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (0, -roomListContent.GetComponent<RectTransform> ().anchoredPosition.y * 0.9f);
-		} else if(roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition.y < -270 && flag) {
-			flag = false;
-			moveFlag = true;
-			roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (0, -270);
-			roomListScrollRect.GetComponent<ScrollRect> ().elasticity = 0.1f;
-			StartCoroutine (PullBackScrollView ());
-			//networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", networkManager.OnMatchList);
-		}
-	}
-
-
-	bool moveFlag = true;
-
-	IEnumerator PullBackScrollView(){
-		
-		yield return new WaitForSeconds(2);
-		//flag = true;
-		Debug.Log ("PullBackScrollView"+moveFlag);
-		//networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", networkManager.OnMatchList);
-		while (moveFlag) {
-			roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition = Vector2.Lerp (roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition, new Vector3 (0, defaultRoomListScrollViewHeight, 0), 0.1f);
-			if(roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition.y >= defaultRoomListScrollViewHeight-1){
-				moveFlag = false;
-				flag = true;
-			}
-			yield return null;
-		}
-		yield break;
 	}
 }

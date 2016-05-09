@@ -165,7 +165,7 @@ public class NetworkManagerController : NetworkBehaviour {
 
 	public void SetUnitParamator(){
 		//MyUnitController myUnitController = myUnit.GetComponent<MyUnitController> ();
-		MyUnitController myUnitController = pullArrow.myUnit.GetComponent<MyUnitController> ();
+	//	MyUnitController myUnitController = pullArrow.myUnit.GetComponent<MyUnitController> ();
 
 		UnitStatus myUnitParam = new UnitStatus(
 			syncUnitId,

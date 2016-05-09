@@ -24,6 +24,9 @@ public class GenMatchListController: MonoBehaviour {
 	}
 
 	public void GenMatchList(ListMatchResponse response){
+		//リストをクリア
+		RemoveAllListViewItem ();
+
 		for (int i = 0; i < response.matches.Count; ++i)
 		{
 			Debug.Log (response.matches [i].name);
@@ -37,6 +40,15 @@ public class GenMatchListController: MonoBehaviour {
 			//rank番号とカッコを取り除く
 			string roomName = Regex.Replace(response.matches [i].name, "{.+?}", "");
 			text.text = roomName;
+		}
+	}
+
+	//リストクリア
+	private void RemoveAllListViewItem() {
+		foreach (Transform child in transform) {
+			if(child.GetSiblingIndex() != 0){
+				GameObject.Destroy(child.gameObject);
+			}
 		}
 	}
 
