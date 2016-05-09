@@ -125,10 +125,21 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	}
 
 	public void OnJoinMatchButton(int ListId){
-		var desc = networkManager.matches[ListId];
-		networkMatch.JoinMatch(desc.networkId, "", networkManager.OnMatchJoined);
+		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", JoinMatch);
+	}
 
-		matchPanel3.SetActive (false);
-		matchPanel4.SetActive (true);
+	private void JoinMatch(ListMatchResponse matchList){
+		matches = matchList.matches;
+		if (networkManager.matches.Count != 0) {
+			int ListId = 0;
+			var desc = networkManager.matches [ListId];
+			networkMatch.JoinMatch (desc.networkId, "", networkManager.OnMatchJoined);
+
+			matchPanel2.SetActive (false);
+			matchPanel4.SetActive (true);
+		} else {
+			Debug.Log("RoomCount=0");
+		}
+
 	}
 }
