@@ -11,6 +11,12 @@ public class CustamNetworkLobbyPlayer : NetworkLobbyPlayer
 
 	public override void OnClientEnterLobby()
 	{
+		Debug.Log ("OnClientEnterLobby");
+	}
+
+	public override void OnClientExitLobby()
+	{
+		Debug.Log ("OnClientExitLobby");
 	}
 
 	//ローカルプレイヤーのinstanceが作られたら実行される

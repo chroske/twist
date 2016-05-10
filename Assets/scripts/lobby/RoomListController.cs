@@ -51,6 +51,9 @@ public class RoomListController : MonoBehaviour {
 			roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (0, roomListContent.GetComponent<RectTransform> ().anchoredPosition.y + defaultRoomListScrollViewHeight);
 			nodeGroup.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (0, -roomListContent.GetComponent<RectTransform> ().anchoredPosition.y * 0.9f);
 		} else if(roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition.y < -240 && contentScrollStop) {
+			networkManager = LobbyManager.GetComponent<NetworkManager> ();
+			networkMatch = networkManager.matchMaker;
+
 			contentScrollStop = false;
 			pullBackScrollViewFlag = true;
 			roomListScrollRect.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (0, -240);
