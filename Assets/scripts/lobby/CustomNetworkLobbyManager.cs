@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using UnityEngine.Networking.Types;
 
 public class CustomNetworkLobbyManager : NetworkLobbyManager
 {
@@ -75,8 +77,15 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	}
 
 	public void ExitRoom(){
-		//networkMatch.DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.nodeId, OnDisconnected);
 		StopClient();
+		StopMatchMaker();
+
+		//networkMatch.DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.nodeId, OnDisconnected);
+		//networkMatch.DestroyMatch(networkManager.matchInfo.networkId, OnDisconnected);
+//		networkManager.StopMatchMaker ();
+//		StopClient();
+		//networkManager = transform.GetComponent<NetworkManager> ();
+
 		currentPanel.SetActive (false);
 		matchPanel2.SetActive (true);
 
@@ -87,6 +96,14 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	private void OnDisconnected(BasicResponse response)
 	{
 		if (response.success) {
+			networkManager.StopMatchMaker ();
+			//StopClient();
+			//networkManager = transform.GetComponent<NetworkManager> ();
+
+			currentPanel.SetActive (false);
+			matchPanel2.SetActive (true);
+
+			currentPanel = matchPanel2;
 		}
 	}
 
@@ -142,6 +159,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		networkManager.matchName = roomName;
 		networkManager.matchSize = 4U;
 		networkMatch.CreateMatch (networkManager.matchName, networkManager.matchSize, true, "", networkManager.OnMatchCreate);
+		//networkMatch.CreateMatch (networkManager.matchName, networkManager.matchSize, true, "", OnMatchCreate);
 
 		currentPanel.SetActive (false);
 		matchPanel4.SetActive (true);
@@ -167,10 +185,50 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 		var desc = networkManager.matches [ListId];
 		networkMatch.JoinMatch (desc.networkId, "", networkManager.OnMatchJoined);
+		//networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
 
 		currentPanel.SetActive (false);
 		matchPanel4.SetActive (true);
 		currentPanel = matchPanel4;
+	}
+
+
+
+	bool matchCreated;
+	public void OnMatchCreate2(CreateMatchResponse matchResponse)
+	{
+		if (matchResponse.success)
+		{
+			Debug.Log("Create match succeeded");
+			matchCreated = true;
+			Utility.SetAccessTokenForNetwork(matchResponse.networkId, new NetworkAccessToken(matchResponse.accessTokenString));
+			NetworkServer.Listen(new MatchInfo(matchResponse), 9000);
+		}
+		else
+		{
+			Debug.LogError ("Create match failed");
+		}
+	}
+
+
+
+	public void CustamOnMatchJoined(JoinMatchResponse matchJoin)
+	{
+		if (matchJoin.success)
+		{
+			Debug.Log("Join match succeeded");
+			StartClient(new MatchInfo(matchJoin));
+		} else {
+			Debug.LogError("Join match failed");
+		}
+	}
+
+
+
+
+	public void OnConnected(NetworkMessage msg)
+	{
+		Debug.Log("Connected!");
 	}
 
 	private int roomListId;
@@ -187,7 +245,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		if (networkManager.matches.Count != 0) {
 			var desc = matches [roomListId];
 			networkMatch.JoinMatch (desc.networkId, "", networkManager.OnMatchJoined);
-
+			//networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
 			currentPanel.SetActive (false);
 			matchPanel4.SetActive (true);
 

@@ -502,6 +502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461faef0b0b184e58a66991bc8d4ab81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unit_id: 0
   attack: 0
   hitPoint: 0
   speed: 0
@@ -1422,6 +1423,7 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 870747335}
+  unitParamManager: {fileID: 0}
 --- !u!114 &777696503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1541,6 +1543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461faef0b0b184e58a66991bc8d4ab81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unit_id: 0
   attack: 0
   hitPoint: 0
   speed: 0
@@ -1605,6 +1608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461faef0b0b184e58a66991bc8d4ab81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unit_id: 0
   attack: 2
   hitPoint: 0
   speed: 0
@@ -2089,6 +2093,7 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 494976985}
+  unitParamManager: {fileID: 0}
 --- !u!114 &1056120036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2239,6 +2244,7 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 911323037}
+  unitParamManager: {fileID: 0}
 --- !u!114 &1148400671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2336,6 +2342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461faef0b0b184e58a66991bc8d4ab81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unit_id: 0
   attack: 0
   hitPoint: 0
   speed: 0
@@ -2476,6 +2483,7 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 1192932229}
+  unitParamManager: {fileID: 0}
 --- !u!1 &1429825924
 GameObject:
   m_ObjectHideFlags: 0
@@ -2631,6 +2639,10 @@ Prefab:
     - target: {fileID: 452442, guid: df7f8868a2d274055a6a639df7915607, type: 2}
       propertyPath: m_RootOrder
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 11435886, guid: df7f8868a2d274055a6a639df7915607, type: 2}
+      propertyPath: showGUI
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df7f8868a2d274055a6a639df7915607, type: 2}
