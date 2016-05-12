@@ -14,6 +14,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	private short playerNetID;
 	private GameObject currentPanel;
 	private bool isHost = false;
+	private int roomListId;
 
 	public GameObject matchPanel1;
 	public GameObject matchPanel2;
@@ -94,7 +95,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		matchPanel2.SetActive (true);
 
 		currentPanel = matchPanel2;
-
 	}
 
 	private void OnDisconnected(BasicResponse response)
@@ -129,7 +129,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		networkMatch = networkManager.matchMaker;
 	}
 
-	//public void OnStopMatchMakeButton(){
 	public void StopMatchMake(){
 		networkManager.StopMatchMaker();
 
@@ -139,7 +138,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		currentPanel = matchPanel1;
 	}
 
-	//public void OnCreateMatchButton(){
 	public void CreateMatch(){
 		StartMatchMake ();
 
@@ -157,7 +155,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		currentPanel = matchPanel4;
 	}
 
-	//public void OnListMatchButton(int rank){
 	public void GetListMatch(int rank){
 		StartMatchMake ();
 
@@ -169,7 +166,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		currentPanel = matchPanel3;
 	}
 
-	//public void OnJoinMatchButton(int ListId){
 	public void JoinListMatch(int ListId){
 		StartMatchMake ();
 
@@ -192,13 +188,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			Debug.LogError("Join match failed");
 		}
 	}
-		
-	public void OnConnected(NetworkMessage msg)
-	{
-		Debug.Log("Connected!");
-	}
-
-	private int roomListId;
 
 	public void ListMatchAndJoinMatch(int ListId){
 		StartMatchMake ();

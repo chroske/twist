@@ -2651,11 +2651,10 @@ MonoBehaviour:
   m_LobbyScene: GameLobby
   m_PlayScene: GameMain
   lobbySlots: []
-  matchPanel1: {fileID: 22486556}
-  matchPanel2: {fileID: 22446560}
-  matchPanel3: {fileID: 22424410}
-  matchPanel4: {fileID: 22427612}
-  test: {fileID: 0}
+  matchPanel1: {fileID: 192058}
+  matchPanel2: {fileID: 111104}
+  matchPanel3: {fileID: 182906}
+  matchPanel4: {fileID: 180584}
   lobbyContent: {fileID: 134394}
   lobbyPlayerListNode: {fileID: 175594, guid: de715a5f74bf845c89d4363df8811af3, type: 2}
 --- !u!114 &11498760
