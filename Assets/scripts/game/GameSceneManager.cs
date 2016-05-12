@@ -18,9 +18,7 @@ public class GameSceneManager : MonoBehaviour {
 	public int firstTurnPlayerId;
 	public bool TurnEnd;
 
-
 	private List<GameObject> partyUnitList;
-
 
 	public IEnumerator DisplayTurnEndText(float displayTime){
 		turnEndText.SetActive(true);
@@ -50,19 +48,33 @@ public class GameSceneManager : MonoBehaviour {
 		GameObject controllUnit = new GameObject();
 		PullArrow pullArrow = arrow.transform.GetComponent<PullArrow>();
 
-		if (UnitControllPlayerId == 1) {
+		if (UnitControllPlayerId == 0) {
 			controllUnit = Unit_1;
 			partyUnitList = new List<GameObject> (){Unit_2, Unit_3, Unit_4};
-		} else if (UnitControllPlayerId == 2) {
+		} else if (UnitControllPlayerId == 1) {
 			controllUnit = Unit_2;
 			partyUnitList = new List<GameObject> (){Unit_1, Unit_3, Unit_4};
-		} else if (UnitControllPlayerId == 3) {
+		} else if (UnitControllPlayerId == 2) {
 			controllUnit = Unit_3;
 			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_4};
-		} else if (UnitControllPlayerId == 4) {
+		} else if (UnitControllPlayerId == 3) {
 			controllUnit = Unit_4;
 			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_3};
 		}
+
+//		if (UnitControllPlayerId == 1) {
+//			controllUnit = Unit_1;
+//			partyUnitList = new List<GameObject> (){Unit_2, Unit_3, Unit_4};
+//		} else if (UnitControllPlayerId == 2) {
+//			controllUnit = Unit_2;
+//			partyUnitList = new List<GameObject> (){Unit_1, Unit_3, Unit_4};
+//		} else if (UnitControllPlayerId == 3) {
+//			controllUnit = Unit_3;
+//			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_4};
+//		} else if (UnitControllPlayerId == 4) {
+//			controllUnit = Unit_4;
+//			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_3};
+//		}
 
 		if (controllUnit != null) {
 			//controllUnit設定
@@ -111,15 +123,26 @@ public class GameSceneManager : MonoBehaviour {
 	//ユニットのパラメータとそれに対応するComboEffectをセット
 	public void SetUnitParamatorByNetId(int netId, UnitStatus myUnitParam){
 		GameObject controllUnit = new GameObject();
-		if (netId == 1) {
+		if (netId == 0) {
 			controllUnit = Unit_1;
-		} else if (netId == 2) {
+		} else if (netId == 1) {
 			controllUnit = Unit_2;
-		} else if (netId == 3) {
+		} else if (netId == 2) {
 			controllUnit = Unit_3;
-		} else if (netId == 4) {
+		} else if (netId == 3) {
 			controllUnit = Unit_4;
 		}
+
+
+//		if (netId == 1) {
+//			controllUnit = Unit_1;
+//		} else if (netId == 2) {
+//			controllUnit = Unit_2;
+//		} else if (netId == 3) {
+//			controllUnit = Unit_3;
+//		} else if (netId == 4) {
+//			controllUnit = Unit_4;
+//		}
 
 		if(controllUnit != null){
 			controllUnit.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam);

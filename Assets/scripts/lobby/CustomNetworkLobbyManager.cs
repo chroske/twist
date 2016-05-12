@@ -10,8 +10,10 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 {
 	private NetworkMatch networkMatch;
 	private NetworkManager networkManager;
-	private NetworkInstanceId playerNetID;
+	//private NetworkInstanceId playerNetID;
+	private short playerNetID;
 	private GameObject currentPanel;
+	private bool isHost = false;
 
 	public GameObject matchPanel1;
 	public GameObject matchPanel2;
@@ -25,17 +27,18 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	private GameObject lobbyPlayerListNode;
 
 	void Start(){
+		//ロビーTOPパネルをcurrentに
 		currentPanel = matchPanel2;
 	}
 		
-
 	//クライアントがロビーのシーンからゲームプレイヤーシーンに切り替えが終了したことを伝えられたときサーバー上で呼び出し
 	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
 	{
 		//lobbyPlayerオブジェクトのnetidをnetworkManagerControllerに送って以後ゲーム中idとして使う
 		NetworkManagerController networkManagerController = gamePlayer.GetComponent<NetworkManagerController>();
-		playerNetID = lobbyPlayer.GetComponent<NetworkIdentity>().netId;
-		int playerNetIdInt =  int.Parse(playerNetID.ToString());
+		//playerNetID = lobbyPlayer.GetComponent<NetworkIdentity>().netId;
+		//int playerNetIdInt =  int.Parse(playerNetID.ToString());
+		int playerNetIdInt = lobbyPlayer.GetComponent<LobbyPlayerController>().playerUniqueId;
 		networkManagerController.syncPlayerNetID = playerNetIdInt;
 
 		//ユニットのパラメータをlobbyPlayerからgamePlayerに渡す
@@ -68,23 +71,24 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		StartCoroutine (matchPanel3.GetComponent<RoomListController>().PullBackScrollView (matchList));
 	}
 
-	public override void OnLobbyClientEnter(){
-		Debug.Log("OnLobbyClientEnter");
+	//ゲームシーンへ移行時にクライアントで呼び出される
+	public override void OnClientSceneChanged(NetworkConnection conn){
+		currentPanel.SetActive (false);
+		base.OnClientSceneChanged(conn);
 	}
 
 	public void StartTheGame(){
+		currentPanel.SetActive (false);
 		ServerChangeScene (playScene);
 	}
 
 	public void ExitRoom(){
-		StopClient();
+		if (isHost) {
+			StopHost ();
+		} else {
+			StopClient();
+		}
 		StopMatchMaker();
-
-		//networkMatch.DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.nodeId, OnDisconnected);
-		//networkMatch.DestroyMatch(networkManager.matchInfo.networkId, OnDisconnected);
-//		networkManager.StopMatchMaker ();
-//		StopClient();
-		//networkManager = transform.GetComponent<NetworkManager> ();
 
 		currentPanel.SetActive (false);
 		matchPanel2.SetActive (true);
@@ -97,8 +101,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		if (response.success) {
 			networkManager.StopMatchMaker ();
-			//StopClient();
-			//networkManager = transform.GetComponent<NetworkManager> ();
 
 			currentPanel.SetActive (false);
 			matchPanel2.SetActive (true);
@@ -109,20 +111,9 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	//ホストとしてゲームを開始したときを含めサーバーを起動したとき、これはサーバー上で呼び出されます。
 	public override void OnLobbyStartServer() {
+		isHost = true;
 		matchPanel4.GetComponent<PlayerListInRoomController> ().SetActiveStartGameButton ();
 	}
-
-
-	//LobbyPlayerがprefabから作成された時に呼び出される(サーバ上)
-//	public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection conn, short playerControllerId)
-//	{
-//		GameObject obj = Instantiate(lobbyPlayerPrefab.gameObject) as GameObject;
-//
-//		obj.transform.SetParent (lobbyContent.transform,false);
-//		obj.transform.GetComponent<CustamNetworkLobbyPlayer> ().SetLobbyPlayerName("あーてすてす");
-//
-//		return obj;
-//	}
 
 	public GameObject CreateLobbyPlayerListPrefab(string lobbyPlayerName){
 		GameObject prefab = Instantiate (lobbyPlayerListNode);
@@ -159,7 +150,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		networkManager.matchName = roomName;
 		networkManager.matchSize = 4U;
 		networkMatch.CreateMatch (networkManager.matchName, networkManager.matchSize, true, "", networkManager.OnMatchCreate);
-		//networkMatch.CreateMatch (networkManager.matchName, networkManager.matchSize, true, "", OnMatchCreate);
 
 		currentPanel.SetActive (false);
 		matchPanel4.SetActive (true);
@@ -184,33 +174,13 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		StartMatchMake ();
 
 		var desc = networkManager.matches [ListId];
-		networkMatch.JoinMatch (desc.networkId, "", networkManager.OnMatchJoined);
-		//networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
+		networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
 
 		currentPanel.SetActive (false);
 		matchPanel4.SetActive (true);
+
 		currentPanel = matchPanel4;
 	}
-
-
-
-	bool matchCreated;
-	public void OnMatchCreate2(CreateMatchResponse matchResponse)
-	{
-		if (matchResponse.success)
-		{
-			Debug.Log("Create match succeeded");
-			matchCreated = true;
-			Utility.SetAccessTokenForNetwork(matchResponse.networkId, new NetworkAccessToken(matchResponse.accessTokenString));
-			NetworkServer.Listen(new MatchInfo(matchResponse), 9000);
-		}
-		else
-		{
-			Debug.LogError ("Create match failed");
-		}
-	}
-
-
 
 	public void CustamOnMatchJoined(JoinMatchResponse matchJoin)
 	{
@@ -222,10 +192,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			Debug.LogError("Join match failed");
 		}
 	}
-
-
-
-
+		
 	public void OnConnected(NetworkMessage msg)
 	{
 		Debug.Log("Connected!");
@@ -244,8 +211,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		matches = matchList.matches;
 		if (networkManager.matches.Count != 0) {
 			var desc = matches [roomListId];
-			networkMatch.JoinMatch (desc.networkId, "", networkManager.OnMatchJoined);
-			//networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
+			networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
 			currentPanel.SetActive (false);
 			matchPanel4.SetActive (true);
 
@@ -254,19 +220,4 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			Debug.Log("RoomCount=0");
 		}
 	}
-
-//	private void JoinMatchCallBack(ListMatchResponse matchList){
-//		matches = matchList.matches;
-//		if (networkManager.matches.Count != 0) {
-//			var desc = networkManager.matches [roomListId];
-//			networkMatch.JoinMatch (desc.networkId, "", networkManager.OnMatchJoined);
-//
-//			currentPanel.SetActive (false);
-//			matchPanel4.SetActive (true);
-//
-//			currentPanel = matchPanel4;
-//		} else {
-//			Debug.Log("RoomCount=0");
-//		}
-//	}
 }

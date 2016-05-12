@@ -115,8 +115,8 @@ public class NetworkManagerController : NetworkBehaviour {
 		
 	//次のプレイヤーIDを吐き出す
 	private int InclementTurnPlayerId(int id){
-		if(id+1 > networkManager.numPlayers){
-			id = 1;
+		if(id+1 > networkManager.numPlayers-1){
+			id = 0;
 		} else {
 			id++;
 		}

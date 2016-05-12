@@ -10,6 +10,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 
 	private GameObject LobbyPlayerListPrefab;
 	private bool setLobbyPlayerNodeFlag;
+	public int playerUniqueId; //ゲームのユニークID
 
 	/*[SyncVar (hook = "SyncLobbyPlayerNameValues")]*/[SyncVar] public string syncLobbyPlayerName;
 
@@ -60,6 +61,8 @@ public class LobbyPlayerController : NetworkBehaviour {
 
 			GameObject lobbyManager = GameObject.Find("LobbyManager");
 			LobbyPlayerListPrefab = lobbyManager.transform.GetComponent<CustomNetworkLobbyManager> ().CreateLobbyPlayerListPrefab(lobbyPlayerName);
+			//ホストのスクロールビューの順番をゲームのユニークIDとして使う
+			playerUniqueId = LobbyPlayerListPrefab.transform.GetSiblingIndex ();
 		}
 	}
 
@@ -96,7 +99,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 
 		unitParamsClass.Add(unitParams);
 
-		//ここでSyncLobbyPlayerNameValues()が発火するので必ずunitParamsClass.Addした後に行うこと
+		//ここでSyncLobbyPlayerNameValues()が発火するので必ずunitParamsClass.Addした後に行うこと ※SyncLobbyPlayerNameValuesは現在未実装
 		syncLobbyPlayerName = lobbyPlayerName;
 	}
 }

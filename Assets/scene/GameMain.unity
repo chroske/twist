@@ -1423,7 +1423,6 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 870747335}
-  unitParamManager: {fileID: 0}
 --- !u!114 &777696503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2093,7 +2092,6 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 494976985}
-  unitParamManager: {fileID: 0}
 --- !u!114 &1056120036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2244,7 +2242,6 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 911323037}
-  unitParamManager: {fileID: 0}
 --- !u!114 &1148400671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2483,7 +2480,6 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 1192932229}
-  unitParamManager: {fileID: 0}
 --- !u!1 &1429825924
 GameObject:
   m_ObjectHideFlags: 0
@@ -2805,7 +2801,7 @@ MonoBehaviour:
   myPlayerNetIdInt: 0
   turnPlayerId: 0
   beforeTurnPlayerId: 0
-  firstTurnPlayerId: 1
+  firstTurnPlayerId: 0
   TurnEnd: 0
 --- !u!4 &1785781617
 Transform:

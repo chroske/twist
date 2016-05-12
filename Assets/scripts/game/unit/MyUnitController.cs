@@ -13,7 +13,7 @@ public class MyUnitController : MonoBehaviour {
 	public GameObject beamType2;
 
 	public GameObject UnitParamManager;
-	public UnitParamManager unitParamManager;
+	private UnitParamManager unitParamManager;
 
 	//減速を始める速度(velocity.magnitude)
 	private float decelerateLimitSpeed = 1.5f;
