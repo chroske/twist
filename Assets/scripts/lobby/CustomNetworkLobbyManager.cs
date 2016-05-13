@@ -69,7 +69,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		matches = matchList.matches;
 
-		StartCoroutine (matchPanel3.GetComponent<RoomListController>().PullBackScrollView (matchList));
+		//StartCoroutine (matchPanel3.GetComponent<RoomListController>().PullBackScrollView (matchList));
 	}
 
 	//ゲームシーンへ移行時にクライアントで呼び出される

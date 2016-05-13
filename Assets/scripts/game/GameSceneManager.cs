@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class GameSceneManager : MonoBehaviour {
+public class GameSceneManager : NetworkBehaviour {
 
 	public GameObject Unit_1;
 	public GameObject Unit_2;
@@ -10,6 +11,7 @@ public class GameSceneManager : MonoBehaviour {
 	public GameObject Unit_4;
 	public GameObject arrow;
 	public GameObject turnEndText;
+	public GameObject NetworkManager;
 
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
@@ -61,20 +63,6 @@ public class GameSceneManager : MonoBehaviour {
 			controllUnit = Unit_4;
 			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_3};
 		}
-
-//		if (UnitControllPlayerId == 1) {
-//			controllUnit = Unit_1;
-//			partyUnitList = new List<GameObject> (){Unit_2, Unit_3, Unit_4};
-//		} else if (UnitControllPlayerId == 2) {
-//			controllUnit = Unit_2;
-//			partyUnitList = new List<GameObject> (){Unit_1, Unit_3, Unit_4};
-//		} else if (UnitControllPlayerId == 3) {
-//			controllUnit = Unit_3;
-//			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_4};
-//		} else if (UnitControllPlayerId == 4) {
-//			controllUnit = Unit_4;
-//			partyUnitList = new List<GameObject> (){Unit_1, Unit_2, Unit_3};
-//		}
 
 		if (controllUnit != null) {
 			//controllUnit設定
@@ -133,22 +121,16 @@ public class GameSceneManager : MonoBehaviour {
 			controllUnit = Unit_4;
 		}
 
-
-//		if (netId == 1) {
-//			controllUnit = Unit_1;
-//		} else if (netId == 2) {
-//			controllUnit = Unit_2;
-//		} else if (netId == 3) {
-//			controllUnit = Unit_3;
-//		} else if (netId == 4) {
-//			controllUnit = Unit_4;
-//		}
-
 		if(controllUnit != null){
 			controllUnit.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam);
 			controllUnit.GetComponent<MyUnitController> ().SetComboEffect ();
 			controllUnit.GetComponent<MyPartyUnitController> ().SetComboEffect ();
 		}
+	}
 
+	private NetworkManager networkManager;
+	public void StopGame(){
+		networkManager = GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>();
+		networkManager.StopHost ();
 	}
 }
