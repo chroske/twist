@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using UnityEngine.EventSystems;
 
 public class RoomListController : MonoBehaviour {
 	
@@ -75,50 +76,65 @@ public class RoomListController : MonoBehaviour {
 	}
 
 	// Update is called once per frame
+	bool ListReloadFlag = true;
 	void Update () {
 		if(loadIcon.activeSelf){
 			loadIcon.transform.eulerAngles += new Vector3 (0f, 0f, -3f);
 		}
-	}
 
-	public void OnChangedScrollPosition(Vector2 position){
-		if (roomListContentRect.anchoredPosition.y < 0.0f && roomListScrollViewRectTransform.anchoredPosition.y > -240 && !contentScrollStop) {
-			//これなんだっけ
-			roomListScrollRect.elasticity = 0.01f;
-			//自動で戻ってる時は追従させない
-			if(!pullBackScrollAnimationFlag){
+		if (roomListContentRect.anchoredPosition.y < 0.0f && roomListScrollViewRectTransform.anchoredPosition.y > -240) {
+			//if (ListReloadFlag) {
+				//これなんだっけ
+				roomListScrollRect.elasticity = 0.01f;
 				//ContentにScrollRectを追従させる
 				roomListScrollViewRectTransform.anchoredPosition = new Vector2 (0, roomListContentRect.anchoredPosition.y + defaultRoomListScrollViewHeight);
-			}
-			//nodeをContentが移動した分だけ反対に移動させて子の追従を打ち消す
-			nodeGroupRectTransform.anchoredPosition = new Vector2 (0, -roomListContentRect.anchoredPosition.y * 0.99f);
-		} else if(roomListScrollViewRectTransform.anchoredPosition.y < -240 && !contentScrollStop && startListMatcheFlag) {
-			Debug.Log ("contentScrollStop");
-			contentScrollStop = true;
-			//startListMatcheFlag = true;
-			roomListScrollViewRectTransform.anchoredPosition = new Vector2 (0, -240);
-			roomListScrollRect.elasticity = 0.1f;
-		}
-
-		//引っ張ってはなして天井までいってから通信を始める
-		if(contentScrollStop && startListMatcheFlag){
-			if(roomListContentRect.anchoredPosition.y >= -nodeGroupRectTransform.anchoredPosition.y - 1){
-				startListMatcheFlag = false;
-
+				//nodeをContentが移動した分だけ反対に移動させて子の追従を打ち消す
+				nodeGroupRectTransform.anchoredPosition = new Vector2 (0, -roomListContentRect.anchoredPosition.y * 0.9f);
+			//}
+		} else if(roomListScrollViewRectTransform.anchoredPosition.y < -240) {
+			if (ListReloadFlag) {
 				//矢印とローディング
 				loadArrowIcon.SetActive(false);
 				loadIcon.SetActive(true);
 
-				//networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", ListMatcheCallBack);
-				StartCoroutine(PullBackScrollView(null));
+				ListReloadFlag = false;
+				roomListScrollRect.elasticity = 0.07f;
+				roomListScrollViewRectTransform.anchoredPosition = new Vector2 (0, -240);
+				//StartCoroutine (PullBackScrollView (null));
+				networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", ListMatcheCallBack);
+			} else {
+				roomListScrollRect.elasticity = 0.0001f;
+				//ContentにScrollRectを追従させる
+				roomListScrollViewRectTransform.anchoredPosition = new Vector2 (0, roomListContentRect.anchoredPosition.y + defaultRoomListScrollViewHeight);
+				//nodeをContentが移動した分だけ反対に移動させて子の追従を打ち消す
+				nodeGroupRectTransform.anchoredPosition = new Vector2 (0, -roomListContentRect.anchoredPosition.y * 0.95f);
 			}
 		}
 
-
-		if(roomListScrollViewRectTransform.anchoredPosition.y >= -90-1 && !startListMatcheFlag){
-			Debug.Log ("End");
-			startListMatcheFlag = true;
+		if(!ListReloadFlag){
+			if(roomListScrollViewRectTransform.anchoredPosition.y >=  -91){
+				Debug.Log ("End");
+				ListReloadFlag = true;
+			}
 		}
+	}
+		
+	IEnumerator PullBackScrollView(ListMatchResponse matchList){
+		yield return new WaitForSeconds(1);
+		Debug.Log ("PullBackScrollView2");
+		roomListScrollViewRectTransform.anchoredPosition = new Vector2 (roomListScrollViewRectTransform.anchoredPosition.x,-239.0f);
+		roomListScrollRect.StopMovement();
+
+		//GUIで表示メソッド実行
+		if(matchList != null){
+			roomListContent.GetComponent<GenMatchListController>().GenMatchList (matchList);
+		}
+
+		//ひっぱって出てくる矢印とローディング
+		loadArrowIcon.SetActive(true);
+		loadIcon.SetActive(false);
+
+		yield break;
 	}
 
 	private void ListMatcheCallBack(ListMatchResponse matchList){
@@ -128,7 +144,7 @@ public class RoomListController : MonoBehaviour {
 
 
 	private bool pullBackScrollAnimationFlag = false;
-	public IEnumerator PullBackScrollView(ListMatchResponse matchList){
+	public IEnumerator PullBackScrollView2(ListMatchResponse matchList){
 		startListMatcheFlag = false;
 		Debug.Log ("XXXXXXXXXXXXXXXX");
 		yield return new WaitForSeconds(1);
