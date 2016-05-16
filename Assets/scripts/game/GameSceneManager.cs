@@ -130,7 +130,7 @@ public class GameSceneManager : NetworkBehaviour {
 
 	private NetworkManager networkManager;
 	public void StopGame(){
-		networkManager = GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>();
+		networkManager = GameObject.Find("MainCanvas").GetComponent<NetworkLobbyManager>();
 		networkManager.StopHost ();
 	}
 }

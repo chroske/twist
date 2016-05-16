@@ -58,7 +58,8 @@ public class NetworkManagerController : NetworkBehaviour {
 		arrow = GameObject.Find("GameCanvas/Arrow");
 		pullArrow = arrow.GetComponent<PullArrow> ();
 		//networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
-		networkManager = GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>();
+		//networkManager = GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>();
+		networkManager = GameObject.Find("MainCanvas").GetComponent<NetworkLobbyManager>();
 
 		//サーバに初期データセット
 		SetDefaultSyncParam();

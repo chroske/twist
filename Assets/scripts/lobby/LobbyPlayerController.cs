@@ -59,7 +59,8 @@ public class LobbyPlayerController : NetworkBehaviour {
 		if(!setLobbyPlayerNodeFlag){
 			setLobbyPlayerNodeFlag = true;
 
-			GameObject lobbyManager = GameObject.Find("LobbyManager");
+			//GameObject lobbyManager = GameObject.Find("LobbyManager");
+			GameObject lobbyManager = GameObject.Find("MainCanvas");
 			LobbyPlayerListPrefab = lobbyManager.transform.GetComponent<CustomNetworkLobbyManager> ().CreateLobbyPlayerListPrefab(lobbyPlayerName);
 			//ホストのスクロールビューの順番をゲームのユニークIDとして使う
 			playerUniqueId = LobbyPlayerListPrefab.transform.GetSiblingIndex ();
