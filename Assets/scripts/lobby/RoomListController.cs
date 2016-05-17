@@ -107,6 +107,11 @@ public class RoomListController : MonoBehaviour {
 				roomListScrollViewRectTransform.anchoredPosition = new Vector2 (0, scrollViewReloadHeight);
 				//リスト取得通信
 				//StartCoroutine (PullBackScrollView (null));
+
+				if(networkMatch == null){
+					networkManager = LobbyManager.GetComponent<NetworkManager> ();
+					networkMatch = networkManager.matchMaker;
+				}
 				networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", ListMatcheCallBack);
 			} else {
 				//reload通信が終了していれば引き戻す処理

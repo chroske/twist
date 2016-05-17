@@ -11,7 +11,7 @@ public class GameSceneManager : NetworkBehaviour {
 	public GameObject Unit_4;
 	public GameObject arrow;
 	public GameObject turnEndText;
-	public GameObject NetworkManager;
+	private GameObject NetworkManager;
 
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
@@ -128,9 +128,18 @@ public class GameSceneManager : NetworkBehaviour {
 		}
 	}
 
-	private NetworkManager networkManager;
+	private CustomNetworkLobbyManager networkLobbyManager;
 	public void StopGame(){
-		networkManager = GameObject.Find("MainCanvas").GetComponent<NetworkLobbyManager>();
-		networkManager.StopHost ();
+		networkLobbyManager = GameObject.Find("/MainCanvas").GetComponent<CustomNetworkLobbyManager>();
+		networkLobbyManager.SendReturnToLobby ();
+
+		if (networkLobbyManager.isHost) {
+			networkLobbyManager.StopHost();
+		} else {
+			networkLobbyManager.StopClient();
+		}
+		networkLobbyManager.StopMatchMaker();
+
+		networkLobbyManager.SetUpLobby();
 	}
 }

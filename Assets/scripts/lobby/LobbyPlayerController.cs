@@ -60,7 +60,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 			setLobbyPlayerNodeFlag = true;
 
 			//GameObject lobbyManager = GameObject.Find("LobbyManager");
-			GameObject lobbyManager = GameObject.Find("MainCanvas");
+			GameObject lobbyManager = GameObject.Find("/MainCanvas");
 			LobbyPlayerListPrefab = lobbyManager.transform.GetComponent<CustomNetworkLobbyManager> ().CreateLobbyPlayerListPrefab(lobbyPlayerName);
 			//ホストのスクロールビューの順番をゲームのユニークIDとして使う
 			playerUniqueId = LobbyPlayerListPrefab.transform.GetSiblingIndex ();
@@ -72,7 +72,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 	}
 
 	public void ProvideLobbyPlayerNameToServer (){
-		GameObject acountDataManagerObj = GameObject.Find("AccountDataManager");
+		GameObject acountDataManagerObj = GameObject.Find("/MainCanvas/AccountDataManager");
 		AccountDataManager acountDataManager = acountDataManagerObj.GetComponent<AccountDataManager> ();
 		List<UnitStatus> mainPartyList = acountDataManager.partyUnitParamList1;
 		UnitStatus LeaderUnitParam = mainPartyList [0];

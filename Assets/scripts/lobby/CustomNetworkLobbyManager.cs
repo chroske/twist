@@ -13,13 +13,15 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	//private NetworkInstanceId playerNetID;
 	private short playerNetID;
 	private GameObject currentPanel;
-	private bool isHost = false;
 	private int roomListId;
 
 	public GameObject matchPanel1;
 	public GameObject matchPanel2;
 	public GameObject matchPanel3;
 	public GameObject matchPanel4;
+	public GameObject HeaderAndTabbar;
+
+	public bool isHost = false; //ホストかどうか
 
 	[SerializeField]
 	private GameObject lobbyContent;
@@ -65,16 +67,15 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	}
 
 	//マッチの一覧を ListMatches() から取得した場合に実行
-	public override void OnMatchList(ListMatchResponse matchList)
-	{
-		matches = matchList.matches;
-
-		//StartCoroutine (matchPanel3.GetComponent<RoomListController>().PullBackScrollView (matchList));
-	}
+//	public override void OnMatchList(ListMatchResponse matchList)
+//	{
+//		matches = matchList.matches;
+//	}
 
 	//ゲームシーンへ移行時にクライアントで呼び出される
 	public override void OnClientSceneChanged(NetworkConnection conn){
 		currentPanel.SetActive (false);
+		HeaderAndTabbar.SetActive (false);
 		base.OnClientSceneChanged(conn);
 	}
 
@@ -209,4 +210,29 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			Debug.Log("RoomCount=0");
 		}
 	}
+
+	//GameSceneからLobbyに戻った時のPanel設定
+	public void SetUpLobby(){
+		matchPanel2.SetActive (true);
+		HeaderAndTabbar.SetActive (true);
+		currentPanel = matchPanel2;
+	}
+
+
+	private bool inTheGame;
+	public override void OnLobbyClientSceneChanged(NetworkConnection conn){
+		Debug.Log ("OnLobbyClientSceneChanged");
+		if(!inTheGame){
+			inTheGame = true;
+		}
+	}
+
+	public override void OnLobbyStopClient(){
+		Debug.Log ("OnLobbyStopClient");
+		if(inTheGame){
+			inTheGame = false;
+			SetUpLobby ();
+		}
+	}
+
 }
