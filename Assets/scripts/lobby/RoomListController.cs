@@ -151,4 +151,10 @@ public class RoomListController : MonoBehaviour {
 	private void ListMatcheCallBack(ListMatchResponse matchList){
 		StartCoroutine(PullBackScrollView(matchList));
 	}
+
+	public void GenerateMatchList(ListMatchResponse matchList){
+		if(matchList != null){
+			roomListContent.GetComponent<GenMatchListController>().GenMatchList (matchList);
+		}
+	}
 }

@@ -10,10 +10,10 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 {
 	private NetworkMatch networkMatch;
 	private NetworkManager networkManager;
-	//private NetworkInstanceId playerNetID;
 	private short playerNetID;
 	private GameObject currentPanel;
 	private int roomListId;
+	private bool inTheGame; //ゲームシーンにいるかどうか
 
 	public GameObject matchPanel1;
 	public GameObject matchPanel2;
@@ -67,10 +67,10 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	}
 
 	//マッチの一覧を ListMatches() から取得した場合に実行
-//	public override void OnMatchList(ListMatchResponse matchList)
-//	{
-//		matches = matchList.matches;
-//	}
+	public override void OnMatchList(ListMatchResponse matchList)
+	{
+		matches = matchList.matches;
+	}
 
 	//ゲームシーンへ移行時にクライアントで呼び出される
 	public override void OnClientSceneChanged(NetworkConnection conn){
@@ -159,7 +159,8 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	public void GetListMatch(int rank){
 		StartMatchMake ();
 
-		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", networkManager.OnMatchList);
+		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", ListMatchCallBack);
+//		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", networkManager.OnMatchList);
 
 		currentPanel.SetActive (false);
 		matchPanel3.SetActive (true);
@@ -197,6 +198,15 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", ListMatchAndJoinMatchCallBack);
 	}
 
+	private void ListMatchCallBack(ListMatchResponse matchList){
+		matches = matchList.matches;
+		if (networkManager.matches.Count != 0) {
+			matchPanel3.GetComponent<RoomListController> ().GenerateMatchList (matchList);
+		} else {
+			Debug.Log("RoomCount=0");
+		}
+	}
+
 	private void ListMatchAndJoinMatchCallBack(ListMatchResponse matchList){
 		matches = matchList.matches;
 		if (networkManager.matches.Count != 0) {
@@ -218,8 +228,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		currentPanel = matchPanel2;
 	}
 
-
-	private bool inTheGame;
 	public override void OnLobbyClientSceneChanged(NetworkConnection conn){
 		Debug.Log ("OnLobbyClientSceneChanged");
 		if(!inTheGame){
@@ -234,5 +242,4 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			SetUpLobby ();
 		}
 	}
-
 }
