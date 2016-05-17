@@ -98,6 +98,18 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		currentPanel = matchPanel2;
 	}
 
+	public void ExitRoomList(){
+		if(matchPanel3.activeSelf){
+			//ルーム一覧クリア
+			matchPanel3.GetComponent<RoomListController> ().ClearRoomList ();
+
+			currentPanel.SetActive (false);
+			matchPanel2.SetActive (true);
+
+			currentPanel = matchPanel2;
+		}
+	}
+
 	private void OnDisconnected(BasicResponse response)
 	{
 		if (response.success) {
@@ -160,7 +172,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		StartMatchMake ();
 
 		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", ListMatchCallBack);
-//		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", networkManager.OnMatchList);
 
 		currentPanel.SetActive (false);
 		matchPanel3.SetActive (true);

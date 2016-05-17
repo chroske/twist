@@ -29,22 +29,25 @@ public class GenMatchListController: MonoBehaviour {
 
 		for (int i = 0; i < response.matches.Count; ++i)
 		{
-			Debug.Log (response.matches [i].name);
+			//部屋がいっぱいじゃなければ表示する
+			if(response.matches[i].currentSize >= response.matches[i].maxSize){
+				Debug.Log (response.matches[i].name);
 
-			var node = GameObject.Instantiate(scrollViewRoom) as RectTransform;
-			node.SetParent(transform, false);
-			node.GetComponent<MatchListRoomController>().ListId = i;
+				var node = GameObject.Instantiate(scrollViewRoom) as RectTransform;
+				node.SetParent(transform, false);
+				node.GetComponent<MatchListRoomController>().ListId = i;
 
-			var text = node.GetComponentInChildren<Text>();
+				var text = node.GetComponentInChildren<Text>();
 
-			//rank番号とカッコを取り除く
-			string roomName = Regex.Replace(response.matches [i].name, "{.+?}", "");
-			text.text = roomName;
+				//rank番号とカッコを取り除く
+				string roomName = Regex.Replace(response.matches [i].name, "{.+?}", "");
+				text.text = roomName;
+			}
 		}
 	}
 
 	//リストクリア
-	private void RemoveAllListViewItem() {
+	public void RemoveAllListViewItem() {
 		foreach (Transform child in transform) {
 			if(child.GetSiblingIndex() != 0){
 				GameObject.Destroy(child.gameObject);

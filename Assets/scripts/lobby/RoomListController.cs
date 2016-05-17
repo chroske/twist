@@ -157,4 +157,8 @@ public class RoomListController : MonoBehaviour {
 			roomListContent.GetComponent<GenMatchListController>().GenMatchList (matchList);
 		}
 	}
+
+	public void ClearRoomList(){
+		roomListContent.GetComponent<GenMatchListController>().RemoveAllListViewItem ();
+	}
 }
