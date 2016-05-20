@@ -25,9 +25,9 @@ public class RoomListController : MonoBehaviour {
 	[SerializeField]
 	private GameObject LobbyManager;
 
+	private bool listReloadFlag = true; //リロード可能フラグ
 	private NetworkMatch networkMatch;
 	private NetworkManager networkManager;
-	private bool listReloadFlag = true; //リロード可能フラグ
 	private bool listReloadEndFlag = false; //リロード終了確認用フラグ
 	private int scrollViewReloadHeight = -240; //ScrollViewがこのポジション以下まで下がったら更新開始
 	private int scrollViewDefaultHeight = -90; //ScrollViewのデフォルト位置

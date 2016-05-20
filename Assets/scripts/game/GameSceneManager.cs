@@ -109,7 +109,7 @@ public class GameSceneManager : NetworkBehaviour {
 	}
 
 	//ユニットのパラメータとそれに対応するComboEffectをセット
-	public void SetUnitParamatorByNetId(int netId, UnitStatus myUnitParam){
+	public void SetUnitParamatorByNetId(int netId, UnitData myUnitParam){
 		GameObject controllUnit = new GameObject();
 		if (netId == 0) {
 			controllUnit = Unit_1;

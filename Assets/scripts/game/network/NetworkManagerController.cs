@@ -48,8 +48,6 @@ public class NetworkManagerController : NetworkBehaviour {
 	private Transform myTransform;
 	public bool startUnitStopCheckFlag;
 
-
-
 	void Awake () {
 		//自分の名前を取得する時に使う
 		myTransform = transform;
@@ -168,22 +166,24 @@ public class NetworkManagerController : NetworkBehaviour {
 		//MyUnitController myUnitController = myUnit.GetComponent<MyUnitController> ();
 	//	MyUnitController myUnitController = pullArrow.myUnit.GetComponent<MyUnitController> ();
 
-		UnitStatus myUnitParam = new UnitStatus(
-			syncUnitId,
-			syncUnitAttack,
-			syncUnitHitpoint,
-			syncUnitSpeed,
-			syncUnitType,
-			syncUnitLevel,
-			syncUnitCombo,
-			syncUintAbbility_1,
-			syncUintAbbility_2,
-			syncUintAbbility_3,
-			syncUintStrikeShot,
-			syncUintComboType,
-			syncUintComboAttack,
-			syncUintMaxComboNum
-		);
+		Dictionary<string, object> data = new Dictionary<string, object> () {
+			{ "unit_id", syncUnitId },
+			{ "attack", syncUnitAttack },
+			{ "hitPoint", syncUnitHitpoint },
+			{ "speed", syncUnitSpeed },
+			{ "type", syncUnitType },
+			{ "Level", syncUnitLevel },
+			{ "combo", syncUnitCombo },
+			{ "ability_1", syncUintAbbility_1 },
+			{ "ability_2", syncUintAbbility_2 },
+			{ "ability_3", syncUintAbbility_3 },
+			{ "strikeShot", syncUintStrikeShot },
+			{ "comboType", syncUintComboType },
+			{ "comboAttack", syncUintComboAttack },
+			{ "maxComboNum", syncUintMaxComboNum }
+		};
+
+		UnitData myUnitParam = new UnitData(data);
 
 		gameSceneManager.SetUnitParamatorByNetId (syncPlayerNetID, myUnitParam);
 	}

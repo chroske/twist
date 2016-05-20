@@ -168,15 +168,10 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		currentPanel = matchPanel4;
 	}
 
+	//ルームリストパネルに遷移した時にデータ取ってくる処理
 	public void GetListMatch(int rank){
 		StartMatchMake ();
-
 		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", ListMatchCallBack);
-
-		currentPanel.SetActive (false);
-		matchPanel3.SetActive (true);
-
-		currentPanel = matchPanel3;
 	}
 
 	public void JoinListMatch(int ListId){
@@ -216,6 +211,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		} else {
 			Debug.Log("RoomCount=0");
 		}
+		Debug.Log("ListMatchCallBack");
+
+		currentPanel.SetActive (false);
+		matchPanel3.SetActive (true);
+
+		currentPanel = matchPanel3;
 	}
 
 	private void ListMatchAndJoinMatchCallBack(ListMatchResponse matchList){

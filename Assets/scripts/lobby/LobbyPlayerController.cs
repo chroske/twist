@@ -72,12 +72,11 @@ public class LobbyPlayerController : NetworkBehaviour {
 	}
 
 	public void ProvideLobbyPlayerNameToServer (){
-		GameObject acountDataManagerObj = GameObject.Find("/MainCanvas/AccountDataManager");
-		AccountDataManager acountDataManager = acountDataManagerObj.GetComponent<AccountDataManager> ();
-		List<UnitStatus> mainPartyList = acountDataManager.partyUnitParamList1;
-		UnitStatus LeaderUnitParam = mainPartyList [0];
+		GameStateManager gameStateManager = GameObject.Find("/MainCanvas/GameStateManager").GetComponent<GameStateManager> ();
+		List<OwnedUnitData> mainPartyList = gameStateManager.partyUnitList1;
+		OwnedUnitData LeaderUnitParam = mainPartyList [0];
 
-		CmdProvideLobbyPlayerDataToServer(acountDataManager.AccountName, LeaderUnitParam.unit_id, LeaderUnitParam.attack, LeaderUnitParam.hitPoint, LeaderUnitParam.speed, LeaderUnitParam.type, LeaderUnitParam.Level, LeaderUnitParam.combo, LeaderUnitParam.ability_1, LeaderUnitParam.ability_2, LeaderUnitParam.ability_3, LeaderUnitParam.strikeShot, LeaderUnitParam.comboType, LeaderUnitParam.comboAttack, LeaderUnitParam.maxComboNum);
+		CmdProvideLobbyPlayerDataToServer(gameStateManager.AccountName, LeaderUnitParam.unit_id, LeaderUnitParam.attack, LeaderUnitParam.hitPoint, LeaderUnitParam.speed, LeaderUnitParam.type, LeaderUnitParam.Level, LeaderUnitParam.combo, LeaderUnitParam.ability_1, LeaderUnitParam.ability_2, LeaderUnitParam.ability_3, LeaderUnitParam.strikeShot, LeaderUnitParam.comboType, LeaderUnitParam.comboAttack, LeaderUnitParam.maxComboNum);
 	}
 
 	[Command]

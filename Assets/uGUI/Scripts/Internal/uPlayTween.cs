@@ -51,7 +51,8 @@ namespace uTools {
 		/// <summary>
 		/// Play this instance.
 		/// </summary>
-		private void Play() {
+//		private void Play() {
+		public void Play() {
             if (playDirection == Direction.Toggle)
             {
 				foreach (var item in mTweeners) {
