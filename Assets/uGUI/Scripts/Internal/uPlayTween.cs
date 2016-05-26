@@ -18,7 +18,12 @@ namespace uTools {
 		void Start () {
 			if (tweenTarget == null) {
 				tweenTarget = gameObject;
-			}		
+			}
+			mTweeners = inCludeChildren? tweenTarget.GetComponentsInChildren<uTweener>() : tweenTarget.GetComponents<uTweener>();
+		}
+
+		public void ChangeTweenTarget(GameObject newTarget){
+			tweenTarget = newTarget;
 			mTweeners = inCludeChildren? tweenTarget.GetComponentsInChildren<uTweener>() : tweenTarget.GetComponents<uTweener>();
 		}
 

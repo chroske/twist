@@ -7,13 +7,17 @@ public class UnitListNodeController : MonoBehaviour {
 
 	public int unitId;
 	public OwnedUnitListController ownedUnitListController;
+	public GameObject UnitDetailPanel;
 
 	public void OnClickUnitListNode(){
 		if (ownedUnitListController.fromPanelName == "PartyEdit") {
 
 		} else if (ownedUnitListController.fromPanelName == "Top") {
-			ownedUnitListController.detailPanel.SetActive (true);
+			ownedUnitListController.GotoUnitDetailPanel(unitId);
+			UnitDetailPanel.SetActive (true);
 		}
+//		ownedUnitListController.GotoUnitDetailPanel(unitId);
+//		UnitDetailPanel.SetActive (true);
 	}
 
 	// Use this for initialization

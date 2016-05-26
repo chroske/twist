@@ -14,7 +14,11 @@ public class PartyUnitListController : MonoBehaviour {
 	[SerializeField]
 	GameObject content;
 
+	[SerializeField]
+	NavigationBarController navigationBar;
+
 	public GameObject unitPanelList;
+	public GameObject fromPanel;
 
 	// Use this for initialization
 	void Start () {
@@ -25,7 +29,6 @@ public class PartyUnitListController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
 	}
 
 	void GenPartyUnitList(List<OwnedUnitData> partyUnitList){
@@ -54,6 +57,15 @@ public class PartyUnitListController : MonoBehaviour {
 			if(child.GetSiblingIndex() != 0){
 				GameObject.Destroy(child.gameObject);
 			}
+		}
+	}
+
+	//遷移アニメーション終了時に呼び出される
+	public void AnimationEnd(){
+		if (this.gameObject.GetComponent<RectTransform>().anchoredPosition.x == 0) {
+			navigationBar.ChangeTweenPanel (this.gameObject);
+		} else {
+			navigationBar.RollBackTweenPanel ();
 		}
 	}
 }

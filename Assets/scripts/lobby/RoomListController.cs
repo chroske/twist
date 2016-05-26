@@ -25,12 +25,12 @@ public class RoomListController : MonoBehaviour {
 	[SerializeField]
 	private GameObject LobbyManager;
 
-	private bool listReloadFlag = true; //リロード可能フラグ
 	private NetworkMatch networkMatch;
 	private NetworkManager networkManager;
+	private bool listReloadFlag = true; //リロード可能フラグ
 	private bool listReloadEndFlag = false; //リロード終了確認用フラグ
-	private int scrollViewReloadHeight = -240; //ScrollViewがこのポジション以下まで下がったら更新開始
-	private int scrollViewDefaultHeight = -90; //ScrollViewのデフォルト位置
+	private int scrollViewReloadHeight = -150; //ScrollViewがこのポジション以下まで下がったら更新開始
+	private int scrollViewDefaultHeight = 0; //ScrollViewのデフォルト位置
 	private float nodeGroupMoveRate = 0.80f; //戻るはやさに関係する
 	private float scrollRectDefaultElasticity;
 	private float pullBackscrollRectElasticity = 0.01f;
@@ -84,6 +84,7 @@ public class RoomListController : MonoBehaviour {
 		if(loadIcon.activeSelf){
 			loadIcon.transform.eulerAngles += new Vector3 (0f, 0f, -8f);
 		}
+
 
 		if (roomListContentRect.anchoredPosition.y < 0.0f && roomListScrollViewRectTransform.anchoredPosition.y > scrollViewReloadHeight) {
 			//ScrollViewのポジションが下がっているので戻る速度をあげてすばやく上にひっぱり戻す

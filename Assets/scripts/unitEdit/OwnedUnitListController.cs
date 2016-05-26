@@ -14,8 +14,20 @@ public class OwnedUnitListController : MonoBehaviour {
 	[SerializeField]
 	GameObject content;
 
-	public GameObject detailPanel;
+	[SerializeField]
+	GameObject backPanelButton;
+
+	[SerializeField]
+	NavigationBarController navigationBar;
+
+	[SerializeField]
+	GameObject UnitDetailPanel;
+
+	[SerializeField]
+	UnitDetailController unitDetailController;
+
 	public string fromPanelName;
+	public GameObject fromPanel;
 
 	// Use this for initialization
 	void Start () {
@@ -26,7 +38,10 @@ public class OwnedUnitListController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	}
+
+	public void GotoUnitDetailPanel(int unitId){
+		unitDetailController.unitId = unitId;
 	}
 
 	void GenOwnedUnitList(List<OwnedUnitData> ownedUnitList){
@@ -38,10 +53,10 @@ public class OwnedUnitListController : MonoBehaviour {
 			node.SetParent(content.transform, false);
 			UnitListNodeController unitListNodeController = node.GetComponent<UnitListNodeController> ();
 			unitListNodeController.unitId = ownedUnitData.unit_id;
+			unitListNodeController.UnitDetailPanel = UnitDetailPanel;
 			unitListNodeController.ownedUnitListController = this;
 
-			uTools.uPlayTween uPlayTween = node.GetComponent<uTools.uPlayTween> ();
-			uPlayTween.tweenTarget = detailPanel;
+			unitListNodeController.GetComponent<uTools.uPlayTween> ().ChangeTweenTarget (UnitDetailPanel);
 
 			var text = node.GetComponentInChildren<Text>();
 
@@ -56,6 +71,15 @@ public class OwnedUnitListController : MonoBehaviour {
 			if(child.GetSiblingIndex() != 0){
 				GameObject.Destroy(child.gameObject);
 			}
+		}
+	}
+
+	//遷移アニメーション終了時に呼び出される
+	public void AnimationEnd(){
+		if (this.gameObject.GetComponent<RectTransform>().anchoredPosition.x == 0) {
+			navigationBar.ChangeTweenPanel (this.gameObject);
+		} else {
+			navigationBar.RollBackTweenPanel ();
 		}
 	}
 }
