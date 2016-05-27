@@ -106,7 +106,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 199066}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d26d9efb2704cb5439ec7d38bbab652f, type: 3}
   m_Name: 
@@ -160,8 +160,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ecdaa2bd5bb44557ba1f70df3b1fae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitId: 0
+  playTween: {fileID: 11450506}
   ownedUnitListController: {fileID: 0}
+  unitId: 0
 --- !u!114 &11476264
 MonoBehaviour:
   m_ObjectHideFlags: 1

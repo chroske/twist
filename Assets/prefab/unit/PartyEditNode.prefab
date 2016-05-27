@@ -83,7 +83,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitId: 0
-  partyUnitListController: {fileID: 0}
+  partyId: 0
+  ownedUnitPanelList: {fileID: 0}
 --- !u!114 &11424564
 MonoBehaviour:
   m_ObjectHideFlags: 1
