@@ -15,15 +15,6 @@ public class UnitPanelTopController : MonoBehaviour {
 	private uTools.uTweenPosition uTweenPosition;
 	public GameObject fromPanel;
 
-	// Use this for initialization
-	void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	public void OnClickEditPanelNode(){
 		PartyUnitListController partyUnitListController = PartyEditPanel.GetComponent<PartyUnitListController> ();
 		partyUnitListController.fromPanel = this.gameObject;
@@ -36,8 +27,7 @@ public class UnitPanelTopController : MonoBehaviour {
 
 	public void OnClickUnitListPanelNode(){
 		OwnedUnitListController ownedUnitListController = UnitListPanel.GetComponent<OwnedUnitListController> ();
-		ownedUnitListController.fromPanelName = "Top";
-		ownedUnitListController.fromPanel = this.gameObject;
+		ownedUnitListController.ownedUnitListMode = "Detail";
 		UnitListPanel.SetActive (true);
 	}
 

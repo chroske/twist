@@ -3,30 +3,30 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 
+//このクラスでUnitの情報を持つ
 public class UnitListNodeController : MonoBehaviour {
+	[SerializeField]
+	uTools.uPlayTween playTween;
 
-	public int unitId;
 	public OwnedUnitListController ownedUnitListController;
-	public GameObject UnitDetailPanel;
+	public int unitId;
+
+	void Start(){
+		playTween = GetComponent<uTools.uPlayTween> ();
+	}
 
 	public void OnClickUnitListNode(){
-		if (ownedUnitListController.fromPanelName == "PartyEdit") {
+		playTween.ChangeTweenTarget(ownedUnitListController.nextPanelObj);
+		ownedUnitListController.nextPanelObj.SetActive (true);
 
-		} else if (ownedUnitListController.fromPanelName == "Top") {
+		if (ownedUnitListController.ownedUnitListMode == "PartyEdit") {
+			//パーティパネルに情報送る(通信が必要なのでコールバックで実行かも
+			ownedUnitListController.SetPartyUnit(unitId);
+		} else if (ownedUnitListController.ownedUnitListMode == "Detail") {
+			//ユニット詳細パネルに情報送る(情報をとってくる必要あり？
 			ownedUnitListController.GotoUnitDetailPanel(unitId);
-			UnitDetailPanel.SetActive (true);
 		}
-//		ownedUnitListController.GotoUnitDetailPanel(unitId);
-//		UnitDetailPanel.SetActive (true);
-	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+		//画面遷移アニメーション開始
+		playTween.Play ();
 	}
 }

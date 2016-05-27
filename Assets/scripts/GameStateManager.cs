@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GameStateManager : MonoBehaviour {
 	//test data
@@ -22,18 +23,21 @@ public class GameStateManager : MonoBehaviour {
 
 	public int AccountId;
 	public string AccountName;
-	public List<OwnedUnitData> partyUnitList1 = new List<OwnedUnitData>();//パーティユニットリスト
+	public List<OwnedUnitData> partyUnitList = new List<OwnedUnitData>();//パーティユニットリスト
 	public List<OwnedUnitData> ownedUnitList = new List<OwnedUnitData>();//所持ユニットリスト
+
+	public Dictionary<int,OwnedUnitData> ownedUnitDic = new Dictionary<int,OwnedUnitData> ();
+	public Dictionary<int,OwnedUnitData> partyUnitDic = new Dictionary<int,OwnedUnitData> ();
 
 	// Use this for initialization
 	void Start () {
 		//本来はサーバから取得して格納すべきだろうか
 		//ローカルでやるならセーブメモリから取得
 		Dictionary<string, object> data1 = new Dictionary<string, object> () {
-			{ "unit_id", test_uint_id },
+			{ "unit_id", 1 },
 			{ "unit_acount_id", "ninja01" },
 			{ "unit_name", "ニンジャ1" },
-			{ "partyNum", 1 },
+			{ "party_id", 1 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
 			{ "speed", test_uint_speed },
@@ -49,10 +53,10 @@ public class GameStateManager : MonoBehaviour {
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
 		Dictionary<string, object> data2 = new Dictionary<string, object> () {
-			{ "unit_id", test_uint_id },
+			{ "unit_id", 2 },
 			{ "unit_acount_id", "ninja02" },
 			{ "unit_name", "ニンジャ2" },
-			{ "partyNum", 2 },
+			{ "party_id", 2 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
 			{ "speed", test_uint_speed },
@@ -68,10 +72,10 @@ public class GameStateManager : MonoBehaviour {
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
 		Dictionary<string, object> data3 = new Dictionary<string, object> () {
-			{ "unit_id", test_uint_id },
+			{ "unit_id", 3 },
 			{ "unit_acount_id", "ninja03" },
 			{ "unit_name", "ニンジャ3" },
-			{ "partyNum", 3 },
+			{ "party_id", 3 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
 			{ "speed", test_uint_speed },
@@ -87,10 +91,10 @@ public class GameStateManager : MonoBehaviour {
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
 		Dictionary<string, object> data4 = new Dictionary<string, object> () {
-			{ "unit_id", test_uint_id },
+			{ "unit_id", 4 },
 			{ "unit_acount_id", "ninja04" },
 			{ "unit_name", "ニンジャ4" },
-			{ "partyNum", 4 },
+			{ "party_id", 4 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
 			{ "speed", test_uint_speed },
@@ -106,10 +110,10 @@ public class GameStateManager : MonoBehaviour {
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
 		Dictionary<string, object> data5 = new Dictionary<string, object> () {
-			{ "unit_id", test_uint_id },
+			{ "unit_id", 5 },
 			{ "unit_acount_id", "ninja05" },
 			{ "unit_name", "ニンジャ5" },
-			{ "partyNum", 0 },
+			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
 			{ "speed", test_uint_speed },
@@ -130,12 +134,49 @@ public class GameStateManager : MonoBehaviour {
 		ownedUnitList.Add(new OwnedUnitData(data4));
 		ownedUnitList.Add(new OwnedUnitData(data5));
 
-		foreach(OwnedUnitData UnitData in ownedUnitList)
+		ownedUnitDic.Add(new OwnedUnitData(data1).unit_id, new OwnedUnitData(data1));
+		ownedUnitDic.Add(new OwnedUnitData(data2).unit_id, new OwnedUnitData(data2));
+		ownedUnitDic.Add(new OwnedUnitData(data3).unit_id, new OwnedUnitData(data3));
+		ownedUnitDic.Add(new OwnedUnitData(data4).unit_id, new OwnedUnitData(data4));
+		ownedUnitDic.Add(new OwnedUnitData(data5).unit_id, new OwnedUnitData(data5));
+
+		foreach(KeyValuePair<int, OwnedUnitData> UnitDataPair in ownedUnitDic)
 		{
-			if(UnitData.partyNum != 0){
-				partyUnitList1.Add(UnitData);
+			if(UnitDataPair.Value.party_id != 0){
+				partyUnitList.Add(UnitDataPair.Value);
+				partyUnitDic.Add (UnitDataPair.Value.unit_id, UnitDataPair.Value);
 			}
 		}
+
+		//party_idでソート
+		partyUnitDic = SortPartyUnitDicByPartyId (partyUnitDic);
+	}
+
+	public void ResetPartyDic(){
+		//初期化してから
+		partyUnitDic = new Dictionary<int,OwnedUnitData> ();
+		partyUnitList = new List<OwnedUnitData> ();
+		foreach(KeyValuePair<int, OwnedUnitData> UnitDataPair in ownedUnitDic)
+		{
+			if(UnitDataPair.Value.party_id != 0){
+				partyUnitDic.Add (UnitDataPair.Value.unit_id, UnitDataPair.Value);
+			}
+		}
+
+		//party_idでソート
+		partyUnitDic = SortPartyUnitDicByPartyId (partyUnitDic);
+	}
+
+	//party_idでソート
+	private Dictionary<int,OwnedUnitData> SortPartyUnitDicByPartyId(Dictionary<int,OwnedUnitData> partyUnitDic_Before){
+		Dictionary<int,OwnedUnitData> partyUnitDic_After = new Dictionary<int,OwnedUnitData> ();
+		var vs2 = partyUnitDic_Before.OrderBy((x) => x.Value.party_id);
+		foreach (var v in vs2)
+		{
+			partyUnitDic_After.Add (v.Key, v.Value);
+		}
+
+		return partyUnitDic_After;
 	}
 		
 	// Update is called once per frame

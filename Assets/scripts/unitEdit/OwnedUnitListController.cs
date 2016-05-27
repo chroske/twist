@@ -26,42 +26,56 @@ public class OwnedUnitListController : MonoBehaviour {
 	[SerializeField]
 	UnitDetailController unitDetailController;
 
-	public string fromPanelName;
-	public GameObject fromPanel;
+	[SerializeField]
+	GameStateManager gameStateManager;
+
+	[SerializeField]
+	PartyUnitListController partyUnitListController;
+
+	public GameObject nextPanelObj;
+	public string ownedUnitListMode;
+	public int selectPartyChangeUnitId;
 
 	// Use this for initialization
 	void Start () {
-		GameStateManager gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
-		List<OwnedUnitData> ownedUnitList = gameStateManager.ownedUnitList;
-		GenOwnedUnitList (ownedUnitList);
-	}
-	
-	// Update is called once per frame
-	void Update () {
+		//GameStateManager gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
+		Dictionary<int, OwnedUnitData> ownedUnitDic = gameStateManager.ownedUnitDic;
+		GenOwnedUnitList (ownedUnitDic);
 	}
 
 	public void GotoUnitDetailPanel(int unitId){
 		unitDetailController.unitId = unitId;
 	}
 
-	void GenOwnedUnitList(List<OwnedUnitData> ownedUnitList){
+	public void SetPartyUnit(int unitId){
+		gameStateManager.ownedUnitDic[unitId].party_id = gameStateManager.partyUnitDic[selectPartyChangeUnitId].party_id;
+		gameStateManager.ownedUnitDic[selectPartyChangeUnitId].party_id = 0;
+		//party_idを入れ替えたのでpartyDic再生成
+		gameStateManager.ResetPartyDic ();
+
+		partyUnitListController.ReloadPartyUnitList ();
+	}
+
+	void GenOwnedUnitList(Dictionary<int, OwnedUnitData> ownedUnitDic){
 		//リストをクリア
 		RemoveAllListViewItem ();
 
-		foreach(OwnedUnitData ownedUnitData in ownedUnitList){
+		//foreach(OwnedUnitData ownedUnitData in ownedUnitList){
+		foreach(KeyValuePair<int, OwnedUnitData> ownedUnitDataPair in ownedUnitDic){
 			var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
 			node.SetParent(content.transform, false);
 			UnitListNodeController unitListNodeController = node.GetComponent<UnitListNodeController> ();
-			unitListNodeController.unitId = ownedUnitData.unit_id;
-			unitListNodeController.UnitDetailPanel = UnitDetailPanel;
+			//unitListNodeController.unitId = ownedUnitData.unit_id;
+			unitListNodeController.unitId = ownedUnitDataPair.Value.unit_id;
 			unitListNodeController.ownedUnitListController = this;
+			SetNextPanelObj ();
 
 			unitListNodeController.GetComponent<uTools.uPlayTween> ().ChangeTweenTarget (UnitDetailPanel);
 
 			var text = node.GetComponentInChildren<Text>();
 
 			//rank番号とカッコを取り除く
-			text.text = ownedUnitData.unit_name;
+			text.text = ownedUnitDataPair.Value.unit_name;
 		}
 	}
 		
@@ -78,8 +92,17 @@ public class OwnedUnitListController : MonoBehaviour {
 	public void AnimationEnd(){
 		if (this.gameObject.GetComponent<RectTransform>().anchoredPosition.x == 0) {
 			navigationBar.ChangeTweenPanel (this.gameObject);
+			SetNextPanelObj ();
 		} else {
 			navigationBar.RollBackTweenPanel ();
+		}
+	}
+
+	private void SetNextPanelObj(){
+		if(ownedUnitListMode == "PartyEdit"){
+			nextPanelObj = this.gameObject;
+		} else if(ownedUnitListMode == "Detail"){
+			nextPanelObj = UnitDetailPanel;
 		}
 	}
 }

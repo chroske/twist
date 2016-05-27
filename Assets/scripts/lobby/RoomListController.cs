@@ -72,6 +72,11 @@ public class RoomListController : MonoBehaviour {
 		}
 	}
 
+	void Awake(){
+		//60fps
+		Application.targetFrameRate = 60;
+	}
+		
 	//メソッド
 	void Start () {
 		networkManager = LobbyManager.GetComponent<NetworkManager> ();
@@ -84,7 +89,6 @@ public class RoomListController : MonoBehaviour {
 		if(loadIcon.activeSelf){
 			loadIcon.transform.eulerAngles += new Vector3 (0f, 0f, -8f);
 		}
-
 
 		if (roomListContentRect.anchoredPosition.y < 0.0f && roomListScrollViewRectTransform.anchoredPosition.y > scrollViewReloadHeight) {
 			//ScrollViewのポジションが下がっているので戻る速度をあげてすばやく上にひっぱり戻す

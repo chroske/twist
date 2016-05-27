@@ -9,7 +9,7 @@ public class PartyUnitListController : MonoBehaviour {
 	RectTransform scrollViewNode;
 
 	[SerializeField]
-	GameObject gameStateManagerObj;
+	GameStateManager gameStateManager;
 
 	[SerializeField]
 	GameObject content;
@@ -17,54 +17,68 @@ public class PartyUnitListController : MonoBehaviour {
 	[SerializeField]
 	NavigationBarController navigationBar;
 
-	public GameObject unitPanelList;
+	public GameObject ownedUnitPanelList;
 	public GameObject fromPanel;
+
+	private Dictionary<int, OwnedUnitData> partyUnitDic = new Dictionary<int, OwnedUnitData> ();
 
 	// Use this for initialization
 	void Start () {
-		GameStateManager gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
-		List<OwnedUnitData> partyUnitList = gameStateManager.partyUnitList1;
-		GenPartyUnitList (partyUnitList);
+		//GameStateManager gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
+		//List<OwnedUnitData> partyUnitList = gameStateManager.partyUnitList1;
+		GenPartyUnitList (gameStateManager.partyUnitDic);
 	}
 
-	// Update is called once per frame
-	void Update () {
-	}
-
-	void GenPartyUnitList(List<OwnedUnitData> partyUnitList){
+	void GenPartyUnitList(Dictionary<int, OwnedUnitData> partyUnitDic){
 		//リストをクリア
 		RemoveAllListViewItem ();
 
-		foreach(OwnedUnitData ownedUnitData in partyUnitList){
+		//foreach(OwnedUnitData ownedUnitData in partyUnitList){
+		foreach(KeyValuePair<int, OwnedUnitData> partyUnitDataPair in partyUnitDic){
 			var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
 			node.SetParent(content.transform, false);
+			//node.GetComponent<Button> ().onClick.AddListener (() => OnClickUnitListNode());
+
 			PartyUnitListNodeController partyUnitListNodeController = node.GetComponent<PartyUnitListNodeController> ();
-			partyUnitListNodeController.partyUnitListController = this;
+			partyUnitListNodeController.unitId = partyUnitDataPair.Value.unit_id;
+			partyUnitListNodeController.partyId = partyUnitDataPair.Value.party_id;
+			partyUnitListNodeController.ownedUnitPanelList = ownedUnitPanelList;
 
 			uTools.uPlayTween uPlayTween = node.GetComponent<uTools.uPlayTween> ();
-			uPlayTween.tweenTarget = unitPanelList;
+			uPlayTween.tweenTarget = ownedUnitPanelList;
 
 			var text = node.GetComponentInChildren<Text>();
 
 			//rank番号とカッコを取り除く
-			text.text = ownedUnitData.unit_name;
+			text.text = partyUnitDataPair.Value.unit_name;
 		}
 	}
+
+//	public void OnClickUnitListNode(){
+//		ownedUnitPanelList.SetActive (true);
+//		OwnedUnitListController ownedUnitListController = ownedUnitPanelList.GetComponent<OwnedUnitListController> ();
+//		ownedUnitListController.ownedUnitListMode = "PartyEdit";
+//		ownedUnitListController.selectPartyChangeUnitId ;
+//	}
 
 	//リストクリア
 	public void RemoveAllListViewItem() {
 		foreach (Transform child in content.transform) {
-			if(child.GetSiblingIndex() != 0){
-				GameObject.Destroy(child.gameObject);
-			}
+			GameObject.Destroy(child.gameObject);
 		}
+	}
+
+	//リスト更新
+	public void ReloadPartyUnitList(){
+		//変更があったらリスト再生成
+		GenPartyUnitList (gameStateManager.partyUnitDic);
 	}
 
 	//遷移アニメーション終了時に呼び出される
 	public void AnimationEnd(){
-		if (this.gameObject.GetComponent<RectTransform>().anchoredPosition.x == 0) {
+		if (this.gameObject.GetComponent<RectTransform>().anchoredPosition.x == 0) { //戻った時
 			navigationBar.ChangeTweenPanel (this.gameObject);
-		} else {
+		} else { //画面外に移動した時
 			navigationBar.RollBackTweenPanel ();
 		}
 	}

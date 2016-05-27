@@ -12,19 +12,11 @@ public class NavigationBarController : MonoBehaviour {
 
 	public List<GameObject> panelList = new List<GameObject> ();
 
-	// Use this for initialization
-	void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	public void ChangeTweenPanel(GameObject panel){
 		//currentPanel = newCurrentpanel;
 		playTween.ChangeTweenTarget(panel);
 		panelList.Add (panel);
+		//backボタンを出す
 		BackPanelButton.SetActive(true);
 	}
 
@@ -36,6 +28,5 @@ public class NavigationBarController : MonoBehaviour {
 			//backボタン消す
 			BackPanelButton.SetActive(false);
 		}
-
 	}
 }

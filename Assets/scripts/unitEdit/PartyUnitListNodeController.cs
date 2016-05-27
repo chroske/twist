@@ -4,9 +4,14 @@ using System.Collections;
 public class PartyUnitListNodeController : MonoBehaviour {
 
 	public int unitId;
-	public PartyUnitListController partyUnitListController;
+	public int partyId;
+
+	public GameObject ownedUnitPanelList;
 
 	public void OnClickUnitListNode(){
-		partyUnitListController.unitPanelList.SetActive (true);
+		ownedUnitPanelList.SetActive (true);
+		OwnedUnitListController ownedUnitListController = ownedUnitPanelList.GetComponent<OwnedUnitListController> ();
+		ownedUnitListController.ownedUnitListMode = "PartyEdit";
+		ownedUnitListController.selectPartyChangeUnitId = unitId;
 	}
 }

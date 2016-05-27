@@ -14,14 +14,6 @@ public class LobbyTopPanelController : MonoBehaviour {
 		customNetworkLobbyManager = LobbyManager.GetComponent<CustomNetworkLobbyManager> ();
 	}
 
-//	public void OnStartMatchMakeButton(){
-//		customNetworkLobbyManager.StartMatchMakeAction();
-//	}
-//
-//	public void OnStopMatchMakeButton(){
-//		customNetworkLobbyManager.StopMatchMake ();
-//	}
-
 	public void OnCreateMatchButton(){
 		customNetworkLobbyManager.CreateMatch ();
 	}

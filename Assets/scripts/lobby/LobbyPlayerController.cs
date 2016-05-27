@@ -73,7 +73,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 
 	public void ProvideLobbyPlayerNameToServer (){
 		GameStateManager gameStateManager = GameObject.Find("/MainCanvas/GameStateManager").GetComponent<GameStateManager> ();
-		List<OwnedUnitData> mainPartyList = gameStateManager.partyUnitList1;
+		List<OwnedUnitData> mainPartyList = gameStateManager.partyUnitList;
 		OwnedUnitData LeaderUnitParam = mainPartyList [0];
 
 		CmdProvideLobbyPlayerDataToServer(gameStateManager.AccountName, LeaderUnitParam.unit_id, LeaderUnitParam.attack, LeaderUnitParam.hitPoint, LeaderUnitParam.speed, LeaderUnitParam.type, LeaderUnitParam.Level, LeaderUnitParam.combo, LeaderUnitParam.ability_1, LeaderUnitParam.ability_2, LeaderUnitParam.ability_3, LeaderUnitParam.strikeShot, LeaderUnitParam.comboType, LeaderUnitParam.comboAttack, LeaderUnitParam.maxComboNum);

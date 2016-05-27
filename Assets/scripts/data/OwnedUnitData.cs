@@ -8,7 +8,7 @@ public class OwnedUnitData : MonoBehaviour {
 	public int unit_id;
 	public string unit_acount_id;
 	public string unit_name;
-	public int partyNum; //0=パーティ以外 1~4=パーティ
+	public int party_id; //0=パーティ以外 1~4=パーティ
 	public int attack;
 	public int hitPoint;
 	public float speed;
@@ -29,7 +29,7 @@ public class OwnedUnitData : MonoBehaviour {
 		unit_id = (int)data["unit_id"];
 		unit_acount_id = data["unit_acount_id"].ToString();
 		unit_name = data["unit_name"].ToString();
-		partyNum = (int)data["partyNum"];
+		party_id = (int)data["party_id"];
 		attack = (int)data["attack"];
 		hitPoint = (int)data["hitPoint"];
 		speed = (float)data["speed"];
