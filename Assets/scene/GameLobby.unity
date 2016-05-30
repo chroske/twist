@@ -1457,7 +1457,6 @@ MonoBehaviour:
   content: {fileID: 1781704642}
   navigationBar: {fileID: 1026837217}
   ownedUnitListPanel: {fileID: 643476879}
-  fromPanel: {fileID: 0}
 --- !u!1 &256778171
 GameObject:
   m_ObjectHideFlags: 0
@@ -1650,6 +1649,26 @@ Prefab:
     - target: {fileID: 22446520, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22470288, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11468394, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 11482908, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
+      propertyPath: m_PreferredWidth
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482908, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
+      propertyPath: m_MinHeight
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482908, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
+      propertyPath: m_PreferredHeight
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
@@ -2272,7 +2291,6 @@ MonoBehaviour:
   UnitListPanel: {fileID: 643476879}
   UnitRemovePanel: {fileID: 0}
   backPanelButton: {fileID: 1117540003}
-  fromPanel: {fileID: 0}
 --- !u!1 &420653392
 GameObject:
   m_ObjectHideFlags: 0
@@ -2879,8 +2897,6 @@ MonoBehaviour:
   test_uint_maxComboNum: 1
   AccountId: 1
   AccountName: NINJA
-  partyUnitList: []
-  ownedUnitList: []
 --- !u!4 &492227633
 Transform:
   m_ObjectHideFlags: 0
@@ -10534,7 +10550,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 7.5000167, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: -15, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1965105838

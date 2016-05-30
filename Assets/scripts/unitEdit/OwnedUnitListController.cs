@@ -4,34 +4,24 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class OwnedUnitListController : MonoBehaviour {
-
 	[SerializeField]
 	RectTransform scrollViewNode;
-
 	[SerializeField]
 	GameObject gameStateManagerObj;
-
 	[SerializeField]
 	GameObject content;
-
 	[SerializeField]
 	GameObject backPanelButton;
-
 	[SerializeField]
 	NavigationBarController navigationBar;
-
 	[SerializeField]
 	GameObject UnitDetailPanel;
-
 	[SerializeField]
 	UnitDetailController unitDetailController;
-
 	[SerializeField]
 	GameStateManager gameStateManager;
-
 	[SerializeField]
 	PartyUnitListController partyUnitListController;
-
 	[SerializeField]
 	GameObject RemoveUnitOnPartyButton;
 
@@ -78,7 +68,6 @@ public class OwnedUnitListController : MonoBehaviour {
 		//リストをクリア
 		RemoveAllListViewItem ();
 
-		//foreach(OwnedUnitData ownedUnitData in ownedUnitList){
 		foreach(KeyValuePair<int, OwnedUnitData> ownedUnitDataPair in ownedUnitDic){
 			var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
 			node.SetParent(content.transform, false);
@@ -92,9 +81,7 @@ public class OwnedUnitListController : MonoBehaviour {
 			//rank番号とカッコを取り除く
 			text.text = ownedUnitDataPair.Value.unit_name;
 		}
-
 		CheckPartyInUnit ();
-
 	}
 		
 	//リストクリア
@@ -136,7 +123,6 @@ public class OwnedUnitListController : MonoBehaviour {
 						child.transform.GetComponent<Button> ().interactable = true;
 					}
 				}
-
 				RemoveUnitOnPartyButton.SetActive (true);
 			} else {
 				child.transform.GetComponent<Button> ().interactable = true;

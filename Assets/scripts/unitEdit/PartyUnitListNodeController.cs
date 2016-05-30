@@ -2,10 +2,8 @@
 using System.Collections;
 
 public class PartyUnitListNodeController : MonoBehaviour {
-
 	public int unitId;
 	public int partyId;
-
 	public GameObject ownedUnitListPanel;
 
 	public void OnClickUnitListNode(){

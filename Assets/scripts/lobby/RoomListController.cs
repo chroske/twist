@@ -6,22 +6,16 @@ using UnityEngine.Networking.Match;
 using UnityEngine.EventSystems;
 
 public class RoomListController : MonoBehaviour {
-	
 	[SerializeField]
 	private GameObject roomListContent;
-
 	[SerializeField]
 	private GameObject roomListScrollView;
-
 	[SerializeField]
 	private GameObject nodeGroup;
-
 	[SerializeField]
 	private GameObject loadIcon;
-
 	[SerializeField]
 	private GameObject loadArrowIcon;
-
 	[SerializeField]
 	private GameObject LobbyManager;
 
@@ -111,7 +105,7 @@ public class RoomListController : MonoBehaviour {
 				//ズレるので決め打ちで値を入れておく
 				roomListScrollViewRectTransform.anchoredPosition = new Vector2 (0, scrollViewReloadHeight);
 				//リスト取得通信
-				//StartCoroutine (PullBackScrollView (null));
+//				StartCoroutine (PullBackScrollView (null));
 
 				if(networkMatch == null){
 					networkManager = LobbyManager.GetComponent<NetworkManager> ();

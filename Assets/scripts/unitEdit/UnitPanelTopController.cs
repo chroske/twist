@@ -5,19 +5,21 @@ public class UnitPanelTopController : MonoBehaviour {
 	
 	[SerializeField]
 	private NavigationBarController navigationBar;
-
-	public GameObject PartyEditPanel;
-	public GameObject PoworUpPanel;
-	public GameObject UnitListPanel;
-	public GameObject UnitRemovePanel;
-	public GameObject backPanelButton;
+	[SerializeField]
+	private GameObject PartyEditPanel;
+	[SerializeField]
+	private GameObject PoworUpPanel;
+	[SerializeField]
+	private GameObject UnitListPanel;
+	[SerializeField]
+	private GameObject UnitRemovePanel;
+	[SerializeField]
+	private GameObject backPanelButton;
 
 	private uTools.uTweenPosition uTweenPosition;
-	public GameObject fromPanel;
 
 	public void OnClickEditPanelNode(){
 		PartyUnitListController partyUnitListController = PartyEditPanel.GetComponent<PartyUnitListController> ();
-		partyUnitListController.fromPanel = this.gameObject;
 		PartyEditPanel.SetActive (true);
 	}
 

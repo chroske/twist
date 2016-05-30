@@ -23,11 +23,8 @@ public class GameStateManager : MonoBehaviour {
 
 	public int AccountId;
 	public string AccountName;
-	public List<OwnedUnitData> partyUnitList = new List<OwnedUnitData>();//パーティユニットリスト
-	public List<OwnedUnitData> ownedUnitList = new List<OwnedUnitData>();//所持ユニットリスト
-
-	public Dictionary<int,OwnedUnitData> ownedUnitDic = new Dictionary<int,OwnedUnitData> ();
-	public Dictionary<int,OwnedUnitData> partyUnitDic = new Dictionary<int,OwnedUnitData> ();
+	public Dictionary<int,OwnedUnitData> ownedUnitDic = new Dictionary<int,OwnedUnitData> ();//パーティユニットリスト
+	public Dictionary<int,OwnedUnitData> partyUnitDic = new Dictionary<int,OwnedUnitData> ();//所持ユニットリスト
 
 	// Use this for initialization
 	void Start () {
@@ -36,7 +33,7 @@ public class GameStateManager : MonoBehaviour {
 		Dictionary<string, object> data1 = new Dictionary<string, object> () {
 			{ "unit_id", 1 },
 			{ "unit_acount_id", "ninja01" },
-			{ "unit_name", "ニンジャ1" },
+			{ "unit_name", "ニンジャ1ビーム" },
 			{ "party_id", 1 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -55,7 +52,7 @@ public class GameStateManager : MonoBehaviour {
 		Dictionary<string, object> data2 = new Dictionary<string, object> () {
 			{ "unit_id", 2 },
 			{ "unit_acount_id", "ninja02" },
-			{ "unit_name", "ニンジャ2" },
+			{ "unit_name", "ニンジャ2爆" },
 			{ "party_id", 2 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -74,7 +71,7 @@ public class GameStateManager : MonoBehaviour {
 		Dictionary<string, object> data3 = new Dictionary<string, object> () {
 			{ "unit_id", 3 },
 			{ "unit_acount_id", "ninja03" },
-			{ "unit_name", "ニンジャ3" },
+			{ "unit_name", "ニンジャ3強ビーム" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -93,7 +90,7 @@ public class GameStateManager : MonoBehaviour {
 		Dictionary<string, object> data4 = new Dictionary<string, object> () {
 			{ "unit_id", 4 },
 			{ "unit_acount_id", "ninja04" },
-			{ "unit_name", "ニンジャ4" },
+			{ "unit_name", "ニンジャ4ビーム" },
 			{ "party_id", 4 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -112,7 +109,7 @@ public class GameStateManager : MonoBehaviour {
 		Dictionary<string, object> data5 = new Dictionary<string, object> () {
 			{ "unit_id", 5 },
 			{ "unit_acount_id", "ninja05" },
-			{ "unit_name", "ニンジャ5" },
+			{ "unit_name", "ニンジャ5爆" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -131,7 +128,7 @@ public class GameStateManager : MonoBehaviour {
 		Dictionary<string, object> data6 = new Dictionary<string, object> () {
 			{ "unit_id", 6 },
 			{ "unit_acount_id", "ninja06" },
-			{ "unit_name", "ニンジャ6" },
+			{ "unit_name", "ニンジャ6ビーム" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -150,7 +147,7 @@ public class GameStateManager : MonoBehaviour {
 		Dictionary<string, object> data7 = new Dictionary<string, object> () {
 			{ "unit_id", 7 },
 			{ "unit_acount_id", "ninja07" },
-			{ "unit_name", "ニンジャ7" },
+			{ "unit_name", "ニンジャ7爆" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -169,7 +166,7 @@ public class GameStateManager : MonoBehaviour {
 		Dictionary<string, object> data8 = new Dictionary<string, object> () {
 			{ "unit_id", 8 },
 			{ "unit_acount_id", "ninja08" },
-			{ "unit_name", "ニンジャ8" },
+			{ "unit_name", "ニンジャ8強ビーム" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -185,11 +182,6 @@ public class GameStateManager : MonoBehaviour {
 			{ "comboAttack", test_uint_comboAttack },
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
-		ownedUnitList.Add(new OwnedUnitData(data1));
-		ownedUnitList.Add(new OwnedUnitData(data2));
-		ownedUnitList.Add(new OwnedUnitData(data3));
-		ownedUnitList.Add(new OwnedUnitData(data4));
-		ownedUnitList.Add(new OwnedUnitData(data5));
 
 		ownedUnitDic.Add(new OwnedUnitData(data1).unit_id, new OwnedUnitData(data1));
 		ownedUnitDic.Add(new OwnedUnitData(data2).unit_id, new OwnedUnitData(data2));
@@ -203,7 +195,6 @@ public class GameStateManager : MonoBehaviour {
 		foreach(KeyValuePair<int, OwnedUnitData> UnitDataPair in ownedUnitDic)
 		{
 			if(UnitDataPair.Value.party_id != 0){
-				partyUnitList.Add(UnitDataPair.Value);
 				partyUnitDic.Add (UnitDataPair.Value.unit_id, UnitDataPair.Value);
 			}
 		}
@@ -215,7 +206,6 @@ public class GameStateManager : MonoBehaviour {
 	public void ResetPartyDic(){
 		//初期化してから
 		partyUnitDic = new Dictionary<int,OwnedUnitData> ();
-		partyUnitList = new List<OwnedUnitData> ();
 		foreach(KeyValuePair<int, OwnedUnitData> UnitDataPair in ownedUnitDic)
 		{
 			if(UnitDataPair.Value.party_id != 0){

@@ -4,28 +4,20 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PartyUnitListController : MonoBehaviour {
-
 	[SerializeField]
 	RectTransform scrollViewNode;
-
 	[SerializeField]
 	GameStateManager gameStateManager;
-
 	[SerializeField]
 	GameObject content;
-
 	[SerializeField]
 	NavigationBarController navigationBar;
 
 	public GameObject ownedUnitListPanel;
-	public GameObject fromPanel;
 
 	private Dictionary<int, OwnedUnitData> partyUnitDic = new Dictionary<int, OwnedUnitData> ();
 
-	// Use this for initialization
 	void Start () {
-		//GameStateManager gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
-		//List<OwnedUnitData> partyUnitList = gameStateManager.partyUnitList1;
 		GenPartyUnitList (gameStateManager.partyUnitDic);
 	}
 
@@ -69,36 +61,7 @@ public class PartyUnitListController : MonoBehaviour {
 				text.text = "空きスロット";
 			}
 		}
-
-
-
-
-//		foreach(KeyValuePair<int, OwnedUnitData> partyUnitDataPair in partyUnitDic){
-//			var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
-//			node.SetParent(content.transform, false);
-//			//node.GetComponent<Button> ().onClick.AddListener (() => OnClickUnitListNode());
-//
-//			PartyUnitListNodeController partyUnitListNodeController = node.GetComponent<PartyUnitListNodeController> ();
-//			partyUnitListNodeController.unitId = partyUnitDataPair.Value.unit_id;
-//			partyUnitListNodeController.partyId = partyUnitDataPair.Value.party_id;
-//			partyUnitListNodeController.ownedUnitPanelList = ownedUnitPanelList;
-//
-//			uTools.uPlayTween uPlayTween = node.GetComponent<uTools.uPlayTween> ();
-//			uPlayTween.tweenTarget = ownedUnitPanelList;
-//
-//			var text = node.GetComponentInChildren<Text>();
-//
-//			//rank番号とカッコを取り除く
-//			text.text = partyUnitDataPair.Value.unit_name;
-//		}
 	}
-
-//	public void OnClickUnitListNode(){
-//		ownedUnitPanelList.SetActive (true);
-//		OwnedUnitListController ownedUnitListController = ownedUnitPanelList.GetComponent<OwnedUnitListController> ();
-//		ownedUnitListController.ownedUnitListMode = "PartyEdit";
-//		ownedUnitListController.selectPartyChangeUnitId ;
-//	}
 
 	//リストクリア
 	public void RemoveAllListViewItem() {

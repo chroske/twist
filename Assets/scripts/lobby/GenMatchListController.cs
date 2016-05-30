@@ -30,7 +30,7 @@ public class GenMatchListController: MonoBehaviour {
 		for (int i = 0; i < response.matches.Count; ++i)
 		{
 			//部屋がいっぱいじゃなければ表示する
-			if(response.matches[i].currentSize >= response.matches[i].maxSize){
+			if(response.matches[i].currentSize <= response.matches[i].maxSize){
 				Debug.Log (response.matches[i].name);
 
 				var node = GameObject.Instantiate(scrollViewRoom) as RectTransform;
