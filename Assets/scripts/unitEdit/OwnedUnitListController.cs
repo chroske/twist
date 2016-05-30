@@ -32,9 +32,12 @@ public class OwnedUnitListController : MonoBehaviour {
 	[SerializeField]
 	PartyUnitListController partyUnitListController;
 
+	[SerializeField]
+	GameObject RemoveUnitOnPartyButton;
+
 	public GameObject nextPanelObj;
 	public string ownedUnitListMode;
-	public int selectPartyChangeUnitId;
+	public int selectPartyChangeId;
 
 	// Use this for initialization
 	void Start () {
@@ -47,9 +50,24 @@ public class OwnedUnitListController : MonoBehaviour {
 		unitDetailController.unitId = unitId;
 	}
 
+	//パーティセット＆入れ替え
 	public void SetPartyUnit(int unitId){
-		gameStateManager.ownedUnitDic[unitId].party_id = gameStateManager.partyUnitDic[selectPartyChangeUnitId].party_id;
-		gameStateManager.ownedUnitDic[selectPartyChangeUnitId].party_id = 0;
+		gameStateManager.ownedUnitDic[unitId].party_id = selectPartyChangeId;
+
+		//partyUnitDicにkeyが存在してたら入れ替え元のparty_idを0にする
+		if(gameStateManager.partyUnitDic.ContainsKey(selectPartyChangeId)){
+			gameStateManager.ownedUnitDic[gameStateManager.partyUnitDic[selectPartyChangeId].unit_id].party_id = 0;
+		}
+
+		//party_idを入れ替えたのでpartyDic再生成
+		gameStateManager.ResetPartyDic ();
+
+		partyUnitListController.ReloadPartyUnitList ();
+	}
+
+	//パーティからユニットはずす
+	public void RemovePartyUnit(){
+		gameStateManager.ownedUnitDic[gameStateManager.partyUnitDic[selectPartyChangeId].unit_id].party_id = 0;
 		//party_idを入れ替えたのでpartyDic再生成
 		gameStateManager.ResetPartyDic ();
 
@@ -65,18 +83,18 @@ public class OwnedUnitListController : MonoBehaviour {
 			var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
 			node.SetParent(content.transform, false);
 			UnitListNodeController unitListNodeController = node.GetComponent<UnitListNodeController> ();
-			//unitListNodeController.unitId = ownedUnitData.unit_id;
 			unitListNodeController.unitId = ownedUnitDataPair.Value.unit_id;
+			unitListNodeController.partyId = ownedUnitDataPair.Value.party_id;
 			unitListNodeController.ownedUnitListController = this;
 			SetNextPanelObj ();
-
 			unitListNodeController.GetComponent<uTools.uPlayTween> ().ChangeTweenTarget (UnitDetailPanel);
-
 			var text = node.GetComponentInChildren<Text>();
-
 			//rank番号とカッコを取り除く
 			text.text = ownedUnitDataPair.Value.unit_name;
 		}
+
+		CheckPartyInUnit ();
+
 	}
 		
 	//リストクリア
@@ -98,11 +116,32 @@ public class OwnedUnitListController : MonoBehaviour {
 		}
 	}
 
+	//一覧パネルのモードに応じて次の遷移先を決める
 	private void SetNextPanelObj(){
 		if(ownedUnitListMode == "PartyEdit"){
 			nextPanelObj = this.gameObject;
 		} else if(ownedUnitListMode == "Detail"){
 			nextPanelObj = UnitDetailPanel;
+		}
+	}
+
+	//パーティにいるユニットはボタンを無効にする
+	public void CheckPartyInUnit(){
+		foreach (Transform child in content.transform) {
+			if (ownedUnitListMode == "PartyEdit") {
+				if(child.gameObject.name != "RemoveUnitOnPartyButton"){
+					if (gameStateManager.ownedUnitDic [child.transform.GetComponent<UnitListNodeController> ().unitId].party_id != 0) {
+						child.transform.GetComponent<Button> ().interactable = false;
+					} else {
+						child.transform.GetComponent<Button> ().interactable = true;
+					}
+				}
+
+				RemoveUnitOnPartyButton.SetActive (true);
+			} else {
+				child.transform.GetComponent<Button> ().interactable = true;
+				RemoveUnitOnPartyButton.SetActive (false);
+			}
 		}
 	}
 }

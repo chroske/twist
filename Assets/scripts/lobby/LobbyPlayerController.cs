@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Networking;
 
 public class LobbyPlayerController : NetworkBehaviour {
@@ -73,8 +74,9 @@ public class LobbyPlayerController : NetworkBehaviour {
 
 	public void ProvideLobbyPlayerNameToServer (){
 		GameStateManager gameStateManager = GameObject.Find("/MainCanvas/GameStateManager").GetComponent<GameStateManager> ();
-		List<OwnedUnitData> mainPartyList = gameStateManager.partyUnitList;
-		OwnedUnitData LeaderUnitParam = mainPartyList [0];
+		Dictionary<int,OwnedUnitData> mainPartyDic = gameStateManager.partyUnitDic;
+		//PartyDicの一番上をリーダーとする
+		OwnedUnitData LeaderUnitParam = mainPartyDic.First().Value;
 
 		CmdProvideLobbyPlayerDataToServer(gameStateManager.AccountName, LeaderUnitParam.unit_id, LeaderUnitParam.attack, LeaderUnitParam.hitPoint, LeaderUnitParam.speed, LeaderUnitParam.type, LeaderUnitParam.Level, LeaderUnitParam.combo, LeaderUnitParam.ability_1, LeaderUnitParam.ability_2, LeaderUnitParam.ability_3, LeaderUnitParam.strikeShot, LeaderUnitParam.comboType, LeaderUnitParam.comboAttack, LeaderUnitParam.maxComboNum);
 	}

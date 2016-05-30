@@ -17,7 +17,7 @@ public class PartyUnitListController : MonoBehaviour {
 	[SerializeField]
 	NavigationBarController navigationBar;
 
-	public GameObject ownedUnitPanelList;
+	public GameObject ownedUnitListPanel;
 	public GameObject fromPanel;
 
 	private Dictionary<int, OwnedUnitData> partyUnitDic = new Dictionary<int, OwnedUnitData> ();
@@ -33,25 +33,64 @@ public class PartyUnitListController : MonoBehaviour {
 		//リストをクリア
 		RemoveAllListViewItem ();
 
-		//foreach(OwnedUnitData ownedUnitData in partyUnitList){
-		foreach(KeyValuePair<int, OwnedUnitData> partyUnitDataPair in partyUnitDic){
-			var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
-			node.SetParent(content.transform, false);
-			//node.GetComponent<Button> ().onClick.AddListener (() => OnClickUnitListNode());
+		for(int i = 1; i <= 4; i++){
+			if (partyUnitDic.ContainsKey (i)) {
+				OwnedUnitData partyUnitData = partyUnitDic [i];
+				var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
+				node.SetParent(content.transform, false);
+				//node.GetComponent<Button> ().onClick.AddListener (() => OnClickUnitListNode());
 
-			PartyUnitListNodeController partyUnitListNodeController = node.GetComponent<PartyUnitListNodeController> ();
-			partyUnitListNodeController.unitId = partyUnitDataPair.Value.unit_id;
-			partyUnitListNodeController.partyId = partyUnitDataPair.Value.party_id;
-			partyUnitListNodeController.ownedUnitPanelList = ownedUnitPanelList;
+				PartyUnitListNodeController partyUnitListNodeController = node.GetComponent<PartyUnitListNodeController> ();
+				partyUnitListNodeController.unitId = partyUnitData.unit_id;
+				partyUnitListNodeController.partyId = partyUnitData.party_id;
+				partyUnitListNodeController.ownedUnitListPanel = ownedUnitListPanel;
 
-			uTools.uPlayTween uPlayTween = node.GetComponent<uTools.uPlayTween> ();
-			uPlayTween.tweenTarget = ownedUnitPanelList;
+				uTools.uPlayTween uPlayTween = node.GetComponent<uTools.uPlayTween> ();
+				uPlayTween.tweenTarget = ownedUnitListPanel;
 
-			var text = node.GetComponentInChildren<Text>();
+				var text = node.GetComponentInChildren<Text>();
 
-			//rank番号とカッコを取り除く
-			text.text = partyUnitDataPair.Value.unit_name;
+				//rank番号とカッコを取り除く
+				text.text = partyUnitData.unit_name;
+			} else {
+				var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
+				node.SetParent(content.transform, false);
+
+				PartyUnitListNodeController partyUnitListNodeController = node.GetComponent<PartyUnitListNodeController> ();
+				partyUnitListNodeController.partyId = i;
+				partyUnitListNodeController.ownedUnitListPanel = ownedUnitListPanel;
+
+				uTools.uPlayTween uPlayTween = node.GetComponent<uTools.uPlayTween> ();
+				uPlayTween.tweenTarget = ownedUnitListPanel;
+
+				var text = node.GetComponentInChildren<Text>();
+
+				//rank番号とカッコを取り除く
+				text.text = "空きスロット";
+			}
 		}
+
+
+
+
+//		foreach(KeyValuePair<int, OwnedUnitData> partyUnitDataPair in partyUnitDic){
+//			var node = GameObject.Instantiate(scrollViewNode) as RectTransform;
+//			node.SetParent(content.transform, false);
+//			//node.GetComponent<Button> ().onClick.AddListener (() => OnClickUnitListNode());
+//
+//			PartyUnitListNodeController partyUnitListNodeController = node.GetComponent<PartyUnitListNodeController> ();
+//			partyUnitListNodeController.unitId = partyUnitDataPair.Value.unit_id;
+//			partyUnitListNodeController.partyId = partyUnitDataPair.Value.party_id;
+//			partyUnitListNodeController.ownedUnitPanelList = ownedUnitPanelList;
+//
+//			uTools.uPlayTween uPlayTween = node.GetComponent<uTools.uPlayTween> ();
+//			uPlayTween.tweenTarget = ownedUnitPanelList;
+//
+//			var text = node.GetComponentInChildren<Text>();
+//
+//			//rank番号とカッコを取り除く
+//			text.text = partyUnitDataPair.Value.unit_name;
+//		}
 	}
 
 //	public void OnClickUnitListNode(){

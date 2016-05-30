@@ -28,6 +28,8 @@ public class UnitPanelTopController : MonoBehaviour {
 	public void OnClickUnitListPanelNode(){
 		OwnedUnitListController ownedUnitListController = UnitListPanel.GetComponent<OwnedUnitListController> ();
 		ownedUnitListController.ownedUnitListMode = "Detail";
+		//パーティ用に設定されていた場合のリセット
+		ownedUnitListController.CheckPartyInUnit ();
 		UnitListPanel.SetActive (true);
 	}
 

@@ -48,7 +48,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "ability_2", test_uint_ability_2 },
 			{ "ability_3", test_uint_ability_3 },
 			{ "strikeShot", test_uint_strikeShot },
-			{ "comboType", test_uint_comboType },
+			{ "comboType", 0 },
 			{ "comboAttack", test_uint_comboAttack },
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
@@ -67,7 +67,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "ability_2", test_uint_ability_2 },
 			{ "ability_3", test_uint_ability_3 },
 			{ "strikeShot", test_uint_strikeShot },
-			{ "comboType", test_uint_comboType },
+			{ "comboType", 1 },
 			{ "comboAttack", test_uint_comboAttack },
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
@@ -75,7 +75,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 3 },
 			{ "unit_acount_id", "ninja03" },
 			{ "unit_name", "ニンジャ3" },
-			{ "party_id", 3 },
+			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
 			{ "speed", test_uint_speed },
@@ -86,7 +86,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "ability_2", test_uint_ability_2 },
 			{ "ability_3", test_uint_ability_3 },
 			{ "strikeShot", test_uint_strikeShot },
-			{ "comboType", test_uint_comboType },
+			{ "comboType", 2 },
 			{ "comboAttack", test_uint_comboAttack },
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
@@ -105,7 +105,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "ability_2", test_uint_ability_2 },
 			{ "ability_3", test_uint_ability_3 },
 			{ "strikeShot", test_uint_strikeShot },
-			{ "comboType", test_uint_comboType },
+			{ "comboType", 0 },
 			{ "comboAttack", test_uint_comboAttack },
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
@@ -124,7 +124,64 @@ public class GameStateManager : MonoBehaviour {
 			{ "ability_2", test_uint_ability_2 },
 			{ "ability_3", test_uint_ability_3 },
 			{ "strikeShot", test_uint_strikeShot },
-			{ "comboType", test_uint_comboType },
+			{ "comboType", 1 },
+			{ "comboAttack", test_uint_comboAttack },
+			{ "maxComboNum", test_uint_maxComboNum }
+		};
+		Dictionary<string, object> data6 = new Dictionary<string, object> () {
+			{ "unit_id", 6 },
+			{ "unit_acount_id", "ninja06" },
+			{ "unit_name", "ニンジャ6" },
+			{ "party_id", 0 },
+			{ "attack", test_uint_attack },
+			{ "hitPoint", test_uint_hitPoint },
+			{ "speed", test_uint_speed },
+			{ "type", test_uint_type },
+			{ "Level", test_uint_Level },
+			{ "combo", test_uint_combo },
+			{ "ability_1", test_uint_ability_1 },
+			{ "ability_2", test_uint_ability_2 },
+			{ "ability_3", test_uint_ability_3 },
+			{ "strikeShot", test_uint_strikeShot },
+			{ "comboType", 0 },
+			{ "comboAttack", test_uint_comboAttack },
+			{ "maxComboNum", test_uint_maxComboNum }
+		};
+		Dictionary<string, object> data7 = new Dictionary<string, object> () {
+			{ "unit_id", 7 },
+			{ "unit_acount_id", "ninja07" },
+			{ "unit_name", "ニンジャ7" },
+			{ "party_id", 0 },
+			{ "attack", test_uint_attack },
+			{ "hitPoint", test_uint_hitPoint },
+			{ "speed", test_uint_speed },
+			{ "type", test_uint_type },
+			{ "Level", test_uint_Level },
+			{ "combo", test_uint_combo },
+			{ "ability_1", test_uint_ability_1 },
+			{ "ability_2", test_uint_ability_2 },
+			{ "ability_3", test_uint_ability_3 },
+			{ "strikeShot", test_uint_strikeShot },
+			{ "comboType", 1 },
+			{ "comboAttack", test_uint_comboAttack },
+			{ "maxComboNum", test_uint_maxComboNum }
+		};
+		Dictionary<string, object> data8 = new Dictionary<string, object> () {
+			{ "unit_id", 8 },
+			{ "unit_acount_id", "ninja08" },
+			{ "unit_name", "ニンジャ8" },
+			{ "party_id", 0 },
+			{ "attack", test_uint_attack },
+			{ "hitPoint", test_uint_hitPoint },
+			{ "speed", test_uint_speed },
+			{ "type", test_uint_type },
+			{ "Level", test_uint_Level },
+			{ "combo", test_uint_combo },
+			{ "ability_1", test_uint_ability_1 },
+			{ "ability_2", test_uint_ability_2 },
+			{ "ability_3", test_uint_ability_3 },
+			{ "strikeShot", test_uint_strikeShot },
+			{ "comboType", 2 },
 			{ "comboAttack", test_uint_comboAttack },
 			{ "maxComboNum", test_uint_maxComboNum }
 		};
@@ -139,6 +196,9 @@ public class GameStateManager : MonoBehaviour {
 		ownedUnitDic.Add(new OwnedUnitData(data3).unit_id, new OwnedUnitData(data3));
 		ownedUnitDic.Add(new OwnedUnitData(data4).unit_id, new OwnedUnitData(data4));
 		ownedUnitDic.Add(new OwnedUnitData(data5).unit_id, new OwnedUnitData(data5));
+		ownedUnitDic.Add(new OwnedUnitData(data6).unit_id, new OwnedUnitData(data6));
+		ownedUnitDic.Add(new OwnedUnitData(data7).unit_id, new OwnedUnitData(data7));
+		ownedUnitDic.Add(new OwnedUnitData(data8).unit_id, new OwnedUnitData(data8));
 
 		foreach(KeyValuePair<int, OwnedUnitData> UnitDataPair in ownedUnitDic)
 		{
@@ -159,7 +219,7 @@ public class GameStateManager : MonoBehaviour {
 		foreach(KeyValuePair<int, OwnedUnitData> UnitDataPair in ownedUnitDic)
 		{
 			if(UnitDataPair.Value.party_id != 0){
-				partyUnitDic.Add (UnitDataPair.Value.unit_id, UnitDataPair.Value);
+				partyUnitDic.Add (UnitDataPair.Value.party_id, UnitDataPair.Value);
 			}
 		}
 

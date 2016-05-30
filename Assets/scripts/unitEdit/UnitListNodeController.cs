@@ -10,6 +10,7 @@ public class UnitListNodeController : MonoBehaviour {
 
 	public OwnedUnitListController ownedUnitListController;
 	public int unitId;
+	public int partyId;
 
 	void Start(){
 		playTween = GetComponent<uTools.uPlayTween> ();
