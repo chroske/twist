@@ -34,7 +34,7 @@ public class MyUnitController : MonoBehaviour {
 		startEffectFlag = true;
 
 		//現在はプレイヤーキャラ以外もいるのでeffectが空にならないように暫定処理
-		SetComboEffect();
+		//SetComboEffect();
 	}
 
 	void FixedUpdate() {

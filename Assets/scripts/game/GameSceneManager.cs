@@ -5,22 +5,45 @@ using UnityEngine.Networking;
 
 public class GameSceneManager : NetworkBehaviour {
 
+	[SerializeField]
+	GameObject offlinePlayerManagerObj;
+
+	[SerializeField]
+	PullArrow pullArrow;
+
 	public GameObject Unit_1;
 	public GameObject Unit_2;
 	public GameObject Unit_3;
 	public GameObject Unit_4;
-	public GameObject arrow;
 	public GameObject turnEndText;
-	private GameObject NetworkManager;
+
 
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
 	public int turnPlayerId;
 	public int beforeTurnPlayerId; //比較用
 	public int firstTurnPlayerId;
-	public bool TurnEnd;
+	public bool turnEnd;
+	public bool offlineGame;
 
+	private GameObject NetworkManager;
 	private List<GameObject> partyUnitList;
+	private GameStateManager gameStateManager;
+	private CustomNetworkLobbyManager networkLobbyManager;
+	private OfflinePlayerManager offlinePlayerManager;
+
+	void Awake(){
+		//offlineGameがtrueならofflinePlayerManagerを作る
+		GameObject gameStateManagerObj = GameObject.Find("/GameStateManager");
+		gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
+		if (gameStateManager.offlineGame) {
+			GameObject prefab = Instantiate (offlinePlayerManagerObj);
+			offlinePlayerManager = prefab.GetComponent<OfflinePlayerManager> ();
+			offlinePlayerManager.gameStateManager = gameStateManager;
+			offlinePlayerManager.pullArrow = pullArrow;
+			offlinePlayerManager.gameSceneManager = this;
+		}
+	}
 
 	public IEnumerator DisplayTurnEndText(float displayTime){
 		turnEndText.SetActive(true);
@@ -48,7 +71,6 @@ public class GameSceneManager : NetworkBehaviour {
 
 	public void ChangeControllUnit(int UnitControllPlayerId){
 		GameObject controllUnit = new GameObject();
-		PullArrow pullArrow = arrow.transform.GetComponent<PullArrow>();
 
 		if (UnitControllPlayerId == 0) {
 			controllUnit = Unit_1;
@@ -108,8 +130,33 @@ public class GameSceneManager : NetworkBehaviour {
 		Unit_4.GetComponent<MyPartyUnitController> ().ResetComboNum ();
 	}
 
+	public void SetAllUnitParamator(Dictionary<int,OwnedUnitData> unitParamDic){
+		Unit_1.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[1]);
+		Unit_1.GetComponent<MyUnitController> ().SetComboEffect ();
+		Unit_1.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+
+		Unit_2.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[2]);
+		Unit_2.GetComponent<MyUnitController> ().SetComboEffect ();
+		Unit_2.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+
+		Unit_3.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[3]);
+		Unit_3.GetComponent<MyUnitController> ().SetComboEffect ();
+		Unit_3.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+
+		Unit_4.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[4]);
+		Unit_4.GetComponent<MyUnitController> ().SetComboEffect ();
+		Unit_4.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+	}
+
+	public void StopAllunitVelocity(){
+		Unit_1.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		Unit_2.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		Unit_3.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		Unit_4.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+	}
+
 	//ユニットのパラメータとそれに対応するComboEffectをセット
-	public void SetUnitParamatorByNetId(int netId, UnitData myUnitParam){
+	public void SetUnitParamatorByNetId(int netId, OwnedUnitData myUnitParam){
 		GameObject controllUnit = new GameObject();
 		if (netId == 0) {
 			controllUnit = Unit_1;
@@ -128,18 +175,23 @@ public class GameSceneManager : NetworkBehaviour {
 		}
 	}
 
-	private CustomNetworkLobbyManager networkLobbyManager;
 	public void StopGame(){
-		networkLobbyManager = GameObject.Find("/MainCanvas").GetComponent<CustomNetworkLobbyManager>();
-		networkLobbyManager.SendReturnToLobby ();
-
-		if (networkLobbyManager.isHost) {
-			networkLobbyManager.StopHost();
-		} else {
-			networkLobbyManager.StopClient();
+		networkLobbyManager = GameObject.Find ("/MainCanvas").GetComponent<CustomNetworkLobbyManager> ();
+		if (gameStateManager.offlineGame) {
+			Destroy (offlinePlayerManager.gameObject);
+			networkLobbyManager.SetUpOfflinePlayTop();
+			gameStateManager.offlineGame = false;
+			Application.UnloadLevel ("GameMain");
+		} else if(gameStateManager.onlineGame) {
+			gameStateManager.onlineGame = false;
+			networkLobbyManager.SendReturnToLobby (); //なんかエラー出るけど問題ないっぽい
+			if (networkLobbyManager.isHost) {
+				networkLobbyManager.StopHost ();
+			} else {
+				networkLobbyManager.StopClient ();
+			}
+			networkLobbyManager.StopMatchMaker ();
+			networkLobbyManager.SetUpLobby ();
 		}
-		networkLobbyManager.StopMatchMaker();
-
-		networkLobbyManager.SetUpLobby();
 	}
 }

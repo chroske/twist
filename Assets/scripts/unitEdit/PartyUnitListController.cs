@@ -15,8 +15,6 @@ public class PartyUnitListController : MonoBehaviour {
 
 	public GameObject ownedUnitListPanel;
 
-	private Dictionary<int, OwnedUnitData> partyUnitDic = new Dictionary<int, OwnedUnitData> ();
-
 	void Start () {
 		GenPartyUnitList (gameStateManager.partyUnitDic);
 	}

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 
 
-public class NetworkManagerController : NetworkBehaviour {
+public class NetworkPlayerManager : NetworkBehaviour {
 	[SyncVar] public Vector3 syncArrowPos;
 	[SyncVar] public Quaternion syncArrowRot;
 	[SyncVar] public Vector2 syncArrowSize;
@@ -55,8 +55,6 @@ public class NetworkManagerController : NetworkBehaviour {
 		gameSceneManager = GameObject.Find("GameSceneManager").GetComponent<GameSceneManager>();
 		arrow = GameObject.Find("GameCanvas/Arrow");
 		pullArrow = arrow.GetComponent<PullArrow> ();
-		//networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
-		//networkManager = GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>();
 		networkManager = GameObject.Find("MainCanvas").GetComponent<NetworkLobbyManager>();
 
 		//サーバに初期データセット
@@ -163,11 +161,11 @@ public class NetworkManagerController : NetworkBehaviour {
 	}
 
 	public void SetUnitParamator(){
-		//MyUnitController myUnitController = myUnit.GetComponent<MyUnitController> ();
-	//	MyUnitController myUnitController = pullArrow.myUnit.GetComponent<MyUnitController> ();
-
 		Dictionary<string, object> data = new Dictionary<string, object> () {
 			{ "unit_id", syncUnitId },
+			{ "unit_acount_id", "" },
+			{ "unit_name", "" },
+			{ "party_id", 0 },
 			{ "attack", syncUnitAttack },
 			{ "hitPoint", syncUnitHitpoint },
 			{ "speed", syncUnitSpeed },
@@ -183,8 +181,7 @@ public class NetworkManagerController : NetworkBehaviour {
 			{ "maxComboNum", syncUintMaxComboNum }
 		};
 
-		UnitData myUnitParam = new UnitData(data);
-
+		OwnedUnitData myUnitParam = new OwnedUnitData(data);
 		gameSceneManager.SetUnitParamatorByNetId (syncPlayerNetID, myUnitParam);
 	}
 

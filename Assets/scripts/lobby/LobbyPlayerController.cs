@@ -60,7 +60,6 @@ public class LobbyPlayerController : NetworkBehaviour {
 		if(!setLobbyPlayerNodeFlag){
 			setLobbyPlayerNodeFlag = true;
 
-			//GameObject lobbyManager = GameObject.Find("LobbyManager");
 			GameObject lobbyManager = GameObject.Find("/MainCanvas");
 			LobbyPlayerListPrefab = lobbyManager.transform.GetComponent<CustomNetworkLobbyManager> ().CreateLobbyPlayerListPrefab(lobbyPlayerName);
 			//ホストのスクロールビューの順番をゲームのユニークIDとして使う
@@ -73,7 +72,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 	}
 
 	public void ProvideLobbyPlayerNameToServer (){
-		GameStateManager gameStateManager = GameObject.Find("/MainCanvas/GameStateManager").GetComponent<GameStateManager> ();
+		GameStateManager gameStateManager = GameObject.Find("/GameStateManager").GetComponent<GameStateManager> ();
 		Dictionary<int,OwnedUnitData> mainPartyDic = gameStateManager.partyUnitDic;
 		//PartyDicの一番上をリーダーとする
 		OwnedUnitData LeaderUnitParam = mainPartyDic.First().Value;

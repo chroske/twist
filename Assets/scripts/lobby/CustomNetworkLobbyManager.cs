@@ -10,10 +10,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 {
 	private NetworkMatch networkMatch;
 	private NetworkManager networkManager;
-	private short playerNetID;
+	private GameStateManager gameStateManager;
 	private GameObject currentPanel;
+	private short playerNetID;
 	private int roomListId;
 	private bool inTheGame; //ゲームシーンにいるかどうか
+
 
 	public GameObject matchPanel1;
 	public GameObject matchPanel2;
@@ -29,16 +31,22 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	[SerializeField]
 	private GameObject lobbyPlayerListNode;
 
+	[SerializeField]
+	private GameObject battlePanel;
+
 	void Start(){
 		//ロビーTOPパネルをcurrentに
 		currentPanel = matchPanel2;
+
+		GameObject gameStateManagerObj = GameObject.Find("/GameStateManager");
+		gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
 	}
 		
 	//クライアントがロビーのシーンからゲームプレイヤーシーンに切り替えが終了したことを伝えられたときサーバー上で呼び出し
 	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
 	{
 		//lobbyPlayerオブジェクトのnetidをnetworkManagerControllerに送って以後ゲーム中idとして使う
-		NetworkManagerController networkManagerController = gamePlayer.GetComponent<NetworkManagerController>();
+		NetworkPlayerManager networkManagerController = gamePlayer.GetComponent<NetworkPlayerManager>();
 		//playerNetID = lobbyPlayer.GetComponent<NetworkIdentity>().netId;
 		//int playerNetIdInt =  int.Parse(playerNetID.ToString());
 		int playerNetIdInt = lobbyPlayer.GetComponent<LobbyPlayerController>().playerUniqueId;
@@ -81,6 +89,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public void StartTheGame(){
 		currentPanel.SetActive (false);
+		gameStateManager.onlineGame = true;
 		ServerChangeScene (playScene);
 	}
 
@@ -231,6 +240,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		} else {
 			Debug.Log("RoomCount=0");
 		}
+	}
+
+	//GameSceneからLobbyに戻った時のPanel設定
+	public void SetUpOfflinePlayTop(){
+		battlePanel.SetActive (true);
+		HeaderAndTabbar.SetActive (true);
 	}
 
 	//GameSceneからLobbyに戻った時のPanel設定

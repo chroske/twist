@@ -20,7 +20,7 @@ public class UnitParamManager : MonoBehaviour {
 	public int maxComboNum;
 
 
-	public void SetParameter(UnitData myUnitParam){
+	public void SetParameter(OwnedUnitData myUnitParam){
 		unit_id = myUnitParam.unit_id;
 		attack = myUnitParam.attack;
 		hitPoint = myUnitParam.hitPoint;

@@ -23,8 +23,14 @@ public class GameStateManager : MonoBehaviour {
 
 	public int AccountId;
 	public string AccountName;
+	public bool offlineGame;
+	public bool onlineGame;
 	public Dictionary<int,OwnedUnitData> ownedUnitDic = new Dictionary<int,OwnedUnitData> ();//パーティユニットリスト
 	public Dictionary<int,OwnedUnitData> partyUnitDic = new Dictionary<int,OwnedUnitData> ();//所持ユニットリスト
+
+	void Awake(){
+		DontDestroyOnLoad (this);
+	}
 
 	// Use this for initialization
 	void Start () {
