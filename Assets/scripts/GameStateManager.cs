@@ -21,12 +21,22 @@ public class GameStateManager : MonoBehaviour {
 	public int test_uint_comboAttack;
 	public int test_uint_maxComboNum;
 
+	//user
 	public int AccountId;
 	public string AccountName;
+
+	//game
 	public bool offlineGame;
 	public bool onlineGame;
 	public Dictionary<int,OwnedUnitData> ownedUnitDic = new Dictionary<int,OwnedUnitData> ();//パーティユニットリスト
 	public Dictionary<int,OwnedUnitData> partyUnitDic = new Dictionary<int,OwnedUnitData> ();//所持ユニットリスト
+
+	//twitter
+	public Twitter.RequestTokenResponse m_RequestTokenResponse;
+	public Twitter.AccessTokenResponse m_AccessTokenResponse;
+	public string CONSUMER_KEY = "MzS9OesDFLmxPwB4QdrgK5VNP";
+	public string CONSUMER_SECRET = "oKKVQ7Rexiy8k6lcHDq0W3DDLIS9uq78wo3lgccDe6tkDtzyrU";
+
 
 	void Awake(){
 		DontDestroyOnLoad (this);

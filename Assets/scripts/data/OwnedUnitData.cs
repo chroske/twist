@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class OwnedUnitData : MonoBehaviour {
+public class OwnedUnitData {
 
 	public int unit_id;
 	public string unit_acount_id;
@@ -22,7 +22,6 @@ public class OwnedUnitData : MonoBehaviour {
 	public int comboType;
 	public int comboAttack;
 	public int maxComboNum;
-
 
 	public OwnedUnitData(Dictionary<string, object>data)
 	{

@@ -19,7 +19,6 @@ public class UnitPanelTopController : MonoBehaviour {
 	private uTools.uTweenPosition uTweenPosition;
 
 	public void OnClickEditPanelNode(){
-		PartyUnitListController partyUnitListController = PartyEditPanel.GetComponent<PartyUnitListController> ();
 		PartyEditPanel.SetActive (true);
 	}
 
