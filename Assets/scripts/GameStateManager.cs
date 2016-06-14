@@ -33,7 +33,7 @@ public class GameStateManager : MonoBehaviour {
 
 	//twitter
 	public Twitter.RequestTokenResponse m_RequestTokenResponse;
-	public Twitter.AccessTokenResponse m_AccessTokenResponse;
+	public Twitter.AccessTokenResponse m_AccessTokenResponse = new Twitter.AccessTokenResponse();
 	public string CONSUMER_KEY = "MzS9OesDFLmxPwB4QdrgK5VNP";
 	public string CONSUMER_SECRET = "oKKVQ7Rexiy8k6lcHDq0W3DDLIS9uq78wo3lgccDe6tkDtzyrU";
 
@@ -44,6 +44,12 @@ public class GameStateManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		m_AccessTokenResponse.Token = PlayerPrefs.GetString("TwitterUserToken");
+		m_AccessTokenResponse.TokenSecret = PlayerPrefs.GetString("TwitterUserTokenSecret");
+		m_AccessTokenResponse.UserId = PlayerPrefs.GetString("TwitterUserID");
+		m_AccessTokenResponse.ScreenName = PlayerPrefs.GetString("TwitterUserScreenName");
+
+
 		//本来はサーバから取得して格納すべきだろうか
 		//ローカルでやるならセーブメモリから取得
 		Dictionary<string, object> data1 = new Dictionary<string, object> () {

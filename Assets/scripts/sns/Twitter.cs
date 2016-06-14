@@ -430,15 +430,14 @@ namespace Twitter
 
 
 		//ここから追記部分
-		public static IEnumerator GetTimeLine (string consumerKey, string consumerSecret, AccessTokenResponse response,  TimeLineCallback callback){
+		public static IEnumerator GetTimeLine (string consumerKey, string consumerSecret, AccessTokenResponse response, string sinceId, TimeLineCallback callback){
 			string urlstr = "https://api.twitter.com/1.1/statuses/home_timeline.json";
 			string count = "15";
-			string since_id = "0";
 
 			Dictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters.Add("count", count);
-			if(since_id != "0"){
-				parameters.Add("since_id", since_id);
+			if(sinceId != "0"){
+				parameters.Add("since_id", sinceId);
 			}
 
 			WWWForm form = new WWWForm();
@@ -446,8 +445,8 @@ namespace Twitter
 			headers["Authorization"] = GetHeaderWithAccessToken("GET", urlstr, consumerKey, consumerSecret, response, parameters);
 
 			string url = urlstr + "?" + "count=" + count;
-			if(since_id != "0"){
-				url += "&since_id=" + since_id;
+			if(sinceId != "0"){
+				url += "&since_id=" + sinceId;
 			}
 
 			WWW web = new WWW(url, null, headers);
