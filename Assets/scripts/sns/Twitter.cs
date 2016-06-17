@@ -420,7 +420,8 @@ namespace Twitter
 						CultureInfo.InvariantCulture,
 						"{0}={1}",
 						UrlEncode(item.Key),
-						UrlEncode(item.Value)));
+						UrlEncode(item.Value))
+				);
 			}
 
 			return UrlEncode(parameterString.ToString());

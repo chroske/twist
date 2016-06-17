@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using MiniJSON;
+using System.Text.RegularExpressions;
 
 public class TwitterTimeLineScrollViewController : MonoBehaviour {
 
@@ -125,7 +126,15 @@ public class TwitterTimeLineScrollViewController : MonoBehaviour {
 			node.SetSiblingIndex(tweetCounter+1); //引っ張り部分があるので+1
 
 			TimeLineNodeController timeLineNodeController = node.GetComponentInChildren<TimeLineNodeController>();
-			timeLineNodeController.SetNodeDatas (tweetData["text"].ToString(),userDatas["name"].ToString(),userDatas["screen_name"].ToString(),userDatas["profile_image_url"].ToString());
+			//リツイートなら
+			if (tweetData ["retweeted_status"] != null) {
+				IDictionary retweetDatas = (IDictionary)tweetData["retweeted_status"];
+				IDictionary rtUserDatas = (IDictionary)retweetDatas["user"];
+				timeLineNodeController.SetNodeDatasRT (retweetDatas["text"].ToString(),rtUserDatas["name"].ToString(), rtUserDatas["screen_name"].ToString(), rtUserDatas["profile_image_url"].ToString(), userDatas ["name"].ToString(), userDatas ["screen_name"].ToString());
+			} else {
+				timeLineNodeController.SetNodeDatas (tweetData ["text"].ToString (), userDatas ["name"].ToString (), userDatas ["screen_name"].ToString (), userDatas ["profile_image_url"].ToString ());
+			}
+
 			tweetCounter++;
 		}
 	}
