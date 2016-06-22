@@ -35,10 +35,16 @@ namespace Twitter
 		public string Json { get; set; }
 	}
 
+	public class SearchTweetResponse
+	{
+		public string Json { get; set; }
+	}
+
 	public delegate void RequestTokenCallback(bool success, RequestTokenResponse response);
 	public delegate void AccessTokenCallback(bool success, AccessTokenResponse response);
 	public delegate void PostTweetCallback(bool success);
 	public delegate void TimeLineCallback(bool success, TimeLineResponse response);
+	public delegate void SearchTweetCallback(bool success, SearchTweetResponse response);
 
 	public class API
 	{
@@ -460,6 +466,42 @@ namespace Twitter
 				};
 
 				callback(true, timeLineresponse);
+			} else {
+				callback(false, null);
+
+			}
+		}
+
+		public static IEnumerator GetSearchTweet(string q, string consumerKey, string consumerSecret, AccessTokenResponse response, SearchTweetCallback callback){
+			string urlstr = "https://api.twitter.com/1.1/search/tweets.json";
+			string count = "10";
+
+			Dictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters.Add("count", count);
+			parameters.Add("q", q);
+//			if(sinceId != "0"){
+//				parameters.Add("since_id", sinceId);
+//			}
+
+			WWWForm form = new WWWForm();
+			Dictionary<string, string> headers = form.headers;
+			headers["Authorization"] = GetHeaderWithAccessToken("GET", urlstr, consumerKey, consumerSecret, response, parameters);
+
+			string url = urlstr + "?" + "count=" + count + "&" + "q=" + q;
+//			if(sinceId != "0"){
+//				url += "&since_id=" + sinceId;
+//			}
+
+			WWW web = new WWW(url, null, headers);
+			yield return web;
+
+			if (web.error == null) {
+				SearchTweetResponse searchTweetResponse = new SearchTweetResponse
+				{
+					Json = web.text
+				};
+
+				callback(true, searchTweetResponse);
 			} else {
 				callback(false, null);
 

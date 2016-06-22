@@ -13,6 +13,8 @@ public class TimeLineNodeController : MonoBehaviour {
 	[SerializeField]
 	private Text nameText;
 	[SerializeField]
+	private Text rtNameText;
+	[SerializeField]
 	private Image icon;
 	[SerializeField]
 	private GameObject tweetTextUrlButtonPrefab;
@@ -59,6 +61,8 @@ public class TimeLineNodeController : MonoBehaviour {
 		string tweetTextStr = rtText;
 		nameText.text = rtName;
 		screenNameText.text = rtScreenName;
+		rtNameText.gameObject.SetActive (true);
+		rtNameText.text = name+"さんのRT";
 
 		MatchCollection matchCollection = Regex.Matches (rtText, @"(https?://[-_.!~*\'()a-zA-Z0-9;/?:@&=+$,%#]+)");
 		string[] matchUrl = new string[matchCollection.Count];
