@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -23,7 +24,8 @@ public class TimeLineNodeController : MonoBehaviour {
 
 
 	public void SetNodeDatas(string tweet, string name, string screenName, string profileImageUrl){
-		string tweetTextStr = tweet;
+		StartCoroutine (SetTweetIcon(profileImageUrl));
+
 		nameText.text = name;
 		screenNameText.text = screenName;
 
@@ -58,7 +60,8 @@ public class TimeLineNodeController : MonoBehaviour {
 	}
 
 	public void SetNodeDatasRT(string rtText, string rtName, string rtScreenName, string rtProfileImageUrl, string name, string screenName){
-		string tweetTextStr = rtText;
+		StartCoroutine (SetTweetIcon(rtProfileImageUrl));
+
 		nameText.text = rtName;
 		screenNameText.text = rtScreenName;
 		rtNameText.gameObject.SetActive (true);
@@ -95,5 +98,34 @@ public class TimeLineNodeController : MonoBehaviour {
 
 	public void onClickUrlButton(string url){
 		Application.OpenURL(url);
+	}
+
+	IEnumerator SetTweetIcon (string url) {
+		string[] splitedUrl = url.Split('/');
+
+		Texture2D texture;
+		string path = string.Format("{0}/{1}", Application.persistentDataPath , splitedUrl[splitedUrl.Length-1]);
+		if (!File.Exists (path)) {
+			WWW www = new WWW(url);
+			yield return www;
+
+			if( www.error == null){
+				File.WriteAllBytes( path, www.bytes );
+				texture = www.texture;
+				icon.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+			}
+		} else {
+			byte[] imageBytes = File.ReadAllBytes(path);
+			Texture2D tex2D = new Texture2D(50, 50);
+			bool isloadbmpSuccess =  tex2D.LoadImage(imageBytes);
+
+			if( isloadbmpSuccess )
+			{
+				texture = tex2D;
+				icon.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+			} else {
+				Debug.Log ("load bmp failed");
+			}
+		}
 	}
 }

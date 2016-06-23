@@ -79,9 +79,6 @@ public class TwitterTimeLineScrollViewController : MonoBehaviour {
 				scrollViewRectTransform.anchoredPosition = new Vector2 (0, scrollViewReloadHeight);
 				//リスト取得通信
 				StartCoroutine (Twitter.API.GetTimeLine (gameStateManager.CONSUMER_KEY, gameStateManager.CONSUMER_SECRET, gameStateManager.m_AccessTokenResponse, sinceId, new Twitter.TimeLineCallback(this.OnGetTimeLineCallback)));
-				StartCoroutine (Twitter.API.GetSearchTweet ("twitter", gameStateManager.CONSUMER_KEY, gameStateManager.CONSUMER_SECRET, gameStateManager.m_AccessTokenResponse, new Twitter.SearchTweetCallback(this.OnGetSearchTweetCallback)));
-
-
 			} else {
 				//reload通信が終了していれば引き戻す処理
 				if(listReloadEndFlag){
@@ -117,20 +114,6 @@ public class TwitterTimeLineScrollViewController : MonoBehaviour {
 			print("OnGetTimeLineCallback - failed.");
 		}
 	}
-
-	void OnGetSearchTweetCallback(bool success, Twitter.SearchTweetResponse response)
-	{
-		if (success)
-		{
-			print("OnGetSearchTweetCallback - true.");
-			Debug.Log (response.Json);
-		}
-		else
-		{
-			print("OnGetSearchTweetCallback - failed.");
-		}
-	}
-		
 
 	void GenerateTimeLineNode(string json){
 		int tweetCounter = 0;

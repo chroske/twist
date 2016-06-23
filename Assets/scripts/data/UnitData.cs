@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public class UnitData
 {
 	public int unit_id;
+	public string unit_acount_id;
+	public string unit_name;
 	public int attack;
 	public int hitPoint;
 	public float speed;
@@ -24,6 +26,8 @@ public class UnitData
 	public UnitData(Dictionary<string, object>data)
 	{
 		unit_id = (int)data["unit_id"];
+		unit_acount_id = data["unit_acount_id"].ToString();
+		unit_name = data["unit_name"].ToString();
 		attack = (int)data["attack"];
 		hitPoint = (int)data["hitPoint"];
 		speed = (float)data["speed"];

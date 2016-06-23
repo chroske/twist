@@ -29,11 +29,10 @@ public class OwnedUnitListController : MonoBehaviour {
 	public string ownedUnitListMode;
 	public int selectPartyChangeId;
 
-	// Use this for initialization
 	void Start () {
 		//GameStateManager gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
-		Dictionary<int, OwnedUnitData> ownedUnitDic = gameStateManager.ownedUnitDic;
-		GenOwnedUnitList (ownedUnitDic);
+		//Dictionary<int, OwnedUnitData> ownedUnitDic = gameStateManager.ownedUnitDic;
+		GenOwnedUnitList (gameStateManager.ownedUnitDic);
 	}
 
 	public void GotoUnitDetailPanel(int unitId){
@@ -98,6 +97,7 @@ public class OwnedUnitListController : MonoBehaviour {
 		if (this.gameObject.GetComponent<RectTransform>().anchoredPosition.x == 0) {
 			navigationBar.ChangeTweenPanel (this.gameObject);
 			SetNextPanelObj ();
+			GenOwnedUnitList (gameStateManager.ownedUnitDic);
 		} else {
 			navigationBar.RollBackTweenPanel ();
 		}

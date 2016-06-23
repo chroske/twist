@@ -472,13 +472,13 @@ namespace Twitter
 			}
 		}
 
-		public static IEnumerator GetSearchTweet(string q, string consumerKey, string consumerSecret, AccessTokenResponse response, SearchTweetCallback callback){
+		public static IEnumerator GetSearchTweet(string consumerKey, string consumerSecret, AccessTokenResponse response, string q, string count, SearchTweetCallback callback){
 			string urlstr = "https://api.twitter.com/1.1/search/tweets.json";
-			string count = "10";
 
 			Dictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters.Add("count", count);
 			parameters.Add("q", q);
+
 //			if(sinceId != "0"){
 //				parameters.Add("since_id", sinceId);
 //			}
@@ -487,7 +487,7 @@ namespace Twitter
 			Dictionary<string, string> headers = form.headers;
 			headers["Authorization"] = GetHeaderWithAccessToken("GET", urlstr, consumerKey, consumerSecret, response, parameters);
 
-			string url = urlstr + "?" + "count=" + count + "&" + "q=" + q;
+			string url = urlstr + "?" + "count=" + count + "&" + "q=" + WWW.EscapeURL(q);
 //			if(sinceId != "0"){
 //				url += "&since_id=" + sinceId;
 //			}
@@ -508,7 +508,4 @@ namespace Twitter
 			}
 		}
 	}
-
-
-
 }
