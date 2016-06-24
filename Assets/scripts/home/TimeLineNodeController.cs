@@ -101,10 +101,11 @@ public class TimeLineNodeController : MonoBehaviour {
 	}
 
 	IEnumerator SetTweetIcon (string url) {
-		string[] splitedUrl = url.Split('/');
-
 		Texture2D texture;
-		string path = string.Format("{0}/{1}", Application.persistentDataPath , splitedUrl[splitedUrl.Length-1]);
+
+		string[] splitedUrl = url.Split('/');
+		string imageFileName = splitedUrl [splitedUrl.Length - 1];
+		string path = string.Format("{0}/{1}", Application.persistentDataPath , imageFileName);
 		if (!File.Exists (path)) {
 			WWW www = new WWW(url);
 			yield return www;
@@ -116,7 +117,7 @@ public class TimeLineNodeController : MonoBehaviour {
 			}
 		} else {
 			byte[] imageBytes = File.ReadAllBytes(path);
-			Texture2D tex2D = new Texture2D(50, 50);
+			Texture2D tex2D = new Texture2D(48, 48);
 			bool isloadbmpSuccess =  tex2D.LoadImage(imageBytes);
 
 			if( isloadbmpSuccess )

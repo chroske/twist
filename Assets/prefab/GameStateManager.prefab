@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &103736
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 457934}
+  - 114: {fileID: 11466358}
+  m_Layer: 0
+  m_Name: GameStateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &457934
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 103736}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 194.48795, y: 131.50893, z: 179.87056}
+  m_LocalScale: {x: 1.0238097, y: 1.0238097, z: 1.0238097}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11466358
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 103736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a679a3ffbcb4f15b92ff54ae755874, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test_uint_id: 1
+  test_party_num: 0
+  test_uint_attack: 0
+  test_uint_hitPoint: 0
+  test_uint_speed: 0
+  test_uint_type: 0
+  test_uint_Level: 0
+  test_uint_combo: 0
+  test_uint_ability_1: 0
+  test_uint_ability_2: 0
+  test_uint_ability_3: 0
+  test_uint_strikeShot: 0
+  test_uint_comboType: 2
+  test_uint_comboAttack: 5
+  test_uint_maxComboNum: 1
+  AccountId: 1
+  AccountName: NINJA
+  offlineGame: 0
+  onlineGame: 0
+  CONSUMER_KEY: MzS9OesDFLmxPwB4QdrgK5VNP
+  CONSUMER_SECRET: oKKVQ7Rexiy8k6lcHDq0W3DDLIS9uq78wo3lgccDe6tkDtzyrU
+  gachaTicketList: []
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 103736}
+  m_IsPrefabParent: 1

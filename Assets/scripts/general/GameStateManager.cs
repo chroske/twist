@@ -37,9 +37,18 @@ public class GameStateManager : MonoBehaviour {
 	public string CONSUMER_KEY = "MzS9OesDFLmxPwB4QdrgK5VNP";
 	public string CONSUMER_SECRET = "oKKVQ7Rexiy8k6lcHDq0W3DDLIS9uq78wo3lgccDe6tkDtzyrU";
 
+	//gachaticket
+	public List<GachaTicketData> gachaTicketList = new List<GachaTicketData> ();//ガチャチケリスト
 
+	private static GameStateManager instance = null;
 	void Awake(){
-		DontDestroyOnLoad (this);
+		//シングルトン
+		if( instance != null ) {
+			Destroy( this.gameObject );
+			return;
+		}
+		DontDestroyOnLoad (this.gameObject);
+		instance = this;
 	}
 
 	// Use this for initialization
@@ -94,7 +103,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 3 },
 			{ "unit_acount_id", "ninja03" },
 			{ "unit_name", "ニンジャ3強ビーム" },
-			{ "party_id", 0 },
+			{ "party_id", 3 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
 			{ "speed", test_uint_speed },
@@ -223,6 +232,24 @@ public class GameStateManager : MonoBehaviour {
 
 		//party_idでソート
 		partyUnitDic = SortPartyUnitDicByPartyId (partyUnitDic);
+
+
+		//ガチャチケテストデータ
+		Dictionary<string, object> ticketData1 = new Dictionary<string, object> () {
+			{ "id", 0 },
+			{ "languageNum", 7 },
+		};
+		Dictionary<string, object> ticketData2 = new Dictionary<string, object> () {
+			{ "id", 1 },
+			{ "languageNum", 5 },
+		};
+		Dictionary<string, object> ticketData3 = new Dictionary<string, object> () {
+			{ "id", 2 },
+			{ "languageNum", 3 },
+		};
+		gachaTicketList.Add(new GachaTicketData(ticketData1));
+		gachaTicketList.Add(new GachaTicketData(ticketData2));
+		gachaTicketList.Add(new GachaTicketData(ticketData3));
 	}
 
 	public void ResetPartyDic(){

@@ -7,8 +7,6 @@ public class OwnedUnitListController : MonoBehaviour {
 	[SerializeField]
 	RectTransform scrollViewNode;
 	[SerializeField]
-	GameObject gameStateManagerObj;
-	[SerializeField]
 	GameObject content;
 	[SerializeField]
 	GameObject backPanelButton;
@@ -30,8 +28,6 @@ public class OwnedUnitListController : MonoBehaviour {
 	public int selectPartyChangeId;
 
 	void Start () {
-		//GameStateManager gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
-		//Dictionary<int, OwnedUnitData> ownedUnitDic = gameStateManager.ownedUnitDic;
 		GenOwnedUnitList (gameStateManager.ownedUnitDic);
 	}
 

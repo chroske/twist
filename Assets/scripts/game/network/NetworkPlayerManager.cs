@@ -52,10 +52,10 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		//自分の名前を取得する時に使う
 		myTransform = transform;
 
-		gameSceneManager = GameObject.Find("GameSceneManager").GetComponent<GameSceneManager>();
-		arrow = GameObject.Find("GameCanvas/Arrow");
+		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<GameSceneManager>();
+		arrow = GameObject.Find("/GameCanvas/Arrow");
 		pullArrow = arrow.GetComponent<PullArrow> ();
-		networkManager = GameObject.Find("MainCanvas").GetComponent<NetworkLobbyManager>();
+		networkManager = GameObject.Find("/MainCanvas").GetComponent<NetworkLobbyManager>();
 
 		//サーバに初期データセット
 		SetDefaultSyncParam();

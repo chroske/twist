@@ -4,7 +4,6 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class BattlePanelOfflineController : MonoBehaviour {
-
 	public GameStateManager gameStateManager;
 
 	public void OnClickQuestButton(){
@@ -13,6 +12,6 @@ public class BattlePanelOfflineController : MonoBehaviour {
 
 	private void StartTheOfflineGame(){
 		gameStateManager.offlineGame = true;
-		Application.LoadLevelAdditive ("GameMain");
+		SceneManager.LoadScene("GameMain", LoadSceneMode.Additive);
 	}
 }

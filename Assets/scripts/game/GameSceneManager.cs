@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class GameSceneManager : NetworkBehaviour {
-
 	[SerializeField]
 	GameObject offlinePlayerManagerObj;
 
@@ -181,7 +181,8 @@ public class GameSceneManager : NetworkBehaviour {
 			Destroy (offlinePlayerManager.gameObject);
 			networkLobbyManager.SetUpOfflinePlayTop();
 			gameStateManager.offlineGame = false;
-			Application.UnloadLevel ("GameMain");
+//			Application.UnloadLevel ("GameMain");
+			SceneManager.UnloadScene ("GameMain");
 		} else if(gameStateManager.onlineGame) {
 			gameStateManager.onlineGame = false;
 			networkLobbyManager.SendReturnToLobby (); //なんかエラー出るけど問題ないっぽい
