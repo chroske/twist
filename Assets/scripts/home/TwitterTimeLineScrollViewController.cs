@@ -102,17 +102,17 @@ public class TwitterTimeLineScrollViewController : MonoBehaviour {
 		if (success)
 		{
 			GenerateTimeLineNode (response.Json);
-
-			//ひっぱって出てくる矢印とローディング
-			loadArrowIcon.SetActive(true);
-			loadIcon.SetActive(false);
-
-			listReloadEndFlag = true;
 		}
 		else
 		{
 			print("OnGetTimeLineCallback - failed.");
 		}
+
+		//ひっぱって出てくる矢印とローディング
+		loadArrowIcon.SetActive(true);
+		loadIcon.SetActive(false);
+
+		listReloadEndFlag = true;
 	}
 
 	void GenerateTimeLineNode(string json){
