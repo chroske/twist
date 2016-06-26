@@ -137,28 +137,28 @@ public class MyUnitController : MonoBehaviour {
 		string imageFileName = splitedUrl [splitedUrl.Length - 1];
 		//string path = string.Format("{0}/{1}", Application.persistentDataPath , imageFileName);
 		string path = string.Format("{0}/{1}", Application.temporaryCachePath , imageFileName);
-		//if (!File.Exists (path)) {
+		if (!File.Exists (path)) {
 			WWW www = new WWW(url);
 			yield return www;
 
-			if( www.error == null){
-				File.WriteAllBytes( path, www.bytes );
+			if (www.error == null) {
+				File.WriteAllBytes (path, www.bytes);
 				texture = www.texture;
 
-				unitIconSprite.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 11.0f);
+				unitIconSprite.sprite = Sprite.Create (texture, new Rect (0, 0, texture.width, texture.height), new Vector2 (0.5f, 0.5f), 11.0f);
 			}
-//		} else {
-//			byte[] imageBytes = File.ReadAllBytes(path);
-//			Texture2D tex2D = new Texture2D(100, 100);
-//			bool isloadbmpSuccess =  tex2D.LoadImage(imageBytes);
-//
-//			if( isloadbmpSuccess )
-//			{
-//				texture = tex2D;
-//				unitIconSprite.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-//			} else {
-//				Debug.Log ("load bmp failed");
-//			}
-//		}
+		} else {
+			byte[] imageBytes = File.ReadAllBytes(path);
+			Texture2D tex2D = new Texture2D(48, 48);
+			bool isloadbmpSuccess =  tex2D.LoadImage(imageBytes);
+
+			if( isloadbmpSuccess )
+			{
+				texture = tex2D;
+				unitIconSprite.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2 (0.5f, 0.5f), 11.0f);
+			} else {
+				Debug.Log ("load bmp failed");
+			}
+		}
 	}
 }
