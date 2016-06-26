@@ -132,18 +132,22 @@ public class GameSceneManager : NetworkBehaviour {
 
 	public void SetAllUnitParamator(Dictionary<int,OwnedUnitData> unitParamDic){
 		Unit_1.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[1]);
+		Unit_1.GetComponent<MyUnitController> ().SetUnitIcon ();
 		Unit_1.GetComponent<MyUnitController> ().SetComboEffect ();
 		Unit_1.GetComponent<MyPartyUnitController> ().SetComboEffect ();
 
 		Unit_2.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[2]);
+		Unit_2.GetComponent<MyUnitController> ().SetUnitIcon ();
 		Unit_2.GetComponent<MyUnitController> ().SetComboEffect ();
 		Unit_2.GetComponent<MyPartyUnitController> ().SetComboEffect ();
 
 		Unit_3.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[3]);
+		Unit_3.GetComponent<MyUnitController> ().SetUnitIcon ();
 		Unit_3.GetComponent<MyUnitController> ().SetComboEffect ();
 		Unit_3.GetComponent<MyPartyUnitController> ().SetComboEffect ();
 
 		Unit_4.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[4]);
+		Unit_4.GetComponent<MyUnitController> ().SetUnitIcon ();
 		Unit_4.GetComponent<MyUnitController> ().SetComboEffect ();
 		Unit_4.GetComponent<MyPartyUnitController> ().SetComboEffect ();
 	}
