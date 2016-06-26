@@ -11,7 +11,7 @@ GameObject:
   - 222: {fileID: 22247784}
   - 114: {fileID: 11424564}
   m_Layer: 5
-  m_Name: RoomIcon
+  m_Name: UnitIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,8 +83,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abee6846489d240aba19e049c67e9aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitIcon: {fileID: 11424564}
   unitId: 0
   partyId: 0
+  iconImageUrl: 
   ownedUnitListPanel: {fileID: 0}
 --- !u!114 &11424564
 MonoBehaviour:

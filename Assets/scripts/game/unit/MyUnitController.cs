@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
 
 public class MyUnitController : MonoBehaviour {
+	[SerializeField]
+	private SpriteRenderer unitIconSprite;
 
 	//particle
 	public GameObject enemyHitEffect;
@@ -32,9 +35,6 @@ public class MyUnitController : MonoBehaviour {
 	void Start () {
 		comboNum = 1;
 		startEffectFlag = true;
-
-		//現在はプレイヤーキャラ以外もいるのでeffectが空にならないように暫定処理
-		//SetComboEffect();
 	}
 
 	void FixedUpdate() {
@@ -110,6 +110,10 @@ public class MyUnitController : MonoBehaviour {
 		comboNum = 1;
 	}
 
+	public void SetUnitIcon(){
+		StartCoroutine(SetLeaderUnitIcon(unitParamManager.unitIconUrl));
+	}
+
 	public void SetComboEffect(){
 		//コンボタイプをセット
 		if (unitParamManager.comboType == 0) {
@@ -124,5 +128,37 @@ public class MyUnitController : MonoBehaviour {
 		} else {
 			comboEffect = null;
 		}
+	}
+
+	IEnumerator SetLeaderUnitIcon (string url) {
+		Texture2D texture;
+
+		string[] splitedUrl = url.Split('/');
+		string imageFileName = splitedUrl [splitedUrl.Length - 1];
+		//string path = string.Format("{0}/{1}", Application.persistentDataPath , imageFileName);
+		string path = string.Format("{0}/{1}", Application.temporaryCachePath , imageFileName);
+		//if (!File.Exists (path)) {
+			WWW www = new WWW(url);
+			yield return www;
+
+			if( www.error == null){
+				File.WriteAllBytes( path, www.bytes );
+				texture = www.texture;
+
+				unitIconSprite.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 11.0f);
+			}
+//		} else {
+//			byte[] imageBytes = File.ReadAllBytes(path);
+//			Texture2D tex2D = new Texture2D(100, 100);
+//			bool isloadbmpSuccess =  tex2D.LoadImage(imageBytes);
+//
+//			if( isloadbmpSuccess )
+//			{
+//				texture = tex2D;
+//				unitIconSprite.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+//			} else {
+//				Debug.Log ("load bmp failed");
+//			}
+//		}
 	}
 }

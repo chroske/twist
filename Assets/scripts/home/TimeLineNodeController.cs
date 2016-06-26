@@ -105,7 +105,8 @@ public class TimeLineNodeController : MonoBehaviour {
 
 		string[] splitedUrl = url.Split('/');
 		string imageFileName = splitedUrl [splitedUrl.Length - 1];
-		string path = string.Format("{0}/{1}", Application.persistentDataPath , imageFileName);
+		//string path = string.Format("{0}/{1}", Application.persistentDataPath , imageFileName);
+		string path = string.Format("{0}/{1}", Application.temporaryCachePath , imageFileName);
 		if (!File.Exists (path)) {
 			WWW www = new WWW(url);
 			yield return www;

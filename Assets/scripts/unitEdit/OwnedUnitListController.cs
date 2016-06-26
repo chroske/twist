@@ -69,6 +69,7 @@ public class OwnedUnitListController : MonoBehaviour {
 			UnitListNodeController unitListNodeController = node.GetComponent<UnitListNodeController> ();
 			unitListNodeController.unitId = ownedUnitDataPair.Value.unit_id;
 			unitListNodeController.partyId = ownedUnitDataPair.Value.party_id;
+			unitListNodeController.iconImageUrl = ownedUnitDataPair.Value.unit_icon_url;
 			unitListNodeController.ownedUnitListController = this;
 			SetNextPanelObj ();
 			unitListNodeController.GetComponent<uTools.uPlayTween> ().ChangeTweenTarget (UnitDetailPanel);

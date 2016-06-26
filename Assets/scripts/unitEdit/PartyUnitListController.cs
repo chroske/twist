@@ -33,6 +33,7 @@ public class PartyUnitListController : MonoBehaviour {
 				PartyUnitListNodeController partyUnitListNodeController = node.GetComponent<PartyUnitListNodeController> ();
 				partyUnitListNodeController.unitId = partyUnitData.unit_id;
 				partyUnitListNodeController.partyId = partyUnitData.party_id;
+				partyUnitListNodeController.iconImageUrl = partyUnitData.unit_icon_url;
 				partyUnitListNodeController.ownedUnitListPanel = ownedUnitListPanel;
 
 				uTools.uPlayTween uPlayTween = node.GetComponent<uTools.uPlayTween> ();

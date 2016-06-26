@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MiniJSON;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class GachaPanelMojiGachaController : MonoBehaviour {
 	[SerializeField]
@@ -24,6 +25,9 @@ public class GachaPanelMojiGachaController : MonoBehaviour {
 		gameStateManager = GameObject.Find ("/GameStateManager").GetComponent<GameStateManager>();
 		mainCanvasObj = GameObject.Find ("/MainCanvas");
 		mainCanvasObj.SetActive (false);
+
+		//文字数制限をセット
+		SetCharacterLimit (gameStateManager.gachaLangageLimite);
 	}
 
 	public void OnClickGachaButton(){
@@ -67,13 +71,21 @@ public class GachaPanelMojiGachaController : MonoBehaviour {
 		ResultPanel.SetActive (true);
 		ResultPanelUnitNameText.text = unitData.unit_name;
 
-		StartCoroutine(SetResultIcon(profileImageUrl));
+		StartCoroutine(SetResultIcon(profileImageUrl, unitData.unit_account_id));
 	}
 
-	IEnumerator SetResultIcon (string url) {
-		WWW texturewww = new WWW(url);
+	IEnumerator SetResultIcon (string url, string accountId) {
+		string[] splitedUrl = url.Split('/');
+		string imageFileName = splitedUrl [splitedUrl.Length - 1];
+		string path = string.Format("{0}/{1}", Application.persistentDataPath , imageFileName);
+
+		WWW texturewww = new WWW (url);
 		yield return texturewww;
-		ResultPanelIconImage.texture = texturewww.texture;
+
+		if (texturewww.error == null) {
+			File.WriteAllBytes (path, texturewww.bytes);
+			ResultPanelIconImage.texture = texturewww.texture;
+		}
 	}
 
 
@@ -84,8 +96,9 @@ public class GachaPanelMojiGachaController : MonoBehaviour {
 
 		Dictionary<string, object> data = new Dictionary<string, object> () {
 			{ "unit_id", id },
-			{ "unit_acount_id", userDatas["name"] },
-			{ "unit_name", userDatas["screen_name"] },
+			{ "unit_acount_id", userDatas["screen_name"] },
+			{ "unit_name", userDatas["name"] },
+			{ "unit_icon_url", userDatas["profile_image_url"] },
 			{ "party_id", 0},
 			{ "attack", 2},
 			{ "hitPoint", int.Parse(userDatas["statuses_count"].ToString())},
@@ -103,7 +116,6 @@ public class GachaPanelMojiGachaController : MonoBehaviour {
 		};
 
 		return new OwnedUnitData(data);
-		//gameStateManager.ownedUnitDic.Add(new OwnedUnitData(data).unit_id, new OwnedUnitData(data));
 	}
 
 	public void SetCharacterLimit(int limit){

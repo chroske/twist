@@ -40,6 +40,9 @@ public class GameStateManager : MonoBehaviour {
 	//gachaticket
 	public List<GachaTicketData> gachaTicketList = new List<GachaTicketData> ();//ガチャチケリスト
 
+	//gacha
+	public int gachaLangageLimite = 0;
+
 	private static GameStateManager instance = null;
 	void Awake(){
 		//シングルトン
@@ -65,6 +68,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 1 },
 			{ "unit_acount_id", "ninja01" },
 			{ "unit_name", "ニンジャ1ビーム" },
+			{ "unit_icon_url", "" },
 			{ "party_id", 1 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -84,6 +88,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 2 },
 			{ "unit_acount_id", "ninja02" },
 			{ "unit_name", "ニンジャ2爆" },
+			{ "unit_icon_url", "" },
 			{ "party_id", 2 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -103,6 +108,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 3 },
 			{ "unit_acount_id", "ninja03" },
 			{ "unit_name", "ニンジャ3強ビーム" },
+			{ "unit_icon_url", "" },
 			{ "party_id", 3 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -122,6 +128,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 4 },
 			{ "unit_acount_id", "ninja04" },
 			{ "unit_name", "ニンジャ4ビーム" },
+			{ "unit_icon_url", "" },
 			{ "party_id", 4 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -141,6 +148,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 5 },
 			{ "unit_acount_id", "ninja05" },
 			{ "unit_name", "ニンジャ5爆" },
+			{ "unit_icon_url", "" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -160,6 +168,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 6 },
 			{ "unit_acount_id", "ninja06" },
 			{ "unit_name", "ニンジャ6ビーム" },
+			{ "unit_icon_url", "" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -179,6 +188,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 7 },
 			{ "unit_acount_id", "ninja07" },
 			{ "unit_name", "ニンジャ7爆" },
+			{ "unit_icon_url", "" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },
@@ -198,6 +208,7 @@ public class GameStateManager : MonoBehaviour {
 			{ "unit_id", 8 },
 			{ "unit_acount_id", "ninja08" },
 			{ "unit_name", "ニンジャ8強ビーム" },
+			{ "unit_icon_url", "" },
 			{ "party_id", 0 },
 			{ "attack", test_uint_attack },
 			{ "hitPoint", test_uint_hitPoint },

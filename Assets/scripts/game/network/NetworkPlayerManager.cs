@@ -18,6 +18,9 @@ public class NetworkPlayerManager : NetworkBehaviour {
 
 	//LobbyPlayerからわたってくるUnitのパラメータ
 	[SyncVar] public int syncUnitId;
+	[SyncVar] public string syncUnitAccountId;
+	[SyncVar] public string syncUnitName;
+	[SyncVar] public string syncUnitIconUrl;
 	[SyncVar] public int syncUnitAttack;
 	[SyncVar] public int syncUnitHitpoint;
 	[SyncVar] public float syncUnitSpeed;
@@ -163,8 +166,9 @@ public class NetworkPlayerManager : NetworkBehaviour {
 	public void SetUnitParamator(){
 		Dictionary<string, object> data = new Dictionary<string, object> () {
 			{ "unit_id", syncUnitId },
-			{ "unit_acount_id", "" },
-			{ "unit_name", "" },
+			{ "unit_acount_id", syncUnitAccountId },
+			{ "unit_name", syncUnitName },
+			{ "unit_icon_url", syncUnitIconUrl },
 			{ "party_id", 0 },
 			{ "attack", syncUnitAttack },
 			{ "hitPoint", syncUnitHitpoint },

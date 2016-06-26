@@ -4,7 +4,10 @@ using System.Collections;
 public class UnitParamManager : MonoBehaviour {
 
 	//unit game parameter
-	public int unit_id;
+	public int unitId;
+	public string unitAccountId;
+	public string unitName;
+	public string unitIconUrl;
 	public int attack;
 	public int hitPoint;
 	public float speed;
@@ -21,7 +24,10 @@ public class UnitParamManager : MonoBehaviour {
 
 
 	public void SetParameter(OwnedUnitData myUnitParam){
-		unit_id = myUnitParam.unit_id;
+		unitId = myUnitParam.unit_id;
+		unitAccountId = myUnitParam.unit_account_id;
+		unitName = myUnitParam.unit_name;
+		unitIconUrl =  myUnitParam.unit_icon_url;
 		attack = myUnitParam.attack;
 		hitPoint = myUnitParam.hitPoint;
 		speed = myUnitParam.speed;

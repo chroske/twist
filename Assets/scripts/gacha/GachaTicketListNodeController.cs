@@ -11,18 +11,18 @@ public class GachaTicketListNodeController : MonoBehaviour {
 	public GameObject selectGachaItemPanel;
 	public GachaPanelSelectItemController gachaPanelSelectItemController;
 
-	private int langageNum;
+	private int langageLimitNum;
 
 	void Start(){
 		playTween = GetComponent<uTools.uPlayTween> ();
 	}
 
 	public void SetNodeParam(string ticketName, int langageNumInt){
-		langageNum = langageNumInt;
+		langageLimitNum = langageNumInt;
 		text.text = ticketName;
 	}
 
 	public void OnClickUnitListNode(){
-		gachaPanelSelectItemController.GotoGachaScene();
+		gachaPanelSelectItemController.GotoGachaScene(langageLimitNum);
 	}
 }

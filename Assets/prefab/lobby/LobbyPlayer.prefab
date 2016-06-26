@@ -9,8 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 468166}
   - 114: {fileID: 11424034}
-  - 114: {fileID: 11461870}
   - 114: {fileID: 11431784}
+  - 114: {fileID: 11499662}
   m_Layer: 0
   m_Name: LobbyPlayer
   m_TagString: Untagged
@@ -73,8 +73,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaca1e182a041480fb56d03b9ac5edc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerUniqueId: 0
   syncLobbyPlayerName: 
---- !u!114 &11461870
+--- !u!114 &11499662
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -82,10 +83,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 110364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08a302c3c01fa4ec5b09f1d22dc135f8, type: 3}
+  m_Script: {fileID: 11500000, guid: 1ff95a5f210fc524bbf91be0f25f387e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowLobbyGUI: 0
+  ShowLobbyGUI: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -170,7 +170,9 @@ public class GameSceneManager : NetworkBehaviour {
 
 		if(controllUnit != null){
 			controllUnit.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam);
-			controllUnit.GetComponent<MyUnitController> ().SetComboEffect ();
+			MyUnitController myUnitController = controllUnit.GetComponent<MyUnitController> ();
+			myUnitController.SetUnitIcon ();
+			myUnitController.SetComboEffect ();
 			controllUnit.GetComponent<MyPartyUnitController> ().SetComboEffect ();
 		}
 	}

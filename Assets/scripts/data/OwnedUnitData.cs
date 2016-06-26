@@ -6,8 +6,9 @@ using System.Collections.Generic;
 public class OwnedUnitData {
 
 	public int unit_id;
-	public string unit_acount_id;
+	public string unit_account_id;
 	public string unit_name;
+	public string unit_icon_url;
 	public int party_id; //0=パーティ以外 1~4=パーティ
 	public int attack;
 	public int hitPoint;
@@ -26,8 +27,9 @@ public class OwnedUnitData {
 	public OwnedUnitData(Dictionary<string, object>data)
 	{
 		unit_id = (int)data["unit_id"];
-		unit_acount_id = data["unit_acount_id"].ToString();
+		unit_account_id = data["unit_acount_id"].ToString();
 		unit_name = data["unit_name"].ToString();
+		unit_icon_url = data["unit_icon_url"].ToString();
 		party_id = (int)data["party_id"];
 		attack = (int)data["attack"];
 		hitPoint = (int)data["hitPoint"];

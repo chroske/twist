@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.IO;
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
@@ -57,6 +58,9 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 		//networkManagerControllerでsyncの構造体を定義すると何故か落ちるのでバラで渡す
 		networkManagerController.syncUnitId = lobbyPlayerController.unitParamsClass [0].unit_id;
+		networkManagerController.syncUnitAccountId = lobbyPlayerController.unitParamsClass [0].unit_account_id;
+		networkManagerController.syncUnitName = lobbyPlayerController.unitParamsClass [0].unit_name;
+		networkManagerController.syncUnitIconUrl = lobbyPlayerController.unitParamsClass [0].unit_icon_url;
 		networkManagerController.syncUnitAttack = lobbyPlayerController.unitParamsClass [0].attack;
 		networkManagerController.syncUnitHitpoint = lobbyPlayerController.unitParamsClass [0].hitPoint;
 		networkManagerController.syncUnitSpeed = lobbyPlayerController.unitParamsClass [0].speed;
@@ -137,12 +141,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		matchPanel4.GetComponent<PlayerListInRoomController> ().SetActiveStartGameButton ();
 	}
 
-	public GameObject CreateLobbyPlayerListPrefab(string lobbyPlayerName){
-		GameObject prefab = Instantiate (lobbyPlayerListNode);
-		prefab.transform.SetParent (lobbyContent.transform,false);
-		prefab.transform.GetComponentInChildren<Text>().text = lobbyPlayerName;
+	public GameObject CreateLobbyPlayerListPrefab(string lobbyPlayerName, string unitIconUrl){
+		GameObject node = Instantiate (lobbyPlayerListNode);
+		node.transform.SetParent (lobbyContent.transform,false);
+		node.transform.GetComponent<LobbyPlayerListNodeController> ().SetNodeDatas (lobbyPlayerName, unitIconUrl);
 
-		return prefab;
+		return node;
 	}
 
 	private void StartMatchMake(){

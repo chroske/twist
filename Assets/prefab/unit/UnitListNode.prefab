@@ -11,7 +11,7 @@ GameObject:
   - 222: {fileID: 22219760}
   - 114: {fileID: 11407904}
   m_Layer: 5
-  m_Name: RoomIcon
+  m_Name: UnitIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,9 +162,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playTween: {fileID: 11450506}
+  unitIcon: {fileID: 11407904}
   ownedUnitListController: {fileID: 0}
   unitId: 0
   partyId: 0
+  iconImageUrl: 
 --- !u!114 &11476264
 MonoBehaviour:
   m_ObjectHideFlags: 1

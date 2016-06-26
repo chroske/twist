@@ -45,18 +45,15 @@ public class GachaPanelSelectItemController : MonoBehaviour {
 		}
 	}
 		
-	public void GotoGachaScene(){
-//		ScrollView.transform.localPosition = new Vector2 (5, -970);
-//		BackGroundPanel.color = new Color(0, 0, 0, 0);
+	public void GotoGachaScene(int langageLimitNum){
 		this.gameObject.SetActive (false);
 
+		//基準位置に戻しておく
 		ScrollView.GetComponent<uTools.uTweenPosition> ().ResetToBeginning ();
 		BackGroundPanel.GetComponent<uTools.uTweenColor>().ResetToBeginning ();
 
-		//ScrollView.SetActive (false);
-		//BackGroundPanel.gameObject.SetActive (false);
+		gameStateManager.gachaLangageLimite = langageLimitNum;
 
 		SceneManager.LoadScene("Gacha", LoadSceneMode.Additive);
-		//SceneManager.LoadScene("Gacha");
 	}
 }
