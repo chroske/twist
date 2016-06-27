@@ -50,12 +50,15 @@ public class UnitListNodeController : MonoBehaviour {
 
 				if( www.error == null){
 					File.WriteAllBytes( path, www.bytes );
+#if UNITY_IOS
+					UnityEngine.iOS.Device.SetNoBackupFlag(path);//iCloudにバックアップさせない(リジェクト対策)
+#endif
 					texture = www.texture;
 					unitIcon.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
 				}
 			} else {
 				byte[] imageBytes = File.ReadAllBytes(path);
-				Texture2D tex2D = new Texture2D(48, 48);
+				Texture2D tex2D = new Texture2D(48, 48, TextureFormat.RGB24, false);
 				bool isloadbmpSuccess =  tex2D.LoadImage(imageBytes);
 
 				if( isloadbmpSuccess )

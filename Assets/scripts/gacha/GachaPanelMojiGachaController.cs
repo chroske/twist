@@ -84,6 +84,9 @@ public class GachaPanelMojiGachaController : MonoBehaviour {
 
 		if (texturewww.error == null) {
 			File.WriteAllBytes (path, texturewww.bytes);
+#if UNITY_IOS
+			UnityEngine.iOS.Device.SetNoBackupFlag(path);//iCloudにバックアップさせない(リジェクト対策)
+#endif
 			ResultPanelIconImage.texture = texturewww.texture;
 		}
 	}

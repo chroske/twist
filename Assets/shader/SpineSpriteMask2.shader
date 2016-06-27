@@ -1,4 +1,4 @@
-﻿Shader "Custom/SpineShader"{
+﻿Shader "Custom/SpineSpriteMask2"{
 Properties
 {
         _MainTex ("Base (RGB)", 2D) = "white" {}
@@ -6,15 +6,19 @@ Properties
  
 SubShader
 {
-        Tags {"Queue"="Transparent+2" "IgnoreProjector"="True" "RenderType"="Transparent"}
+        Tags {"Queue"="Transparent+1" "IgnoreProjector"="True"}
         ZWrite Off
-        Cull Off
-        Blend SrcAlpha OneMinusSrcAlpha
+        AlphaTest Greater 0.5
+        ColorMask 0
+        ZTest Always
+ 
  
         Stencil {
-                        Ref 1
-                        Comp Equal
+                        Ref 2
+                        Comp always
+                        Pass replace
                 }
+ 
      
         Pass
         {
@@ -50,6 +54,7 @@ SubShader
                         fixed4 frag (v2f i) : COLOR
                         {
                                 fixed4 col = tex2D(_MainTex, i.texcoord);
+                                //if(col.a<0.1)discard;
                                 return col;
                         }
                 ENDCG

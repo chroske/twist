@@ -1,4 +1,4 @@
-﻿Shader "Custom/SpineShader"{
+﻿Shader "Custom/SpineShader2"{
 Properties
 {
         _MainTex ("Base (RGB)", 2D) = "white" {}
@@ -12,7 +12,7 @@ SubShader
         Blend SrcAlpha OneMinusSrcAlpha
  
         Stencil {
-                        Ref 1
+                        Ref 2
                         Comp Equal
                 }
      

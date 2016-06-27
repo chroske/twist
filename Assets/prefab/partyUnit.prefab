@@ -44,7 +44,7 @@ GameObject:
   - 114: {fileID: 11431258}
   - 114: {fileID: 11476352}
   m_Layer: 8
-  m_Name: PartyUnit
+  m_Name: partyUnit
   m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &148420
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,8 +160,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 143590}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.08, y: -0.17, z: 1.1}
-  m_LocalScale: {x: 6.8250012, y: 6.825005, z: 1}
+  m_LocalPosition: {x: 0.15, y: -0.3, z: 1.1}
+  m_LocalScale: {x: 23, y: 23, z: 1}
   m_Children: []
   m_Father: {fileID: 499542}
   m_RootOrder: 4
@@ -225,7 +225,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.639053
+  m_Radius: 2.083995
 --- !u!58 &5874736
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -239,7 +239,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.63203007
+  m_Radius: 2.083995
 --- !u!95 &9591152
 Animator:
   serializedVersion: 3

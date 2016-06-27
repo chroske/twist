@@ -14,10 +14,10 @@ SubShader
  
  
         Stencil {
-                                Ref 2
-                                Comp always
-                                Pass replace
-                        }
+                        Ref 1
+                        Comp always
+                        Pass replace
+                }
  
      
         Pass

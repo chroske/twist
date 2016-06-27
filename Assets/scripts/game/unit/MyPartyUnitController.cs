@@ -143,7 +143,7 @@ public class MyPartyUnitController : MonoBehaviour {
 			}
 		} else {
 			byte[] imageBytes = File.ReadAllBytes(path);
-			Texture2D tex2D = new Texture2D(48, 48);
+			Texture2D tex2D = new Texture2D(48, 48, TextureFormat.RGB24, false);
 			bool isloadbmpSuccess =  tex2D.LoadImage(imageBytes);
 
 			if( isloadbmpSuccess )
