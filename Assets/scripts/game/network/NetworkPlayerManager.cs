@@ -137,7 +137,8 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		RectTransform rectTrans = arrow.transform.GetComponent <RectTransform> ();
 
 		arrow.transform.position = syncArrowPos;
-		arrow.transform.rotation = syncArrowRot;
+		arrow.transform.rotation = Quaternion.Slerp(arrow.transform.rotation, syncArrowRot, 1.0f);
+
 		rectTrans.sizeDelta = syncArrowSize;
 	}
 
