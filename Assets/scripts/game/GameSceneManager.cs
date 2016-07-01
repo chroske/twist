@@ -33,6 +33,8 @@ public class GameSceneManager : NetworkBehaviour {
 	private OfflinePlayerManager offlinePlayerManager;
 
 	void Awake(){
+		Application.targetFrameRate = 60;
+
 		//offlineGameがtrueならofflinePlayerManagerを作る
 		GameObject gameStateManagerObj = GameObject.Find("/GameStateManager");
 		gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();

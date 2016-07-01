@@ -41,7 +41,6 @@ public class GachaPanelMojiGachaController : MonoBehaviour {
 		if (success)
 		{
 			GenerateUnitFromSearchTweet (response.Json);
-			//Debug.Log (response.Json);
 		}
 		else
 		{
@@ -75,18 +74,17 @@ public class GachaPanelMojiGachaController : MonoBehaviour {
 	}
 
 	IEnumerator SetResultIcon (string url, string accountId) {
+		//大きいサイズのアイコンを使う
 		string[] splitedUrl = url.Split('/');
 		string imageFileName = splitedUrl [splitedUrl.Length - 1];
-		string path = string.Format("{0}/{1}", Application.persistentDataPath , imageFileName);
+		string largeImageFileName = imageFileName.Replace("_normal","");
+		string path = string.Format("{0}/{1}", Application.persistentDataPath , largeImageFileName);
+		string largeSizeIconImageUrl = url.Replace(imageFileName,largeImageFileName);
 
-		WWW texturewww = new WWW (url);
+		WWW texturewww = new WWW (largeSizeIconImageUrl);
 		yield return texturewww;
 
 		if (texturewww.error == null) {
-			File.WriteAllBytes (path, texturewww.bytes);
-#if UNITY_IOS
-			UnityEngine.iOS.Device.SetNoBackupFlag(path);//iCloudにバックアップさせない(リジェクト対策)
-#endif
 			ResultPanelIconImage.texture = texturewww.texture;
 		}
 	}

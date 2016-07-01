@@ -3,8 +3,12 @@ using System.Collections;
 using System.IO;
 
 public class MyUnitController : MonoBehaviour {
+	public int unitNum;
+
 	[SerializeField]
 	private SpriteRenderer unitIconSprite;
+	[SerializeField]
+	private SpriteRenderer mask;
 
 	//particle
 	public GameObject enemyHitEffect;
@@ -30,6 +34,8 @@ public class MyUnitController : MonoBehaviour {
 
 	void Awake(){
 		unitParamManager = UnitParamManager.GetComponent<UnitParamManager>();
+		mask.material.SetInt ("_Stencil", unitNum);
+		unitIconSprite.material.SetInt ("_Stencil", unitNum);
 	}
 
 	void Start () {

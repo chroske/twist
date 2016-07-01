@@ -184,7 +184,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 102638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.23, y: -3.08, z: -1}
+  m_LocalPosition: {x: -1.51, y: -2.33, z: -1}
   m_LocalScale: {x: 0.18, y: 0.18, z: 1}
   m_Children:
   - {fileID: 444436}
@@ -327,6 +327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitIconSprite: {fileID: 21207156}
+  mask: {fileID: 21244456}
   enemyHitEffect: {fileID: 165614, guid: fadbe3bb23b0649c1b1e50b24d7b14bc, type: 2}
   wallHitEffect: {fileID: 179246, guid: 41be393b9bebe4b9a9f9b3420d04e905, type: 2}
   explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}

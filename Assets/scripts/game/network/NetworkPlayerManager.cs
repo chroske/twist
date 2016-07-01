@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
-
+[NetworkSettings(sendInterval=0.2f)]
 public class NetworkPlayerManager : NetworkBehaviour {
 	[SyncVar] public Vector3 syncArrowPos;
 	[SyncVar] public Quaternion syncArrowRot;
@@ -36,6 +36,7 @@ public class NetworkPlayerManager : NetworkBehaviour {
 	[SyncVar] public int syncUintMaxComboNum;
 
 	//ゲームオブジェクトとコンポーネント
+	private RectTransform arrowRectTrans;
 	private GameObject arrow;
 	private PullArrow pullArrow;
 	private GameSceneManager gameSceneManager;
@@ -57,6 +58,7 @@ public class NetworkPlayerManager : NetworkBehaviour {
 
 		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<GameSceneManager>();
 		arrow = GameObject.Find("/GameCanvas/Arrow");
+		arrowRectTrans = arrow.GetComponent<RectTransform> ();
 		pullArrow = arrow.GetComponent<PullArrow> ();
 		networkManager = GameObject.Find("/MainCanvas").GetComponent<NetworkLobbyManager>();
 
@@ -67,10 +69,6 @@ public class NetworkPlayerManager : NetworkBehaviour {
 	void Start(){
 		startUnitStopCheckFlag = false;
 
-		//NetIdを取得してファイル名を設定
-		GetNetIdentity();
-		SetIdentity();
-
 		if(isLocalPlayer){
 			gameSceneManager.myPlayerNetIdInt = syncPlayerNetID;
 		}
@@ -78,15 +76,6 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		SetUnitParamator();
 			
 		gameSceneManager.TurnChange (syncTurnPlayerId);
-	}
-		
-
-	void Update ()
-	{
-		//例外が発生した時にSetIdentityメソッド実行
-		if (myTransform.name == "" || myTransform.name == "Player(Clone)") {
-			SetIdentity();
-		}
 	}
 		
 	void FixedUpdate(){
@@ -107,10 +96,6 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		if (!gameSceneManager.myTurnFlag && !isLocalPlayer && syncPlayerNetID == gameSceneManager.turnPlayerId) {
 			ReceveArrowData ();
 		}
-	}
-
-	private void SetIdentity (){
-		//myTransform.name = "NetworkPlayerManager" + GetComponent<NetworkIdentity>().netId.ToString();
 	}
 		
 	//次のプレイヤーIDを吐き出す
@@ -137,10 +122,15 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		RectTransform rectTrans = arrow.transform.GetComponent <RectTransform> ();
 
 		arrow.transform.position = syncArrowPos;
-		arrow.transform.rotation = Quaternion.Slerp(arrow.transform.rotation, syncArrowRot, 1.0f);
+		arrow.transform.rotation = Quaternion.Slerp(arrow.transform.rotation, syncArrowRot, Time.deltaTime * 5);
 
-		rectTrans.sizeDelta = syncArrowSize;
+		if (syncArrowSize.y == 0) {
+			rectTrans.sizeDelta = syncArrowSize;
+		} else {
+			rectTrans.sizeDelta = Vector2.Lerp (rectTrans.sizeDelta, syncArrowSize, Time.deltaTime * 5);
+		}
 	}
+
 
 	//フラグを受け取ったらショットする
 	void ReceveShotFlag(Vector2 shotVector){
@@ -198,16 +188,6 @@ public class NetworkPlayerManager : NetworkBehaviour {
 	}
 
 ////////////////////////////////////////////////////////[Client]/////////////////////////////////////////////////////////////////
-
-	[Client]
-	void GetNetIdentity()
-	{
-		//NetworkIdentityのNetID取得
-
-		//ゲームシーンが読まれた時にlobbyplayerのnetidをplayerNetIDに入れるスクリプトを書く
-//		playerNetID = GetComponent<NetworkIdentity>().netId;
-//		playerNetIdInt =  int.Parse(playerNetID.ToString());
-	}
 		
 	[Client]
 	void TransmitArrowData()
@@ -227,7 +207,6 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		} else {
 			//Turnプレイヤーのタップがはなれた時点でArrowのSizeを0にしてその時点のarrowDistanceをsyncに入れる
 			if(arrowPos != Vector3.zero && arrowSize != Vector2.zero){
-				arrowPos = Vector3.zero;
 				arrowSize = Vector2.zero;
 				arrowShotFlag = pullArrow.shotFlag;
 
@@ -236,9 +215,7 @@ public class NetworkPlayerManager : NetworkBehaviour {
 			}
 		}
 	}
-
-
-
+		
 
 ////////////////////////////////////////////////////////[Command]/////////////////////////////////////////////////////////////////
 		

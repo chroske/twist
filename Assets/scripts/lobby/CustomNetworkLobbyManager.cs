@@ -167,7 +167,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	public void CreateMatch(){
 		StartMatchMake ();
 
-		string matchRoomName = "TESTTESTBB";
+		string matchRoomName = "ONLINE ROOM";
 		int rank = 1;
 
 		string roomName = "{" + rank.ToString() + "}" + matchRoomName;

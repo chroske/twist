@@ -2,6 +2,7 @@
 Properties
 {
         _MainTex ("Base (RGB)", 2D) = "white" {}
+        _Stencil ("Stencil ID", Int) = 0
 }
  
 SubShader
@@ -14,9 +15,9 @@ SubShader
  
  
         Stencil {
-                        Ref 1
-                        Comp always
-                        Pass replace
+                        Ref [_Stencil]
+                        Comp Always
+                        Pass Replace
                 }
  
      

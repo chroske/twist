@@ -2,6 +2,7 @@
 Properties
 {
         _MainTex ("Base (RGB)", 2D) = "white" {}
+        _Stencil ("Stencil ID", Int) = 0
 }
  
 SubShader
@@ -12,7 +13,7 @@ SubShader
         Blend SrcAlpha OneMinusSrcAlpha
  
         Stencil {
-                        Ref 1
+                        Ref [_Stencil]
                         Comp Equal
                 }
      
