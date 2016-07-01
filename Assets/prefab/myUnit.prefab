@@ -36,15 +36,13 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &129518
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 22413514}
   - 212: {fileID: 21279902}
-  - 95: {fileID: 9577198}
-  - 114: {fileID: 11416898}
   - 222: {fileID: 22275366}
   m_Layer: 8
   m_Name: UnitSprite
@@ -71,7 +69,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &143354
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -117,6 +115,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &185532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 441720}
+  - 95: {fileID: 9565166}
+  - 114: {fileID: 11418830}
+  m_Layer: 8
+  m_Name: Icon
+  m_TagString: controllUnit
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400014
 Transform:
   m_ObjectHideFlags: 1
@@ -128,7 +143,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 468622}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!4 &411854
 Transform:
   m_ObjectHideFlags: 1
@@ -139,7 +154,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_Children: []
-  m_Father: {fileID: 468622}
+  m_Father: {fileID: 441720}
   m_RootOrder: 0
 --- !u!4 &415222
 Transform:
@@ -152,7 +167,7 @@ Transform:
   m_LocalScale: {x: 23, y: 23, z: 1}
   m_Children: []
   m_Father: {fileID: 468622}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!4 &424592
 Transform:
   m_ObjectHideFlags: 1
@@ -164,7 +179,21 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 468622}
-  m_RootOrder: 2
+  m_RootOrder: 1
+--- !u!4 &441720
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 185532}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 411854}
+  - {fileID: 22413514}
+  m_Father: {fileID: 468622}
+  m_RootOrder: 0
 --- !u!4 &468622
 Transform:
   m_ObjectHideFlags: 1
@@ -172,11 +201,10 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 113430}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.81, y: -2.8, z: -1}
+  m_LocalPosition: {x: 1.81, y: -2.8, z: 20}
   m_LocalScale: {x: 0.18, y: 0.18, z: 1}
   m_Children:
-  - {fileID: 411854}
-  - {fileID: 22413514}
+  - {fileID: 441720}
   - {fileID: 424592}
   - {fileID: 482906}
   - {fileID: 415222}
@@ -194,7 +222,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 468622}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!50 &5097996
 Rigidbody2D:
   serializedVersion: 2
@@ -240,13 +268,13 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2.083995
---- !u!95 &9577198
+--- !u!95 &9565166
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 129518}
+  m_GameObject: {fileID: 185532}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: d5e24ec4371a44fa29d24bec5e366b3e, type: 2}
@@ -257,12 +285,12 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11416898
+--- !u!114 &11418830
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 129518}
+  m_GameObject: {fileID: 185532}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ccd0ad93dd1d463997bc396073fb578, type: 3}
@@ -298,6 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3d072e0c5ffa4935a91ac54d9774226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitNum: 1
   unitIconSprite: {fileID: 21279902}
   mask: {fileID: 21270104}
   enemyHitEffect: {fileID: 100000, guid: 3c1f0555cc3fd4e1d87382fbaa007f8f, type: 2}
@@ -440,7 +469,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 468622}
+  m_Father: {fileID: 441720}
   m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

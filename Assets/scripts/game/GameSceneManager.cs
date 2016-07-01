@@ -7,16 +7,28 @@ using UnityEngine.SceneManagement;
 public class GameSceneManager : NetworkBehaviour {
 	[SerializeField]
 	GameObject offlinePlayerManagerObj;
-
 	[SerializeField]
 	PullArrow pullArrow;
 
-	public GameObject Unit_1;
-	public GameObject Unit_2;
-	public GameObject Unit_3;
-	public GameObject Unit_4;
-	public GameObject turnEndText;
+	[SerializeField]
+	CommandPanelManager CommandAreaUnit_1;
+	[SerializeField]
+	CommandPanelManager CommandAreaUnit_2;
+	[SerializeField]
+	CommandPanelManager CommandAreaUnit_3;
+	[SerializeField]
+	CommandPanelManager CommandAreaUnit_4;
 
+	[SerializeField]
+	GameObject Unit_1;
+	[SerializeField]
+	GameObject Unit_2;
+	[SerializeField]
+	GameObject Unit_3;
+	[SerializeField]
+	GameObject Unit_4;
+	[SerializeField]
+	GameObject turnEndText;
 
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
@@ -134,24 +146,32 @@ public class GameSceneManager : NetworkBehaviour {
 
 	public void SetAllUnitParamator(Dictionary<int,OwnedUnitData> unitParamDic){
 		Unit_1.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[1]);
-		Unit_1.GetComponent<MyUnitController> ().SetUnitIcon ();
-		Unit_1.GetComponent<MyUnitController> ().SetComboEffect ();
+		MyUnitController myUnitController_1 = Unit_1.GetComponent<MyUnitController> ();
+		myUnitController_1.SetUnitIcon ();
+		myUnitController_1.SetComboEffect ();
 		Unit_1.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+		CommandAreaUnit_1.SetCommandPanelParam (unitParamDic[1]);
 
 		Unit_2.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[2]);
-		Unit_2.GetComponent<MyUnitController> ().SetUnitIcon ();
-		Unit_2.GetComponent<MyUnitController> ().SetComboEffect ();
+		MyUnitController myUnitController_2 = Unit_2.GetComponent<MyUnitController> ();
+		myUnitController_2.SetUnitIcon ();
+		myUnitController_2.SetComboEffect ();
 		Unit_2.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+		CommandAreaUnit_2.SetCommandPanelParam (unitParamDic[2]);
 
 		Unit_3.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[3]);
-		Unit_3.GetComponent<MyUnitController> ().SetUnitIcon ();
-		Unit_3.GetComponent<MyUnitController> ().SetComboEffect ();
+		MyUnitController myUnitController_3 = Unit_3.GetComponent<MyUnitController> ();
+		myUnitController_3.SetUnitIcon ();
+		myUnitController_3.SetComboEffect ();
 		Unit_3.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+		CommandAreaUnit_3.SetCommandPanelParam (unitParamDic[3]);
 
 		Unit_4.GetComponentInChildren<UnitParamManager> ().SetParameter (unitParamDic[4]);
-		Unit_4.GetComponent<MyUnitController> ().SetUnitIcon ();
-		Unit_4.GetComponent<MyUnitController> ().SetComboEffect ();
+		MyUnitController myUnitController_4 = Unit_4.GetComponent<MyUnitController> ();
+		myUnitController_4.SetUnitIcon ();
+		myUnitController_4.SetComboEffect ();
 		Unit_4.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+		CommandAreaUnit_4.SetCommandPanelParam (unitParamDic[4]);
 	}
 
 	public void StopAllunitVelocity(){
@@ -164,22 +184,33 @@ public class GameSceneManager : NetworkBehaviour {
 	//ユニットのパラメータとそれに対応するComboEffectをセット
 	public void SetUnitParamatorByNetId(int netId, OwnedUnitData myUnitParam){
 		GameObject controllUnit = new GameObject();
+		CommandPanelManager controllUnitCommand = new CommandPanelManager ();
 		if (netId == 0) {
 			controllUnit = Unit_1;
+			controllUnitCommand = CommandAreaUnit_1;
 		} else if (netId == 1) {
 			controllUnit = Unit_2;
+			controllUnitCommand = CommandAreaUnit_2;
 		} else if (netId == 2) {
 			controllUnit = Unit_3;
+			controllUnitCommand = CommandAreaUnit_3;
 		} else if (netId == 3) {
 			controllUnit = Unit_4;
+			controllUnitCommand = CommandAreaUnit_4;
 		}
 
+		//自分のユニットにパラメータセット
 		if(controllUnit != null){
 			controllUnit.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam);
 			MyUnitController myUnitController = controllUnit.GetComponent<MyUnitController> ();
 			myUnitController.SetUnitIcon ();
 			myUnitController.SetComboEffect ();
 			controllUnit.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+		}
+
+		//自分のユニットのコマンドパネルにパラメータセット
+		if(controllUnitCommand != null){
+			controllUnitCommand.GetComponent<CommandPanelManager>().SetCommandPanelParam(myUnitParam);
 		}
 	}
 
