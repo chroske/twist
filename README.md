@@ -1,3 +1,5 @@
 # twist
-twist
-Unity Multiplayer Demo App Billiards RPG Game
+Unity Multiplayer Demo App
+
+Twitter連動ビリヤードRPGゲーム「ツイッタラーストライク」
+略して「ツイスト」
