@@ -523,7 +523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0.29195502, g: 0.418178, b: 0.88235295, a: 1}
   m_EffectDistance: {x: 8, y: 8}
-  m_UseGraphicAlpha: 1
+  m_UseGraphicAlpha: 0
 --- !u!1 &439524017
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,7 +604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0.29195502, g: 0.418178, b: 0.88235295, a: 1}
   m_EffectDistance: {x: 8, y: 8}
-  m_UseGraphicAlpha: 1
+  m_UseGraphicAlpha: 0
 --- !u!1 &496152778
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,7 +845,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0.29195502, g: 0.418178, b: 0.88235295, a: 1}
   m_EffectDistance: {x: 8, y: 8}
-  m_UseGraphicAlpha: 1
+  m_UseGraphicAlpha: 0
 --- !u!1 &648372580
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,6 +1128,10 @@ Prefab:
       propertyPath: pullArrow
       value: 
       objectReference: {fileID: 974581153}
+    - target: {fileID: 11480302, guid: 9c0d48399028d2b49b883b4a57684d34, type: 2}
+      propertyPath: maxComboNum
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9c0d48399028d2b49b883b4a57684d34, type: 2}
   m_IsPrefabParent: 0
@@ -1294,6 +1298,10 @@ Prefab:
       propertyPath: unitNum
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 11400542, guid: f79bf056e52004bb3989de236ec81e85, type: 2}
+      propertyPath: pullArrow
+      value: 
+      objectReference: {fileID: 974581153}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f79bf056e52004bb3989de236ec81e85, type: 2}
   m_IsPrefabParent: 0
@@ -1440,6 +1448,22 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11476352, guid: f79bf056e52004bb3989de236ec81e85, type: 2}
       propertyPath: unitNum
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400542, guid: f79bf056e52004bb3989de236ec81e85, type: 2}
+      propertyPath: pullArrow
+      value: 
+      objectReference: {fileID: 974581153}
+    - target: {fileID: 11454616, guid: f79bf056e52004bb3989de236ec81e85, type: 2}
+      propertyPath: maxComboNum
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11454616, guid: f79bf056e52004bb3989de236ec81e85, type: 2}
+      propertyPath: comboType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11454616, guid: f79bf056e52004bb3989de236ec81e85, type: 2}
+      propertyPath: comboAttack
       value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1917,7 +1941,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0.29195502, g: 0.418178, b: 0.88235295, a: 1}
   m_EffectDistance: {x: 8, y: 8}
-  m_UseGraphicAlpha: 1
+  m_UseGraphicAlpha: 0
 --- !u!1 &1056635733
 GameObject:
   m_ObjectHideFlags: 0

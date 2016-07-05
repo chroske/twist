@@ -340,9 +340,9 @@ MonoBehaviour:
   ability_2: 0
   ability_3: 0
   strikeShot: 0
-  comboType: 1
-  comboAttack: 18
-  maxComboNum: 15
+  comboType: 0
+  comboAttack: 3
+  maxComboNum: 1
 --- !u!114 &11476352
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -9,3 +9,5 @@ EditorBuildSettings:
     path: Assets/scene/GameLobby.unity
   - enabled: 1
     path: Assets/scene/GameMain.unity
+  - enabled: 1
+    path: Assets/scene/Gacha.unity
