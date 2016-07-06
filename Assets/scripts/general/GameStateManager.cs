@@ -28,6 +28,7 @@ public class GameStateManager : MonoBehaviour {
 	//game
 	public bool offlineGame;
 	public bool onlineGame;
+	public string onlineGameMode = "";
 	public Dictionary<int,OwnedUnitData> ownedUnitDic = new Dictionary<int,OwnedUnitData> ();//パーティユニットリスト
 	public Dictionary<int,OwnedUnitData> partyUnitDic = new Dictionary<int,OwnedUnitData> ();//所持ユニットリスト
 

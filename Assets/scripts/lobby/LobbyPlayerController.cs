@@ -12,6 +12,9 @@ public class LobbyPlayerController : NetworkBehaviour {
 	private GameObject LobbyPlayerListPrefab;
 	private bool setLobbyPlayerNodeFlag;
 	public int playerUniqueId; //ゲームのユニークID
+	public PlayerListInRoomController playerListInRoomController;
+	public DuelPlayerListInRoomController duelPlayerListInRoomController;
+	public string onlineGameMode;
 
 	/*[SyncVar (hook = "SyncLobbyPlayerNameValues")]*/[SyncVar] public string syncLobbyPlayerName;
 
@@ -63,8 +66,13 @@ public class LobbyPlayerController : NetworkBehaviour {
 		if(!setLobbyPlayerNodeFlag){
 			setLobbyPlayerNodeFlag = true;
 
-			GameObject lobbyManager = GameObject.Find("/MainCanvas");
-			LobbyPlayerListPrefab = lobbyManager.transform.GetComponent<CustomNetworkLobbyManager> ().CreateLobbyPlayerListPrefab(lobbyPlayerName, unitIconUrl);
+			if(onlineGameMode == "online"){
+				LobbyPlayerListPrefab = playerListInRoomController.CreateLobbyPlayerListPrefab(lobbyPlayerName, unitIconUrl);
+			} else if(onlineGameMode == "duel"){
+				LobbyPlayerListPrefab = duelPlayerListInRoomController.CreateLobbyPlayerListPrefab(lobbyPlayerName, unitIconUrl);
+			}
+
+
 			//ホストのスクロールビューの順番をゲームのユニークIDとして使う
 			playerUniqueId = LobbyPlayerListPrefab.transform.GetSiblingIndex ();
 		}

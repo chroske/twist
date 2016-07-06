@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 
-public class PlayerListInRoomController : NetworkBehaviour {
+public class DuelPlayerListInRoomController : NetworkBehaviour {
 
 	[SerializeField]
 	CustomNetworkLobbyManager customNetworkLobbyManager;
@@ -12,7 +12,7 @@ public class PlayerListInRoomController : NetworkBehaviour {
 	[SerializeField]
 	GameObject ExitButton;
 	[SerializeField]
-	BattlePanelOnlineController battlePanelOnlineController;
+	BattlePanelOnlineDuelController battlePanelOnlineDuelController;
 	[SerializeField]
 	GameObject content;
 	[SerializeField]
@@ -27,15 +27,14 @@ public class PlayerListInRoomController : NetworkBehaviour {
 		return node;
 	}
 
-
 	//ゲームスタートボタン
 	public void OnClickStartGameButton(){
-		battlePanelOnlineController.StartTheGame();
+		battlePanelOnlineDuelController.StartTheGame();
 	}
 
 	//ルーム退出ボタン
 	public void OnClickExitButton(){
-		battlePanelOnlineController.ExitRoom();
+		battlePanelOnlineDuelController.ExitRoom();
 	}
 
 	public void SetActiveStartGameButton(){

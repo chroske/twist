@@ -8,14 +8,16 @@ public class LobbyTopPanelController : MonoBehaviour {
 	private CustomNetworkLobbyManager customNetworkLobbyManager;
 
 	[SerializeField]
-	private GameObject LobbyManager;
+	GameObject LobbyManager;
+	[SerializeField]
+	BattlePanelOnlineController battlePanelOnlineController;
 
 	void Start () {
 		customNetworkLobbyManager = LobbyManager.GetComponent<CustomNetworkLobbyManager> ();
 	}
 
 	public void OnCreateMatchButton(){
-		customNetworkLobbyManager.CreateMatch ();
+		battlePanelOnlineController.CreateMatch ();
 	}
 
 	public void OnListMatchButton(int rank){

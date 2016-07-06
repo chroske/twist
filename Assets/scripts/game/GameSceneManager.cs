@@ -9,7 +9,6 @@ public class GameSceneManager : NetworkBehaviour {
 	GameObject offlinePlayerManagerObj;
 	[SerializeField]
 	PullArrow pullArrow;
-
 	[SerializeField]
 	CommandPanelManager CommandAreaUnit_1;
 	[SerializeField]
@@ -231,7 +230,6 @@ public class GameSceneManager : NetworkBehaviour {
 				networkLobbyManager.StopClient ();
 			}
 			networkLobbyManager.StopMatchMaker ();
-			networkLobbyManager.SetUpLobby ();
 		}
 	}
 }

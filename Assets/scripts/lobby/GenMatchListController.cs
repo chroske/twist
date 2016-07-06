@@ -9,19 +9,10 @@ public class GenMatchListController: MonoBehaviour {
 
 	[SerializeField]
 	RectTransform scrollViewRoom;
-
 	[SerializeField]
 	GameObject lobbyManager;
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	[SerializeField]
+	BattlePanelOnlineController battlePanelOnlineController;
 
 	public void GenMatchList(ListMatchResponse response){
 		//リストをクリア
@@ -57,5 +48,6 @@ public class GenMatchListController: MonoBehaviour {
 
 	public void OnJoinMatchButton(int ListId){
 		lobbyManager.GetComponent<CustomNetworkLobbyManager>().JoinListMatch(ListId);
+		battlePanelOnlineController.ChangePanel(3);
 	}
 }

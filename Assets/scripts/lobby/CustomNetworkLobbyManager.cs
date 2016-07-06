@@ -17,28 +17,28 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	private int roomListId;
 	private bool inTheGame; //ゲームシーンにいるかどうか
 
-
-	public GameObject matchPanel1;
-	public GameObject matchPanel2;
-	public GameObject matchPanel3;
-	public GameObject matchPanel4;
 	public GameObject HeaderAndTabbar;
 
 	public bool isHost = false; //ホストかどうか
 
 	[SerializeField]
-	private GameObject lobbyContent;
-
+	GameObject lobbyContent;
 	[SerializeField]
-	private GameObject lobbyPlayerListNode;
-
+	GameObject lobbyPlayerListNode;
 	[SerializeField]
-	private GameObject battlePanel;
+	GameObject battlePanelOnline;
+	[SerializeField]
+	BattlePanelOnlineController battlePanelOnlineController;
+	[SerializeField]
+	GameObject battlePanelOnlineDuel;
+	[SerializeField]
+	BattlePanelOnlineDuelController battlePanelOnlineDuelController;
+	[SerializeField]
+	PlayerListInRoomController playerListInRoomController;
+	[SerializeField]
+	DuelPlayerListInRoomController duelPlayerListInRoomController;
 
 	void Start(){
-		//ロビーTOPパネルをcurrentに
-		currentPanel = matchPanel2;
-
 		GameObject gameStateManagerObj = GameObject.Find("/GameStateManager");
 		gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
 	}
@@ -48,8 +48,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	{
 		//lobbyPlayerオブジェクトのnetidをnetworkManagerControllerに送って以後ゲーム中idとして使う
 		NetworkPlayerManager networkManagerController = gamePlayer.GetComponent<NetworkPlayerManager>();
-		//playerNetID = lobbyPlayer.GetComponent<NetworkIdentity>().netId;
-		//int playerNetIdInt =  int.Parse(playerNetID.ToString());
 		int playerNetIdInt = lobbyPlayer.GetComponent<LobbyPlayerController>().playerUniqueId;
 		networkManagerController.syncPlayerNetID = playerNetIdInt;
 
@@ -86,13 +84,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	//ゲームシーンへ移行時にクライアントで呼び出される
 	public override void OnClientSceneChanged(NetworkConnection conn){
-		currentPanel.SetActive (false);
-		HeaderAndTabbar.SetActive (false);
+		//currentPanel.SetActive (false);
+		//HeaderAndTabbar.SetActive (false);
 		base.OnClientSceneChanged(conn);
 	}
 
 	public void StartTheGame(){
-		currentPanel.SetActive (false);
 		gameStateManager.onlineGame = true;
 		ServerChangeScene (playScene);
 	}
@@ -104,49 +101,35 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 			StopClient();
 		}
 		StopMatchMaker();
-
-		currentPanel.SetActive (false);
-		matchPanel2.SetActive (true);
-
-		currentPanel = matchPanel2;
 	}
+//
+//	public void ExitRoomList(){
+//		if(matchPanel3.activeSelf){
+//			//ルーム一覧クリア
+//			matchPanel3.GetComponent<RoomListController> ().ClearRoomList ();
+//
+//			battlePanelOnlineController.ChangePanel(1);
+//		}
+//	}
 
-	public void ExitRoomList(){
-		if(matchPanel3.activeSelf){
-			//ルーム一覧クリア
-			matchPanel3.GetComponent<RoomListController> ().ClearRoomList ();
-
-			currentPanel.SetActive (false);
-			matchPanel2.SetActive (true);
-
-			currentPanel = matchPanel2;
-		}
-	}
-
-	private void OnDisconnected(BasicResponse response)
-	{
-		if (response.success) {
-			networkManager.StopMatchMaker ();
-
-			currentPanel.SetActive (false);
-			matchPanel2.SetActive (true);
-
-			currentPanel = matchPanel2;
-		}
-	}
+//	private void OnDisconnected(BasicResponse response)
+//	{
+//		if (response.success) {
+//			networkManager.StopMatchMaker ();
+//			battlePanelOnlineController.ChangePanel(1);
+//		}
+//	}
 
 	//ホストとしてゲームを開始したときを含めサーバーを起動したとき、これはサーバー上で呼び出されます。
 	public override void OnLobbyStartServer() {
 		isHost = true;
-		matchPanel4.GetComponent<PlayerListInRoomController> ().SetActiveStartGameButton ();
-	}
 
-	public GameObject CreateLobbyPlayerListPrefab(string lobbyPlayerName, string unitIconUrl){
-		GameObject node = Instantiate (lobbyPlayerListNode);
-		node.transform.SetParent (lobbyContent.transform,false);
-		node.transform.GetComponent<LobbyPlayerListNodeController> ().SetNodeDatas (lobbyPlayerName, unitIconUrl);
+		if (gameStateManager.onlineGameMode == "online") {
+			battlePanelOnlineController.SetActiveStartGameButtonInRoom ();
+		} else if(gameStateManager.onlineGameMode == "duel"){
+			battlePanelOnlineDuelController.SetActiveStartGameButtonInRoom ();
+		}
 
-		return node;
 	}
 
 	private void StartMatchMake(){
@@ -157,11 +140,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public void StopMatchMake(){
 		networkManager.StopMatchMaker();
-
-		currentPanel.SetActive (false);
-		matchPanel1.SetActive (true);
-
-		currentPanel = matchPanel1;
 	}
 
 	public void CreateMatch(){
@@ -174,11 +152,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		networkManager.matchName = roomName;
 		networkManager.matchSize = 4U;
 		networkMatch.CreateMatch (networkManager.matchName, networkManager.matchSize, true, "", networkManager.OnMatchCreate);
-
-		currentPanel.SetActive (false);
-		matchPanel4.SetActive (true);
-
-		currentPanel = matchPanel4;
 	}
 
 	//ルームリストパネルに遷移した時にデータ取ってくる処理
@@ -192,11 +165,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 		var desc = networkManager.matches [ListId];
 		networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
-
-		currentPanel.SetActive (false);
-		matchPanel4.SetActive (true);
-
-		currentPanel = matchPanel4;
 	}
 
 	public void CustamOnMatchJoined(JoinMatchResponse matchJoin)
@@ -213,23 +181,26 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	public void ListMatchAndJoinMatch(int ListId){
 		StartMatchMake ();
 		roomListId = ListId;
-
 		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", ListMatchAndJoinMatchCallBack);
 	}
+
+	public void JoinDuelRundamMatch(int ListId){
+		StartMatchMake ();
+		roomListId = ListId;
+		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", JoinDuelRundamMatchCallBack);
+	}
+
 
 	private void ListMatchCallBack(ListMatchResponse matchList){
 		matches = matchList.matches;
 		if (networkManager.matches.Count != 0) {
-			matchPanel3.GetComponent<RoomListController> ().GenerateMatchList (matchList);
+			battlePanelOnlineController.GenerateMatchList (matchList);
 		} else {
 			Debug.Log("RoomCount=0");
 		}
 		Debug.Log("ListMatchCallBack");
 
-		currentPanel.SetActive (false);
-		matchPanel3.SetActive (true);
-
-		currentPanel = matchPanel3;
+		battlePanelOnlineController.ChangePanel(2);
 	}
 
 	private void ListMatchAndJoinMatchCallBack(ListMatchResponse matchList){
@@ -237,26 +208,39 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		if (networkManager.matches.Count != 0) {
 			var desc = matches [roomListId];
 			networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
-			currentPanel.SetActive (false);
-			matchPanel4.SetActive (true);
-
-			currentPanel = matchPanel4;
+			battlePanelOnlineController.ChangePanel(3);
 		} else {
 			Debug.Log("RoomCount=0");
 		}
 	}
 
-	//GameSceneからLobbyに戻った時のPanel設定
-	public void SetUpOfflinePlayTop(){
-		battlePanel.SetActive (true);
-		HeaderAndTabbar.SetActive (true);
+	private void JoinDuelRundamMatchCallBack(ListMatchResponse matchList){
+		matches = matchList.matches;
+		if (networkManager.matches.Count != 0) {
+			var desc = matches [roomListId];
+			networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
+			battlePanelOnlineDuelController.ChangePanel(3);
+		} else {
+			Debug.Log("RoomCount=0");
+			CreatelRundamMatchRoom();
+		}
+	}
+
+	private void CreatelRundamMatchRoom(){
+		string matchRoomName = "RUNDAM MATCH ROOM";
+		int rank = 1;
+
+		string roomName = "{" + rank.ToString() + "}" + matchRoomName;
+		networkManager.matchName = roomName;
+		networkManager.matchSize = 4U;
+		networkMatch.CreateMatch (networkManager.matchName, networkManager.matchSize, true, "", networkManager.OnMatchCreate);
+		battlePanelOnlineDuelController.ChangePanel(3);
 	}
 
 	//GameSceneからLobbyに戻った時のPanel設定
-	public void SetUpLobby(){
-		matchPanel2.SetActive (true);
+	public void SetUpOfflinePlayTop(){
+		battlePanelOnline.SetActive (true);
 		HeaderAndTabbar.SetActive (true);
-		currentPanel = matchPanel2;
 	}
 
 	public override void OnLobbyClientSceneChanged(NetworkConnection conn){
@@ -269,8 +253,26 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	public override void OnLobbyStopClient(){
 		Debug.Log ("OnLobbyStopClient");
 		if(inTheGame){
-			inTheGame = false;
-			SetUpLobby ();
+			inTheGame = false;				
+			if(gameStateManager.onlineGameMode == "online"){
+				battlePanelOnlineController.SetUpLobby ();
+			} else if(gameStateManager.onlineGameMode == "duel"){
+				battlePanelOnlineDuelController.SetUpLobby ();
+			}
 		}
+	}
+
+	public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection conn, short playerControlID){
+		GameObject newLobbyPlayer = Instantiate(lobbyPlayerPrefab.gameObject);
+		LobbyPlayerController lobbyPlayerController = newLobbyPlayer.GetComponent<LobbyPlayerController> ();
+
+		lobbyPlayerController.onlineGameMode = gameStateManager.onlineGameMode;
+		if(gameStateManager.onlineGameMode == "online"){
+			lobbyPlayerController.playerListInRoomController = playerListInRoomController;
+		} else if(gameStateManager.onlineGameMode == "duel"){
+			lobbyPlayerController.duelPlayerListInRoomController = duelPlayerListInRoomController;
+		}
+
+		return newLobbyPlayer;
 	}
 }

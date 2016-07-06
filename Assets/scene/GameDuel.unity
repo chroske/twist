@@ -331,7 +331,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &191857717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2421,6 +2421,7 @@ MonoBehaviour:
   offlinePlayerManagerObj: {fileID: 156346, guid: 622b169fa9a63418ba594a05f0b58bd1,
     type: 2}
   pullArrow: {fileID: 665931247}
+  battlePanelOnlineController: {fileID: 0}
   CommandAreaUnit_1: {fileID: 1092945377}
   CommandAreaUnit_2: {fileID: 1079382793}
   CommandAreaUnit_3: {fileID: 108070160}
