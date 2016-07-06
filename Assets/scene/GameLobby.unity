@@ -128,6 +128,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 11466358, guid: 4e1e0e591975e488d8a9bb5254b7a89b, type: 2}
+      propertyPath: test_uint_attack
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4e1e0e591975e488d8a9bb5254b7a89b, type: 2}
   m_IsPrefabParent: 0
