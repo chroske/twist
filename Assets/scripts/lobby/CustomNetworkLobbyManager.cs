@@ -20,6 +20,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	public GameObject HeaderAndTabbar;
 
 	public bool isHost = false; //ホストかどうか
+	protected ulong _currentMatchID;
 
 	[SerializeField]
 	GameObject lobbyContent;
@@ -37,6 +38,14 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	PlayerListInRoomController playerListInRoomController;
 	[SerializeField]
 	DuelPlayerListInRoomController duelPlayerListInRoomController;
+
+
+
+	//修正必須
+	[SerializeField]
+	GameObject content;
+	[SerializeField]
+	GameObject contentDuel;
 
 	void Start(){
 		GameObject gameStateManagerObj = GameObject.Find("/GameStateManager");
@@ -96,29 +105,19 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public void ExitRoom(){
 		if (isHost) {
-			StopHost ();
+			//DestroyMatchしないとマッチが残って邪魔
+			this.matchMaker.DestroyMatch((NetworkID)_currentMatchID, OnMatchDestroyed);
 		} else {
 			StopClient();
+			StopMatchMaker();
 		}
-		StopMatchMaker();
 	}
-//
-//	public void ExitRoomList(){
-//		if(matchPanel3.activeSelf){
-//			//ルーム一覧クリア
-//			matchPanel3.GetComponent<RoomListController> ().ClearRoomList ();
-//
-//			battlePanelOnlineController.ChangePanel(1);
-//		}
-//	}
 
-//	private void OnDisconnected(BasicResponse response)
-//	{
-//		if (response.success) {
-//			networkManager.StopMatchMaker ();
-//			battlePanelOnlineController.ChangePanel(1);
-//		}
-//	}
+	public void OnMatchDestroyed(BasicResponse resp)
+	{
+		StopMatchMaker();
+		StopHost();
+	}
 
 	//ホストとしてゲームを開始したときを含めサーバーを起動したとき、これはサーバー上で呼び出されます。
 	public override void OnLobbyStartServer() {
@@ -219,7 +218,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		if (networkManager.matches.Count != 0) {
 			var desc = matches [roomListId];
 			networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
-			battlePanelOnlineDuelController.ChangePanel(3);
+			battlePanelOnlineDuelController.ChangePanel (3);
 		} else {
 			Debug.Log("RoomCount=0");
 			CreatelRundamMatchRoom();
@@ -237,6 +236,13 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		battlePanelOnlineDuelController.ChangePanel(3);
 	}
 
+	public override void OnMatchCreate(UnityEngine.Networking.Match.CreateMatchResponse matchInfo)
+	{
+		base.OnMatchCreate(matchInfo);
+
+		_currentMatchID = (System.UInt64)matchInfo.networkId;
+	}
+
 	//GameSceneからLobbyに戻った時のPanel設定
 	public void SetUpOfflinePlayTop(){
 		battlePanelOnline.SetActive (true);
@@ -247,6 +253,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		Debug.Log ("OnLobbyClientSceneChanged");
 		if(!inTheGame){
 			inTheGame = true;
+		}
+
+		if(gameStateManager.onlineGameMode == "online"){
+			battlePanelOnlineController.ChangeGameScene ();
+		} else if(gameStateManager.onlineGameMode == "duel"){
+			battlePanelOnlineDuelController.ChangeGameScene ();
 		}
 	}
 
@@ -264,15 +276,30 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection conn, short playerControlID){
 		GameObject newLobbyPlayer = Instantiate(lobbyPlayerPrefab.gameObject);
-		LobbyPlayerController lobbyPlayerController = newLobbyPlayer.GetComponent<LobbyPlayerController> ();
-
-		lobbyPlayerController.onlineGameMode = gameStateManager.onlineGameMode;
-		if(gameStateManager.onlineGameMode == "online"){
-			lobbyPlayerController.playerListInRoomController = playerListInRoomController;
-		} else if(gameStateManager.onlineGameMode == "duel"){
-			lobbyPlayerController.duelPlayerListInRoomController = duelPlayerListInRoomController;
-		}
+//		LobbyPlayerController lobbyPlayerController = newLobbyPlayer.GetComponent<LobbyPlayerController> ();
+//
+//		lobbyPlayerController.onlineGameMode = gameStateManager.onlineGameMode;
+//		if(gameStateManager.onlineGameMode == "online"){
+//			lobbyPlayerController.playerListInRoomController = playerListInRoomController;
+//		} else if(gameStateManager.onlineGameMode == "duel"){
+//			lobbyPlayerController.duelPlayerListInRoomController = duelPlayerListInRoomController;
+//		}
 
 		return newLobbyPlayer;
+	}
+
+
+	//ScrollViewにnodeを作る
+	public GameObject CreateLobbyPlayerListPrefab(string lobbyPlayerName, string unitIconUrl){
+		GameObject node = Instantiate (lobbyPlayerListNode);
+		if(gameStateManager.onlineGameMode == "online"){
+			node.transform.SetParent (content.transform,false);
+		} else if(gameStateManager.onlineGameMode == "duel"){
+			node.transform.SetParent (contentDuel.transform,false);
+		}
+
+		node.transform.GetComponent<LobbyPlayerListNodeController> ().SetNodeDatas (lobbyPlayerName, unitIconUrl);
+
+		return node;
 	}
 }

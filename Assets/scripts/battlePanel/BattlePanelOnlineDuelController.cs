@@ -33,6 +33,12 @@ public class BattlePanelOnlineDuelController : MonoBehaviour {
 		customNetworkLobbyManager.StartTheGame();
 	}
 
+	public void ChangeGameScene(){
+		currentPanel.SetActive (false);
+		this.gameObject.SetActive (false);
+		HeaderAndTabbar.SetActive (false);
+	}
+
 	public void ExitRoom(){
 		ChangePanel(1);
 		customNetworkLobbyManager.ExitRoom();

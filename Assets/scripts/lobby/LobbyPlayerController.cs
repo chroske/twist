@@ -15,6 +15,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 	public PlayerListInRoomController playerListInRoomController;
 	public DuelPlayerListInRoomController duelPlayerListInRoomController;
 	public string onlineGameMode;
+	public CustomNetworkLobbyManager customNetworkLobbyManager;
 
 	/*[SyncVar (hook = "SyncLobbyPlayerNameValues")]*/[SyncVar] public string syncLobbyPlayerName;
 
@@ -40,6 +41,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 	}
 
 	void Start(){
+		customNetworkLobbyManager = GameObject.Find("/MainCanvas").GetComponent<CustomNetworkLobbyManager> ();
 	}
 	
 	// Update is called once per frame
@@ -66,12 +68,12 @@ public class LobbyPlayerController : NetworkBehaviour {
 		if(!setLobbyPlayerNodeFlag){
 			setLobbyPlayerNodeFlag = true;
 
-			if(onlineGameMode == "online"){
-				LobbyPlayerListPrefab = playerListInRoomController.CreateLobbyPlayerListPrefab(lobbyPlayerName, unitIconUrl);
-			} else if(onlineGameMode == "duel"){
-				LobbyPlayerListPrefab = duelPlayerListInRoomController.CreateLobbyPlayerListPrefab(lobbyPlayerName, unitIconUrl);
-			}
-
+//			if(onlineGameMode == "online"){
+//				LobbyPlayerListPrefab = playerListInRoomController.CreateLobbyPlayerListPrefab(lobbyPlayerName, unitIconUrl);
+//			} else if(onlineGameMode == "duel"){
+//				LobbyPlayerListPrefab = duelPlayerListInRoomController.CreateLobbyPlayerListPrefab(lobbyPlayerName, unitIconUrl);
+//			}
+			LobbyPlayerListPrefab = customNetworkLobbyManager.CreateLobbyPlayerListPrefab(lobbyPlayerName, unitIconUrl);
 
 			//ホストのスクロールビューの順番をゲームのユニークIDとして使う
 			playerUniqueId = LobbyPlayerListPrefab.transform.GetSiblingIndex ();
