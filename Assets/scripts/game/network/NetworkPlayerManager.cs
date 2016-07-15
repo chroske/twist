@@ -36,7 +36,6 @@ public class NetworkPlayerManager : NetworkBehaviour {
 	[SyncVar] public int syncUintMaxComboNum;
 
 	//ゲームオブジェクトとコンポーネント
-	private RectTransform arrowRectTrans;
 	private GameObject arrow;
 	private PullArrow pullArrow;
 	private GameSceneManager gameSceneManager;
@@ -49,16 +48,12 @@ public class NetworkPlayerManager : NetworkBehaviour {
 	public bool arrowShotFlag;
 	public Vector2 arrowDistance;
 
-	private Transform myTransform;
 	public bool startUnitStopCheckFlag;
 
 	void Awake () {
 		//自分の名前を取得する時に使う
-		myTransform = transform;
-
 		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<GameSceneManager>();
 		arrow = GameObject.Find("/GameCanvas/Arrow");
-		arrowRectTrans = arrow.GetComponent<RectTransform> ();
 		pullArrow = arrow.GetComponent<PullArrow> ();
 		networkManager = GameObject.Find("/MainCanvas").GetComponent<NetworkLobbyManager>();
 

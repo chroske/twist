@@ -126,7 +126,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 457934, guid: 4e1e0e591975e488d8a9bb5254b7a89b, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 11466358, guid: 4e1e0e591975e488d8a9bb5254b7a89b, type: 2}
       propertyPath: test_uint_attack
@@ -2074,7 +2074,7 @@ MonoBehaviour:
   matchSize: 4
   m_ShowLobbyGUI: 0
   m_MaxPlayers: 4
-  m_MaxPlayersPerConnection: 1
+  m_MaxPlayersPerConnection: 4
   m_MinPlayers: 0
   m_LobbyPlayerPrefab: {fileID: 11499662, guid: e14e2e52d6df848b781ace1b9721ce20,
     type: 2}
@@ -2084,7 +2084,6 @@ MonoBehaviour:
   lobbySlots: []
   HeaderAndTabbar: {fileID: 54497957}
   isHost: 0
-  lobbyContent: {fileID: 650211095}
   lobbyPlayerListNode: {fileID: 175594, guid: de715a5f74bf845c89d4363df8811af3, type: 2}
   battlePanelOnline: {fileID: 458385129}
   battlePanelOnlineController: {fileID: 458385131}
@@ -2092,6 +2091,9 @@ MonoBehaviour:
   battlePanelOnlineDuelController: {fileID: 244035584}
   playerListInRoomController: {fileID: 718742007}
   duelPlayerListInRoomController: {fileID: 1193328542}
+  content: {fileID: 650211095}
+  contentDuel: {fileID: 1499706414}
+  customNetworkMigrationManager: {fileID: 0}
 --- !u!114 &163337890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3357,6 +3359,14 @@ Prefab:
     - target: {fileID: 11432244, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
       propertyPath: m_Inertia
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482724, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
+      propertyPath: battlePanelOnlineController
+      value: 
+      objectReference: {fileID: 458385131}
+    - target: {fileID: 22446520, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 150
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 52e35118150df458ab9a5ce30375e71e, type: 2}
@@ -5922,7 +5932,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 728657009}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

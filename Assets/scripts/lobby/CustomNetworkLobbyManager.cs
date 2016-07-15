@@ -16,14 +16,12 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	private short playerNetID;
 	private int roomListId;
 	private bool inTheGame; //ゲームシーンにいるかどうか
-
 	public GameObject HeaderAndTabbar;
 
 	public bool isHost = false; //ホストかどうか
 	protected ulong _currentMatchID;
+	protected ulong _currentMatchNodeID;
 
-	[SerializeField]
-	GameObject lobbyContent;
 	[SerializeField]
 	GameObject lobbyPlayerListNode;
 	[SerializeField]
@@ -39,17 +37,21 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	[SerializeField]
 	DuelPlayerListInRoomController duelPlayerListInRoomController;
 
-
-
 	//修正必須
 	[SerializeField]
 	GameObject content;
 	[SerializeField]
 	GameObject contentDuel;
 
+	[SerializeField]
+	CustomNetworkMigrationManager customNetworkMigrationManager;
+
 	void Start(){
 		GameObject gameStateManagerObj = GameObject.Find("/GameStateManager");
 		gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
+
+		//NetworkMigrationManagerを設定
+		SetupMigrationManager (customNetworkMigrationManager);
 	}
 		
 	//クライアントがロビーのシーンからゲームプレイヤーシーンに切り替えが終了したことを伝えられたときサーバー上で呼び出し
@@ -106,17 +108,22 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	public void ExitRoom(){
 		if (isHost) {
 			//DestroyMatchしないとマッチが残って邪魔
-			this.matchMaker.DestroyMatch((NetworkID)_currentMatchID, OnMatchDestroyed);
+			this.matchMaker.DestroyMatch((NetworkID)_currentMatchID, OnMatchDestroyedHost);
 		} else {
-			StopClient();
-			StopMatchMaker();
+			this.matchMaker.DropConnection((NetworkID)_currentMatchID, (NodeID)_currentMatchNodeID , OnMatchDestroyedClient);
 		}
 	}
 
-	public void OnMatchDestroyed(BasicResponse resp)
+	public void OnMatchDestroyedHost(BasicResponse resp)
 	{
 		StopMatchMaker();
 		StopHost();
+	}
+
+	public void OnMatchDestroyedClient(BasicResponse resp)
+	{
+		StopMatchMaker();
+		StopClient();
 	}
 
 	//ホストとしてゲームを開始したときを含めサーバーを起動したとき、これはサーバー上で呼び出されます。
@@ -163,7 +170,11 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		StartMatchMake ();
 
 		var desc = networkManager.matches [ListId];
-		networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
+		if (desc.currentSize < desc.maxSize) {
+			networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
+		} else {
+			Debug.Log ("player num limit over");
+		}
 	}
 
 	public void CustamOnMatchJoined(JoinMatchResponse matchJoin)
@@ -188,7 +199,6 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		roomListId = ListId;
 		networkMatch.ListMatches(0, 20, /*"{"+rank+"}"*/"", JoinDuelRundamMatchCallBack);
 	}
-
 
 	private void ListMatchCallBack(ListMatchResponse matchList){
 		matches = matchList.matches;
@@ -217,16 +227,21 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		matches = matchList.matches;
 		if (networkManager.matches.Count != 0) {
 			var desc = matches [roomListId];
-			networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
-			battlePanelOnlineDuelController.ChangePanel (3);
+
+			if (desc.currentSize < desc.maxSize) {
+				networkMatch.JoinMatch (desc.networkId, "", CustamOnMatchJoined);
+				battlePanelOnlineDuelController.ChangePanel (3);
+			} else {
+				Debug.Log ("player num limit over");
+			}
 		} else {
 			Debug.Log("RoomCount=0");
-			CreatelRundamMatchRoom();
+			CreatelRandumMatchRoom();
 		}
 	}
 
-	private void CreatelRundamMatchRoom(){
-		string matchRoomName = "RUNDAM MATCH ROOM";
+	private void CreatelRandumMatchRoom(){
+		string matchRoomName = "RANDOM MATCH ROOM";
 		int rank = 1;
 
 		string roomName = "{" + rank.ToString() + "}" + matchRoomName;
@@ -241,6 +256,7 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 		base.OnMatchCreate(matchInfo);
 
 		_currentMatchID = (System.UInt64)matchInfo.networkId;
+		_currentMatchNodeID = (System.UInt64)matchInfo.nodeId;
 	}
 
 	//GameSceneからLobbyに戻った時のPanel設定

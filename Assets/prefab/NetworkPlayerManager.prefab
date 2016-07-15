@@ -81,6 +81,9 @@ MonoBehaviour:
   syncTurnPlayerId: 0
   syncPlayerNetID: 0
   syncUnitId: 0
+  syncUnitAccountId: 
+  syncUnitName: 
+  syncUnitIconUrl: 
   syncUnitAttack: 0
   syncUnitHitpoint: 0
   syncUnitSpeed: 0

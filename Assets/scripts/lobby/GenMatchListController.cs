@@ -26,13 +26,7 @@ public class GenMatchListController: MonoBehaviour {
 
 				var node = GameObject.Instantiate(scrollViewRoom) as RectTransform;
 				node.SetParent(transform, false);
-				node.GetComponent<MatchListRoomController>().ListId = i;
-
-				var text = node.GetComponentInChildren<Text>();
-
-				//rank番号とカッコを取り除く
-				string roomName = Regex.Replace(response.matches [i].name, "{.+?}", "");
-				text.text = roomName;
+				node.GetComponent<MatchListRoomController>().SetNodeDatas(i, response.matches [i].name, response.matches[i].maxSize, response.matches[i].currentSize);
 			}
 		}
 	}

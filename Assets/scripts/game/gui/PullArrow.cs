@@ -81,7 +81,6 @@ public class PullArrow : MonoBehaviour {
 					shotFlag = true;
 
 					Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
-
 					myUnitRigidbody2D.AddForce(shotVector);
 
 					arrowDistance = 0;
