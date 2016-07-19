@@ -3253,7 +3253,7 @@ MonoBehaviour:
   m_LobbyScene: GameLobby
   m_PlayScene: GameDuel
   lobbySlots: []
-  HeaderAndTabbar: {fileID: 54497957}
+  headerAndTabbar: {fileID: 0}
   isHost: 0
   lobbyPlayerListNode: {fileID: 175594, guid: de715a5f74bf845c89d4363df8811af3, type: 2}
   battlePanelOnline: {fileID: 458385129}
@@ -9109,7 +9109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollViewRoom: {fileID: 22414482, guid: 20a6100444c9f46c8ba89362f3b6102b, type: 2}
-  lobbyManager: {fileID: 163337884}
+  lobbyManager: {fileID: 458385129}
   battlePanelOnlineController: {fileID: 458385131}
 --- !u!114 &812143567
 MonoBehaviour:
@@ -12731,7 +12731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollViewRoom: {fileID: 22414482, guid: 20a6100444c9f46c8ba89362f3b6102b, type: 2}
-  lobbyManager: {fileID: 163337884}
+  lobbyManager: {fileID: 244035582}
   battlePanelOnlineController: {fileID: 0}
 --- !u!114 &1115003713
 MonoBehaviour:

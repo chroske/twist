@@ -24,11 +24,11 @@ public class PullArrow : MonoBehaviour {
 	public float arrowUiDistanceRate;
 
 	public GameObject myUnit;
-	public GameObject gameSceneManager;
 
 	private RectTransform rectTrans;
 	public bool shotFlag;
 	public bool tapFlag;
+	public bool myTurnFlag;
 
 
 	public Vector2 shotVector;
@@ -41,7 +41,7 @@ public class PullArrow : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(gameSceneManager.GetComponent<GameSceneManager>().myTurnFlag && shotFlag == false){
+		if(myTurnFlag && shotFlag == false){
 			rectTrans = GetComponent <RectTransform>();
 
 			//タップ

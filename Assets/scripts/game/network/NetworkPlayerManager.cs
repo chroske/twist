@@ -55,7 +55,7 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<GameSceneManager>();
 		arrow = GameObject.Find("/GameCanvas/Arrow");
 		pullArrow = arrow.GetComponent<PullArrow> ();
-		networkManager = GameObject.Find("/MainCanvas").GetComponent<NetworkLobbyManager>();
+		networkManager = GameObject.Find("/MainCanvas/BattlePanel/BattlePanelOnline").GetComponent<NetworkLobbyManager>();
 
 		//サーバに初期データセット
 		SetDefaultSyncParam();

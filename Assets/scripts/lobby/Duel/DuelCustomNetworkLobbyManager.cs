@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Collections;
 using UnityEngine.Networking;
@@ -16,7 +17,7 @@ public class DuelCustomNetworkLobbyManager : NetworkLobbyManager
 	private short playerNetID;
 	private int roomListId;
 	private bool inTheGame; //ゲームシーンにいるかどうか
-	public GameObject HeaderAndTabbar;
+	public GameObject headerAndTabbar;
 
 	public bool isHost = false; //ホストかどうか
 	protected ulong _currentMatchID;
@@ -78,6 +79,32 @@ public class DuelCustomNetworkLobbyManager : NetworkLobbyManager
 		networkManagerController.syncUintComboType = lobbyPlayerController.unitParamsClass [0].comboType;
 		networkManagerController.syncUintComboAttack = lobbyPlayerController.unitParamsClass [0].comboAttack;
 		networkManagerController.syncUintMaxComboNum = lobbyPlayerController.unitParamsClass [0].maxComboNum;
+
+		foreach(var partyUnitParam in lobbyPlayerController.unitParamsClass){
+			Dictionary<string, object> data = new Dictionary<string, object> () {
+				{ "unit_id", partyUnitParam.unit_id },
+				{ "unit_acount_id", partyUnitParam.unit_account_id },
+				{ "unit_name", partyUnitParam.unit_name },
+				{ "unit_icon_url", partyUnitParam.unit_icon_url },
+				{ "party_id", 0 },
+				{ "attack", partyUnitParam.attack },
+				{ "hitPoint", partyUnitParam.hitPoint },
+				{ "speed", partyUnitParam.speed },
+				{ "type", partyUnitParam.type },
+				{ "Level", partyUnitParam.Level },
+				{ "combo", partyUnitParam.combo },
+				{ "ability_1", partyUnitParam.ability_1 },
+				{ "ability_2", partyUnitParam.ability_2 },
+				{ "ability_3", partyUnitParam.ability_3 },
+				{ "strikeShot", partyUnitParam.strikeShot },
+				{ "comboType", partyUnitParam.comboType },
+				{ "comboAttack", partyUnitParam.comboAttack },
+				{ "maxComboNum", partyUnitParam.maxComboNum }
+			};
+
+			OwnedUnitData partyUnitData = new OwnedUnitData (data);
+			networkManagerController.partyUnitParamList.Add (partyUnitData);
+		}
 
 		return true;
 	}
@@ -257,7 +284,7 @@ public class DuelCustomNetworkLobbyManager : NetworkLobbyManager
 	//GameSceneからLobbyに戻った時のPanel設定
 	public void SetUpOfflinePlayTop(){
 		battlePanelOnline.SetActive (true);
-		HeaderAndTabbar.SetActive (true);
+		headerAndTabbar.SetActive (true);
 	}
 
 	public override void OnLobbyClientSceneChanged(NetworkConnection conn){
