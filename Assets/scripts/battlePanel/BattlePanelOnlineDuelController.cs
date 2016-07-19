@@ -12,7 +12,7 @@ public class BattlePanelOnlineDuelController : MonoBehaviour {
 	[SerializeField]
 	GameObject matchPanel3;
 	[SerializeField]
-	CustomNetworkLobbyManager customNetworkLobbyManager;
+	DuelCustomNetworkLobbyManager duelCustomNetworkLobbyManager;
 	[SerializeField]
 	GameObject HeaderAndTabbar;
 	[SerializeField]
@@ -30,7 +30,7 @@ public class BattlePanelOnlineDuelController : MonoBehaviour {
 	public void StartTheGame(){
 		currentPanel.SetActive (false);
 		this.gameObject.SetActive (false);
-		customNetworkLobbyManager.StartTheGame();
+		duelCustomNetworkLobbyManager.StartTheGame();
 	}
 
 	public void ChangeGameScene(){
@@ -41,7 +41,7 @@ public class BattlePanelOnlineDuelController : MonoBehaviour {
 
 	public void ExitRoom(){
 		ChangePanel(1);
-		customNetworkLobbyManager.ExitRoom();
+		duelCustomNetworkLobbyManager.ExitRoom();
 	}
 
 	//GameSceneからLobbyに戻った時のPanel設定

@@ -41,6 +41,7 @@ public class GameSceneManager : NetworkBehaviour {
 	private List<GameObject> partyUnitList;
 	private GameStateManager gameStateManager;
 	private CustomNetworkLobbyManager networkLobbyManager;
+	private DuelCustomNetworkLobbyManager duelNetworkLobbyManager;
 	private OfflinePlayerManager offlinePlayerManager;
 
 	void Awake(){
@@ -214,7 +215,7 @@ public class GameSceneManager : NetworkBehaviour {
 	}
 
 	public void StopGame(){
-		networkLobbyManager = GameObject.Find ("/MainCanvas").GetComponent<CustomNetworkLobbyManager> ();
+		
 		if (gameStateManager.offlineGame) {
 			Destroy (offlinePlayerManager.gameObject);
 			networkLobbyManager.SetUpOfflinePlayTop();
@@ -222,14 +223,29 @@ public class GameSceneManager : NetworkBehaviour {
 //			Application.UnloadLevel ("GameMain");
 			SceneManager.UnloadScene ("GameMain");
 		} else if(gameStateManager.onlineGame) {
-			gameStateManager.onlineGame = false;
-			networkLobbyManager.SendReturnToLobby (); //なんかエラー出るけど問題ないっぽい
-			if (networkLobbyManager.isHost) {
-				networkLobbyManager.StopHost ();
-			} else {
-				networkLobbyManager.StopClient ();
+			if(gameStateManager.onlineGameMode == "online"){
+				networkLobbyManager = GameObject.Find ("/MainCanvas/BattlePanel/BattlePanelOnline").GetComponent<CustomNetworkLobbyManager> ();
+
+				gameStateManager.onlineGame = false;
+				networkLobbyManager.SendReturnToLobby (); //なんかエラー出るけど問題ないっぽい
+				if (networkLobbyManager.isHost) {
+					networkLobbyManager.StopHost ();
+				} else {
+					networkLobbyManager.StopClient ();
+				}
+				networkLobbyManager.StopMatchMaker ();
+			} else if(gameStateManager.onlineGameMode == "duel"){
+				duelNetworkLobbyManager = GameObject.Find ("/MainCanvas/BattlePanel/BattlePanelOnlineDuel").GetComponent<DuelCustomNetworkLobbyManager> ();
+
+				gameStateManager.onlineGame = false;
+				duelNetworkLobbyManager.SendReturnToLobby (); //なんかエラー出るけど問題ないっぽい
+				if (duelNetworkLobbyManager.isHost) {
+					duelNetworkLobbyManager.StopHost ();
+				} else {
+					duelNetworkLobbyManager.StopClient ();
+				}
+				duelNetworkLobbyManager.StopMatchMaker ();
 			}
-			networkLobbyManager.StopMatchMaker ();
 		}
 	}
 }

@@ -6,7 +6,7 @@ using UnityEngine.Networking.Match;
 public class DuelPlayerListInRoomController : NetworkBehaviour {
 
 	[SerializeField]
-	CustomNetworkLobbyManager customNetworkLobbyManager;
+	DuelCustomNetworkLobbyManager duelCustomNetworkLobbyManager;
 	[SerializeField]
 	GameObject StartGameButton;
 	[SerializeField]

@@ -41,7 +41,7 @@ public class LobbyPlayerController : NetworkBehaviour {
 	}
 
 	void Start(){
-		customNetworkLobbyManager = GameObject.Find("/MainCanvas").GetComponent<CustomNetworkLobbyManager> ();
+		customNetworkLobbyManager = GameObject.Find("/MainCanvas/BattlePanel/BattlePanelOnline").GetComponent<CustomNetworkLobbyManager> ();
 	}
 	
 	// Update is called once per frame

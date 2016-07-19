@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &159676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 491582}
+  - 114: {fileID: 11447004}
+  - 114: {fileID: 11480842}
+  m_Layer: 0
+  m_Name: DuelNetworkPlayerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &491582
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159676}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.230453, y: -14.943052, z: 6.4257812}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11447004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 214
+    i1: 27
+    i2: 97
+    i3: 114
+    i4: 210
+    i5: 157
+    i6: 164
+    i7: 55
+    i8: 24
+    i9: 29
+    i10: 84
+    i11: 101
+    i12: 64
+    i13: 70
+    i14: 93
+    i15: 54
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &11480842
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7292c1347ca4f0289ec5e93125dd34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncArrowPos: {x: 0, y: 0, z: 0}
+  syncArrowRot: {x: 0, y: 0, z: 0, w: 0}
+  syncArrowSize: {x: 0, y: 0}
+  syncArrowShotFlag: 0
+  syncArrowDistance: {x: 0, y: 0}
+  syncUnitPos: {x: 0, y: 0, z: 0}
+  syncTurnPlayerId: 0
+  syncPlayerNetID: 0
+  syncUnitId: 0
+  syncUnitAccountId: 
+  syncUnitName: 
+  syncUnitIconUrl: 
+  syncUnitAttack: 0
+  syncUnitHitpoint: 0
+  syncUnitSpeed: 0
+  syncUnitType: 0
+  syncUnitLevel: 0
+  syncUnitCombo: 0
+  syncUintAbbility_1: 0
+  syncUintAbbility_2: 0
+  syncUintAbbility_3: 0
+  syncUintStrikeShot: 0
+  syncUintComboType: 0
+  syncUintComboAttack: 0
+  syncUintMaxComboNum: 0
+  arrowPos: {x: 0, y: 0, z: 0}
+  arrowRot: {x: 0, y: 0, z: 0, w: 0}
+  arrowSize: {x: 0, y: 0}
+  arrowShotFlag: 0
+  arrowDistance: {x: 0, y: 0}
+  startUnitStopCheckFlag: 0
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 159676}
+  m_IsPrefabParent: 1

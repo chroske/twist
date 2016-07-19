@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
 
-public class CustomNetworkLobbyManager : NetworkLobbyManager
+public class DuelCustomNetworkLobbyManager : NetworkLobbyManager
 {
 	private NetworkMatch networkMatch;
 	private NetworkManager networkManager;
@@ -43,21 +43,22 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	[SerializeField]
 	GameObject contentDuel;
 
+
 	void Start(){
 		GameObject gameStateManagerObj = GameObject.Find("/GameStateManager");
 		gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
 	}
-		
+
 	//クライアントがロビーのシーンからゲームプレイヤーシーンに切り替えが終了したことを伝えられたときサーバー上で呼び出し
 	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
 	{
 		//lobbyPlayerオブジェクトのnetidをnetworkManagerControllerに送って以後ゲーム中idとして使う
-		NetworkPlayerManager networkManagerController = gamePlayer.GetComponent<NetworkPlayerManager>();
-		int playerNetIdInt = lobbyPlayer.GetComponent<LobbyPlayerController>().playerUniqueId;
+		DuelNetworkPlayerManager networkManagerController = gamePlayer.GetComponent<DuelNetworkPlayerManager>();
+		int playerNetIdInt = lobbyPlayer.GetComponent<DuelLobbyPlayerController>().playerUniqueId;
 		networkManagerController.syncPlayerNetID = playerNetIdInt;
 
 		//ユニットのパラメータをlobbyPlayerからgamePlayerに渡す
-		LobbyPlayerController lobbyPlayerController = lobbyPlayer.GetComponent<LobbyPlayerController>();
+		DuelLobbyPlayerController lobbyPlayerController = lobbyPlayer.GetComponent<DuelLobbyPlayerController>();
 
 		//networkManagerControllerでsyncの構造体を定義すると何故か落ちるのでバラで渡す
 		networkManagerController.syncUnitId = lobbyPlayerController.unitParamsClass [0].unit_id;
@@ -286,14 +287,14 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 
 	public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection conn, short playerControlID){
 		GameObject newLobbyPlayer = Instantiate(lobbyPlayerPrefab.gameObject);
-//		LobbyPlayerController lobbyPlayerController = newLobbyPlayer.GetComponent<LobbyPlayerController> ();
-//
-//		lobbyPlayerController.onlineGameMode = gameStateManager.onlineGameMode;
-//		if(gameStateManager.onlineGameMode == "online"){
-//			lobbyPlayerController.playerListInRoomController = playerListInRoomController;
-//		} else if(gameStateManager.onlineGameMode == "duel"){
-//			lobbyPlayerController.duelPlayerListInRoomController = duelPlayerListInRoomController;
-//		}
+		//		LobbyPlayerController lobbyPlayerController = newLobbyPlayer.GetComponent<LobbyPlayerController> ();
+		//
+		//		lobbyPlayerController.onlineGameMode = gameStateManager.onlineGameMode;
+		//		if(gameStateManager.onlineGameMode == "online"){
+		//			lobbyPlayerController.playerListInRoomController = playerListInRoomController;
+		//		} else if(gameStateManager.onlineGameMode == "duel"){
+		//			lobbyPlayerController.duelPlayerListInRoomController = duelPlayerListInRoomController;
+		//		}
 
 		return newLobbyPlayer;
 	}

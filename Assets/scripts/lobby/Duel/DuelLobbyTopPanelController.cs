@@ -5,16 +5,16 @@ using UnityEngine.Networking.Match;
 
 public class DuelLobbyTopPanelController : MonoBehaviour {
 
-	private CustomNetworkLobbyManager customNetworkLobbyManager;
+	private DuelCustomNetworkLobbyManager duelCustomNetworkLobbyManager;
 
 	[SerializeField]
 	GameObject LobbyManager;
 
 	void Start () {
-		customNetworkLobbyManager = LobbyManager.GetComponent<CustomNetworkLobbyManager> ();
+		duelCustomNetworkLobbyManager = LobbyManager.GetComponent<DuelCustomNetworkLobbyManager> ();
 	}
 
 	public void OnRundamMatchButton(int ListId){
-		customNetworkLobbyManager.JoinDuelRundamMatch(0);
+		duelCustomNetworkLobbyManager.JoinDuelRundamMatch(0);
 	}
 }

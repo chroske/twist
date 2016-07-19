@@ -39,7 +39,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4aca476fdd94c19b2ad356b2f302b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pullArrow: {fileID: 0}
   gameStateManager: {fileID: 0}
+  gameSceneManager: {fileID: 0}
+  startUnitStopCheckFlag: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
