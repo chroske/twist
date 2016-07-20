@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 
 [NetworkSettings(sendInterval=0.2f)]
-public class DuelNetworkPlayerManager : NetworkBehaviour {
+public class NetworkPlayerController : NetworkBehaviour {
 	[SyncVar] public Vector3 syncArrowPos;
 	[SyncVar] public Quaternion syncArrowRot;
 	[SyncVar] public Vector2 syncArrowSize;
@@ -38,7 +38,7 @@ public class DuelNetworkPlayerManager : NetworkBehaviour {
 	//ゲームオブジェクトとコンポーネント
 	private GameObject arrow;
 	private PullArrow pullArrow;
-	private DuelGameSceneManager gameSceneManager;
+	private GameSceneManager gameSceneManager;
 	private NetworkManager networkManager;
 
 	//Arrow関連データ
@@ -50,14 +50,12 @@ public class DuelNetworkPlayerManager : NetworkBehaviour {
 
 	public bool startUnitStopCheckFlag;
 
-	public List<OwnedUnitData> partyUnitParamList = new List<OwnedUnitData>();
-
 	void Awake () {
 		//自分の名前を取得する時に使う
-		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<DuelGameSceneManager>();
+		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<GameSceneManager>();
 		arrow = GameObject.Find("/GameCanvas/Arrow");
 		pullArrow = arrow.GetComponent<PullArrow> ();
-		networkManager = GameObject.Find("/MainCanvas/BattlePanel/BattlePanelOnlineDuel").GetComponent<NetworkLobbyManager>();
+		networkManager = GameObject.Find("/MainCanvas/BattlePanel/BattlePanelOnline").GetComponent<NetworkLobbyManager>();
 
 		//サーバに初期データセット
 		SetDefaultSyncParam();
@@ -71,10 +69,10 @@ public class DuelNetworkPlayerManager : NetworkBehaviour {
 		}
 
 		SetUnitParamator();
-
+			
 		gameSceneManager.TurnChange (syncTurnPlayerId);
 	}
-
+		
 	void FixedUpdate(){
 		//このスクリプトの付随するオブジェクトが別のネットワーク端末から作られたものでないことの確認
 		if (isLocalPlayer) {
@@ -94,11 +92,9 @@ public class DuelNetworkPlayerManager : NetworkBehaviour {
 			ReceveArrowData ();
 		}
 	}
-
+		
 	//次のプレイヤーIDを吐き出す
 	private int InclementTurnPlayerId(int id){
-		Debug.Log ("InclementTurnPlayerId");
-
 		if(id+1 > networkManager.numPlayers-1){
 			id = 0;
 		} else {
@@ -154,45 +150,40 @@ public class DuelNetworkPlayerManager : NetworkBehaviour {
 	}
 
 	public void SetUnitParamator(){
-//		Dictionary<string, object> data = new Dictionary<string, object> () {
-//			{ "unit_id", syncUnitId },
-//			{ "unit_acount_id", syncUnitAccountId },
-//			{ "unit_name", syncUnitName },
-//			{ "unit_icon_url", syncUnitIconUrl },
-//			{ "party_id", 0 },
-//			{ "attack", syncUnitAttack },
-//			{ "hitPoint", syncUnitHitpoint },
-//			{ "speed", syncUnitSpeed },
-//			{ "type", syncUnitType },
-//			{ "Level", syncUnitLevel },
-//			{ "combo", syncUnitCombo },
-//			{ "ability_1", syncUintAbbility_1 },
-//			{ "ability_2", syncUintAbbility_2 },
-//			{ "ability_3", syncUintAbbility_3 },
-//			{ "strikeShot", syncUintStrikeShot },
-//			{ "comboType", syncUintComboType },
-//			{ "comboAttack", syncUintComboAttack },
-//			{ "maxComboNum", syncUintMaxComboNum }
-//		};
+		Dictionary<string, object> data = new Dictionary<string, object> () {
+			{ "unit_id", syncUnitId },
+			{ "unit_acount_id", syncUnitAccountId },
+			{ "unit_name", syncUnitName },
+			{ "unit_icon_url", syncUnitIconUrl },
+			{ "party_id", 0 },
+			{ "attack", syncUnitAttack },
+			{ "hitPoint", syncUnitHitpoint },
+			{ "speed", syncUnitSpeed },
+			{ "type", syncUnitType },
+			{ "Level", syncUnitLevel },
+			{ "combo", syncUnitCombo },
+			{ "ability_1", syncUintAbbility_1 },
+			{ "ability_2", syncUintAbbility_2 },
+			{ "ability_3", syncUintAbbility_3 },
+			{ "strikeShot", syncUintStrikeShot },
+			{ "comboType", syncUintComboType },
+			{ "comboAttack", syncUintComboAttack },
+			{ "maxComboNum", syncUintMaxComboNum }
+		};
 
-//		List<OwnedUnitData> myPartyUnitParam = new List<OwnedUnitData> ();
-//
-//		foreach(OwnedUnitData partyUnitParam in partyUnitParamList){
-//			myPartyUnitParam.Add (partyUnitParam);
-//		}
-
-		gameSceneManager.SetUnitParamatorByNetId (syncPlayerNetID, partyUnitParamList);
+		OwnedUnitData myUnitParam = new OwnedUnitData(data);
+		gameSceneManager.SetUnitParamatorByNetId (syncPlayerNetID, myUnitParam);
 	}
 
-	////////////////////////////////////////////////////////[Server]/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////[Server]/////////////////////////////////////////////////////////////////
 
 	[Server]
 	void SetDefaultSyncParam(){
 		syncTurnPlayerId = gameSceneManager.firstTurnPlayerId;
 	}
 
-	////////////////////////////////////////////////////////[Client]/////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////[Client]/////////////////////////////////////////////////////////////////
+		
 	[Client]
 	void TransmitArrowData()
 	{
@@ -219,10 +210,10 @@ public class DuelNetworkPlayerManager : NetworkBehaviour {
 			}
 		}
 	}
+		
 
-
-	////////////////////////////////////////////////////////[Command]/////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////[Command]/////////////////////////////////////////////////////////////////
+		
 
 	//クライアント側から受け取ったパラメータをサーバ側でsyncにつめる
 	[Command]
@@ -247,7 +238,7 @@ public class DuelNetworkPlayerManager : NetworkBehaviour {
 		}
 	}
 
-	////////////////////////////////////////////////////////[ClientRpc]/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////[ClientRpc]/////////////////////////////////////////////////////////////////
 
 	//全クライアントをターンエンドさせる
 	[ClientRpc]

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 
 [NetworkSettings(sendInterval=0.2f)]
-public class NetworkPlayerManager : NetworkBehaviour {
+public class DuelNetworkPlayerController : NetworkBehaviour {
 	[SyncVar] public Vector3 syncArrowPos;
 	[SyncVar] public Quaternion syncArrowRot;
 	[SyncVar] public Vector2 syncArrowSize;
@@ -16,29 +16,13 @@ public class NetworkPlayerManager : NetworkBehaviour {
 	[SyncVar] public int syncTurnPlayerId;
 	[SyncVar] public int syncPlayerNetID;
 
-	//LobbyPlayerからわたってくるUnitのパラメータ
-	[SyncVar] public int syncUnitId;
-	[SyncVar] public string syncUnitAccountId;
-	[SyncVar] public string syncUnitName;
-	[SyncVar] public string syncUnitIconUrl;
-	[SyncVar] public int syncUnitAttack;
-	[SyncVar] public int syncUnitHitpoint;
-	[SyncVar] public float syncUnitSpeed;
-	[SyncVar] public int syncUnitType;
-	[SyncVar] public int syncUnitLevel;
-	[SyncVar] public int syncUnitCombo;
-	[SyncVar] public int syncUintAbbility_1;
-	[SyncVar] public int syncUintAbbility_2;
-	[SyncVar] public int syncUintAbbility_3;
-	[SyncVar] public int syncUintStrikeShot;
-	[SyncVar] public int syncUintComboType;
-	[SyncVar] public int syncUintComboAttack;
-	[SyncVar] public int syncUintMaxComboNum;
+	//ユニットのパラメータSyncListStruct
+	public UnitParamsData unitParamsData = new UnitParamsData();
 
 	//ゲームオブジェクトとコンポーネント
 	private GameObject arrow;
 	private PullArrow pullArrow;
-	private GameSceneManager gameSceneManager;
+	private DuelGameSceneManager gameSceneManager;
 	private NetworkManager networkManager;
 
 	//Arrow関連データ
@@ -50,12 +34,14 @@ public class NetworkPlayerManager : NetworkBehaviour {
 
 	public bool startUnitStopCheckFlag;
 
+	//public List<OwnedUnitData> partyUnitParamList = new List<OwnedUnitData>();
+
 	void Awake () {
 		//自分の名前を取得する時に使う
-		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<GameSceneManager>();
+		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<DuelGameSceneManager>();
 		arrow = GameObject.Find("/GameCanvas/Arrow");
 		pullArrow = arrow.GetComponent<PullArrow> ();
-		networkManager = GameObject.Find("/MainCanvas/BattlePanel/BattlePanelOnline").GetComponent<NetworkLobbyManager>();
+		networkManager = GameObject.Find("/MainCanvas/BattlePanel/BattlePanelOnlineDuel").GetComponent<NetworkLobbyManager>();
 
 		//サーバに初期データセット
 		SetDefaultSyncParam();
@@ -68,11 +54,42 @@ public class NetworkPlayerManager : NetworkBehaviour {
 			gameSceneManager.myPlayerNetIdInt = syncPlayerNetID;
 		}
 
-		SetUnitParamator();
-			
 		gameSceneManager.TurnChange (syncTurnPlayerId);
+		gameSceneManager.SetControllUnit ();
 	}
-		
+
+	public override void OnStartClient(){
+		//unitParamsClassはローカルのクラスなのでListにして送る（めんどくさいのでunitParamsClassはちゃんとクラス化する
+		List<OwnedUnitData> partyUnitParamList = new List<OwnedUnitData> ();
+		foreach(var partyUnitParam in unitParamsData){
+			Dictionary<string, object> data = new Dictionary<string, object> () {
+				{ "unit_id", partyUnitParam.unit_id },
+				{ "unit_acount_id", partyUnitParam.unit_account_id },
+				{ "unit_name", partyUnitParam.unit_name },
+				{ "unit_icon_url", partyUnitParam.unit_icon_url },
+				{ "party_id", 0 },
+				{ "attack", partyUnitParam.attack },
+				{ "hitPoint", partyUnitParam.hitPoint },
+				{ "speed", partyUnitParam.speed },
+				{ "type", partyUnitParam.type },
+				{ "Level", partyUnitParam.Level },
+				{ "combo", partyUnitParam.combo },
+				{ "ability_1", partyUnitParam.ability_1 },
+				{ "ability_2", partyUnitParam.ability_2 },
+				{ "ability_3", partyUnitParam.ability_3 },
+				{ "strikeShot", partyUnitParam.strikeShot },
+				{ "comboType", partyUnitParam.comboType },
+				{ "comboAttack", partyUnitParam.comboAttack },
+				{ "maxComboNum", partyUnitParam.maxComboNum }
+			};
+
+			OwnedUnitData partyUnitData = new OwnedUnitData (data);
+
+			partyUnitParamList.Add (partyUnitData);
+		}
+		gameSceneManager.SetUnitParamatorByNetId (syncPlayerNetID, partyUnitParamList);
+	}
+
 	void FixedUpdate(){
 		//このスクリプトの付随するオブジェクトが別のネットワーク端末から作られたものでないことの確認
 		if (isLocalPlayer) {
@@ -92,9 +109,11 @@ public class NetworkPlayerManager : NetworkBehaviour {
 			ReceveArrowData ();
 		}
 	}
-		
+
 	//次のプレイヤーIDを吐き出す
 	private int InclementTurnPlayerId(int id){
+		Debug.Log ("InclementTurnPlayerId");
+
 		if(id+1 > networkManager.numPlayers-1){
 			id = 0;
 		} else {
@@ -149,41 +168,15 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		}
 	}
 
-	public void SetUnitParamator(){
-		Dictionary<string, object> data = new Dictionary<string, object> () {
-			{ "unit_id", syncUnitId },
-			{ "unit_acount_id", syncUnitAccountId },
-			{ "unit_name", syncUnitName },
-			{ "unit_icon_url", syncUnitIconUrl },
-			{ "party_id", 0 },
-			{ "attack", syncUnitAttack },
-			{ "hitPoint", syncUnitHitpoint },
-			{ "speed", syncUnitSpeed },
-			{ "type", syncUnitType },
-			{ "Level", syncUnitLevel },
-			{ "combo", syncUnitCombo },
-			{ "ability_1", syncUintAbbility_1 },
-			{ "ability_2", syncUintAbbility_2 },
-			{ "ability_3", syncUintAbbility_3 },
-			{ "strikeShot", syncUintStrikeShot },
-			{ "comboType", syncUintComboType },
-			{ "comboAttack", syncUintComboAttack },
-			{ "maxComboNum", syncUintMaxComboNum }
-		};
-
-		OwnedUnitData myUnitParam = new OwnedUnitData(data);
-		gameSceneManager.SetUnitParamatorByNetId (syncPlayerNetID, myUnitParam);
-	}
-
-////////////////////////////////////////////////////////[Server]/////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////[Server]/////////////////////////////////////////////////////////////////
 
 	[Server]
 	void SetDefaultSyncParam(){
 		syncTurnPlayerId = gameSceneManager.firstTurnPlayerId;
 	}
 
-////////////////////////////////////////////////////////[Client]/////////////////////////////////////////////////////////////////
-		
+	////////////////////////////////////////////////////////[Client]/////////////////////////////////////////////////////////////////
+
 	[Client]
 	void TransmitArrowData()
 	{
@@ -210,11 +203,9 @@ public class NetworkPlayerManager : NetworkBehaviour {
 			}
 		}
 	}
-		
 
-////////////////////////////////////////////////////////[Command]/////////////////////////////////////////////////////////////////
-		
 
+	////////////////////////////////////////////////////////[Command]/////////////////////////////////////////////////////////////////
 	//クライアント側から受け取ったパラメータをサーバ側でsyncにつめる
 	[Command]
 	void CmdProvideArrowDataToServer (Vector3 arrowPos, Quaternion arrowRot, Vector2 arrowSize, bool arrowShotFlag, Vector2 arrowDistance){
@@ -238,7 +229,7 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		}
 	}
 
-////////////////////////////////////////////////////////[ClientRpc]/////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////[ClientRpc]/////////////////////////////////////////////////////////////////
 
 	//全クライアントをターンエンドさせる
 	[ClientRpc]
@@ -254,10 +245,10 @@ public class NetworkPlayerManager : NetworkBehaviour {
 		//shotFlagをfalse(まだshotしてない)に
 		pullArrow.shotFlag = false;
 		//TurnPlayerIdを１増やしてsyncにつめる
-		gameSceneManager.turnPlayerId =nextTurnPlayerId;
+		gameSceneManager.turnPlayerId = nextTurnPlayerId;
 		//ターンチェンジ判定
 		gameSceneManager.TurnChange (gameSceneManager.turnPlayerId);
-		//コントロールするユニットも変更
-		gameSceneManager.ChangeControllUnit (gameSceneManager.turnPlayerId);
+		//全ユニットのComboNumを初期化
+		gameSceneManager.ResetComboNumAllUnit ();
 	}
 }

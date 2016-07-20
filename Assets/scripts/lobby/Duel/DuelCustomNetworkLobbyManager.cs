@@ -44,66 +44,43 @@ public class DuelCustomNetworkLobbyManager : NetworkLobbyManager
 	[SerializeField]
 	GameObject contentDuel;
 
-
 	void Start(){
 		GameObject gameStateManagerObj = GameObject.Find("/GameStateManager");
 		gameStateManager = gameStateManagerObj.GetComponent<GameStateManager> ();
 	}
 
-	//クライアントがロビーのシーンからゲームプレイヤーシーンに切り替えが終了したことを伝えられたときサーバー上で呼び出し
+	//クライアントがロビーのシーンからゲームプレイヤーシーンに切り替えが終了したことを伝えられたときサーバー上で呼び出し　サーバのみで実行される
 	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
 	{
 		//lobbyPlayerオブジェクトのnetidをnetworkManagerControllerに送って以後ゲーム中idとして使う
-		DuelNetworkPlayerManager networkManagerController = gamePlayer.GetComponent<DuelNetworkPlayerManager>();
+		DuelNetworkPlayerController networkPlayerController = gamePlayer.GetComponent<DuelNetworkPlayerController>();
 		int playerNetIdInt = lobbyPlayer.GetComponent<DuelLobbyPlayerController>().playerUniqueId;
-		networkManagerController.syncPlayerNetID = playerNetIdInt;
+		networkPlayerController.syncPlayerNetID = playerNetIdInt;
 
 		//ユニットのパラメータをlobbyPlayerからgamePlayerに渡す
 		DuelLobbyPlayerController lobbyPlayerController = lobbyPlayer.GetComponent<DuelLobbyPlayerController>();
 
-		//networkManagerControllerでsyncの構造体を定義すると何故か落ちるのでバラで渡す
-		networkManagerController.syncUnitId = lobbyPlayerController.unitParamsClass [0].unit_id;
-		networkManagerController.syncUnitAccountId = lobbyPlayerController.unitParamsClass [0].unit_account_id;
-		networkManagerController.syncUnitName = lobbyPlayerController.unitParamsClass [0].unit_name;
-		networkManagerController.syncUnitIconUrl = lobbyPlayerController.unitParamsClass [0].unit_icon_url;
-		networkManagerController.syncUnitAttack = lobbyPlayerController.unitParamsClass [0].attack;
-		networkManagerController.syncUnitHitpoint = lobbyPlayerController.unitParamsClass [0].hitPoint;
-		networkManagerController.syncUnitSpeed = lobbyPlayerController.unitParamsClass [0].speed;
-		networkManagerController.syncUnitType = lobbyPlayerController.unitParamsClass [0].type;
-		networkManagerController.syncUnitLevel = lobbyPlayerController.unitParamsClass [0].Level;
-		networkManagerController.syncUnitCombo = lobbyPlayerController.unitParamsClass [0].combo;
-		networkManagerController.syncUintAbbility_1 = lobbyPlayerController.unitParamsClass [0].ability_1;
-		networkManagerController.syncUintAbbility_2 = lobbyPlayerController.unitParamsClass [0].ability_2;
-		networkManagerController.syncUintAbbility_3 = lobbyPlayerController.unitParamsClass [0].ability_3;
-		networkManagerController.syncUintStrikeShot = lobbyPlayerController.unitParamsClass [0].strikeShot;
-		networkManagerController.syncUintComboType = lobbyPlayerController.unitParamsClass [0].comboType;
-		networkManagerController.syncUintComboAttack = lobbyPlayerController.unitParamsClass [0].comboAttack;
-		networkManagerController.syncUintMaxComboNum = lobbyPlayerController.unitParamsClass [0].maxComboNum;
+		foreach (var partyUnitParam in lobbyPlayerController.unitParamsData) {
+			UnitParams unitParams = new UnitParams ();
+			unitParams.unit_id = partyUnitParam.unit_id;
+			unitParams.unit_account_id = partyUnitParam.unit_account_id;
+			unitParams.unit_name = partyUnitParam.unit_name;
+			unitParams.unit_icon_url = partyUnitParam.unit_icon_url;
+			unitParams.attack = partyUnitParam.attack;
+			unitParams.hitPoint = partyUnitParam.hitPoint;
+			unitParams.speed = partyUnitParam.speed;
+			unitParams.type = partyUnitParam.type;
+			unitParams.Level = partyUnitParam.Level;
+			unitParams.combo = partyUnitParam.combo;
+			unitParams.ability_1 = partyUnitParam.ability_1;
+			unitParams.ability_2 = partyUnitParam.ability_2;
+			unitParams.ability_3 = partyUnitParam.ability_3;
+			unitParams.strikeShot = partyUnitParam.strikeShot;
+			unitParams.comboType = partyUnitParam.comboType;
+			unitParams.comboAttack = partyUnitParam.comboAttack;
+			unitParams.maxComboNum = partyUnitParam.maxComboNum;
 
-		foreach(var partyUnitParam in lobbyPlayerController.unitParamsClass){
-			Dictionary<string, object> data = new Dictionary<string, object> () {
-				{ "unit_id", partyUnitParam.unit_id },
-				{ "unit_acount_id", partyUnitParam.unit_account_id },
-				{ "unit_name", partyUnitParam.unit_name },
-				{ "unit_icon_url", partyUnitParam.unit_icon_url },
-				{ "party_id", 0 },
-				{ "attack", partyUnitParam.attack },
-				{ "hitPoint", partyUnitParam.hitPoint },
-				{ "speed", partyUnitParam.speed },
-				{ "type", partyUnitParam.type },
-				{ "Level", partyUnitParam.Level },
-				{ "combo", partyUnitParam.combo },
-				{ "ability_1", partyUnitParam.ability_1 },
-				{ "ability_2", partyUnitParam.ability_2 },
-				{ "ability_3", partyUnitParam.ability_3 },
-				{ "strikeShot", partyUnitParam.strikeShot },
-				{ "comboType", partyUnitParam.comboType },
-				{ "comboAttack", partyUnitParam.comboAttack },
-				{ "maxComboNum", partyUnitParam.maxComboNum }
-			};
-
-			OwnedUnitData partyUnitData = new OwnedUnitData (data);
-			networkManagerController.partyUnitParamList.Add (partyUnitData);
+			networkPlayerController.unitParamsData.Add(unitParams);
 		}
 
 		return true;

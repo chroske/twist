@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 491582}
   - 114: {fileID: 11447004}
-  - 114: {fileID: 11480842}
+  - 114: {fileID: 11444970}
   m_Layer: 0
   m_Name: DuelNetworkPlayerManager
   m_TagString: Untagged
@@ -29,6 +29,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11444970
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b4d1db1421342ed882efb3c783420d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncArrowPos: {x: 0, y: 0, z: 0}
+  syncArrowRot: {x: 0, y: 0, z: 0, w: 0}
+  syncArrowSize: {x: 0, y: 0}
+  syncArrowShotFlag: 0
+  syncArrowDistance: {x: 0, y: 0}
+  syncUnitPos: {x: 0, y: 0, z: 0}
+  syncTurnPlayerId: 0
+  syncPlayerNetID: 0
+  arrowPos: {x: 0, y: 0, z: 0}
+  arrowRot: {x: 0, y: 0, z: 0, w: 0}
+  arrowSize: {x: 0, y: 0}
+  arrowShotFlag: 0
+  arrowDistance: {x: 0, y: 0}
+  startUnitStopCheckFlag: 0
+  partyUnitParamList: []
 --- !u!114 &11447004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -61,48 +87,6 @@ MonoBehaviour:
     i15: 54
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &11480842
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 159676}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc7292c1347ca4f0289ec5e93125dd34, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncArrowPos: {x: 0, y: 0, z: 0}
-  syncArrowRot: {x: 0, y: 0, z: 0, w: 0}
-  syncArrowSize: {x: 0, y: 0}
-  syncArrowShotFlag: 0
-  syncArrowDistance: {x: 0, y: 0}
-  syncUnitPos: {x: 0, y: 0, z: 0}
-  syncTurnPlayerId: 0
-  syncPlayerNetID: 0
-  syncUnitId: 0
-  syncUnitAccountId: 
-  syncUnitName: 
-  syncUnitIconUrl: 
-  syncUnitAttack: 0
-  syncUnitHitpoint: 0
-  syncUnitSpeed: 0
-  syncUnitType: 0
-  syncUnitLevel: 0
-  syncUnitCombo: 0
-  syncUintAbbility_1: 0
-  syncUintAbbility_2: 0
-  syncUintAbbility_3: 0
-  syncUintStrikeShot: 0
-  syncUintComboType: 0
-  syncUintComboAttack: 0
-  syncUintMaxComboNum: 0
-  arrowPos: {x: 0, y: 0, z: 0}
-  arrowRot: {x: 0, y: 0, z: 0, w: 0}
-  arrowSize: {x: 0, y: 0}
-  arrowShotFlag: 0
-  arrowDistance: {x: 0, y: 0}
-  startUnitStopCheckFlag: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

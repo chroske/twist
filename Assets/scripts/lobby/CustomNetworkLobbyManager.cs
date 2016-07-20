@@ -52,31 +52,31 @@ public class CustomNetworkLobbyManager : NetworkLobbyManager
 	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
 	{
 		//lobbyPlayerオブジェクトのnetidをnetworkManagerControllerに送って以後ゲーム中idとして使う
-		NetworkPlayerManager networkManagerController = gamePlayer.GetComponent<NetworkPlayerManager>();
+		NetworkPlayerController networkPlayerController = gamePlayer.GetComponent<NetworkPlayerController>();
 		int playerNetIdInt = lobbyPlayer.GetComponent<LobbyPlayerController>().playerUniqueId;
-		networkManagerController.syncPlayerNetID = playerNetIdInt;
+		networkPlayerController.syncPlayerNetID = playerNetIdInt;
 
 		//ユニットのパラメータをlobbyPlayerからgamePlayerに渡す
 		LobbyPlayerController lobbyPlayerController = lobbyPlayer.GetComponent<LobbyPlayerController>();
 
 		//networkManagerControllerでsyncの構造体を定義すると何故か落ちるのでバラで渡す
-		networkManagerController.syncUnitId = lobbyPlayerController.unitParamsClass [0].unit_id;
-		networkManagerController.syncUnitAccountId = lobbyPlayerController.unitParamsClass [0].unit_account_id;
-		networkManagerController.syncUnitName = lobbyPlayerController.unitParamsClass [0].unit_name;
-		networkManagerController.syncUnitIconUrl = lobbyPlayerController.unitParamsClass [0].unit_icon_url;
-		networkManagerController.syncUnitAttack = lobbyPlayerController.unitParamsClass [0].attack;
-		networkManagerController.syncUnitHitpoint = lobbyPlayerController.unitParamsClass [0].hitPoint;
-		networkManagerController.syncUnitSpeed = lobbyPlayerController.unitParamsClass [0].speed;
-		networkManagerController.syncUnitType = lobbyPlayerController.unitParamsClass [0].type;
-		networkManagerController.syncUnitLevel = lobbyPlayerController.unitParamsClass [0].Level;
-		networkManagerController.syncUnitCombo = lobbyPlayerController.unitParamsClass [0].combo;
-		networkManagerController.syncUintAbbility_1 = lobbyPlayerController.unitParamsClass [0].ability_1;
-		networkManagerController.syncUintAbbility_2 = lobbyPlayerController.unitParamsClass [0].ability_2;
-		networkManagerController.syncUintAbbility_3 = lobbyPlayerController.unitParamsClass [0].ability_3;
-		networkManagerController.syncUintStrikeShot = lobbyPlayerController.unitParamsClass [0].strikeShot;
-		networkManagerController.syncUintComboType = lobbyPlayerController.unitParamsClass [0].comboType;
-		networkManagerController.syncUintComboAttack = lobbyPlayerController.unitParamsClass [0].comboAttack;
-		networkManagerController.syncUintMaxComboNum = lobbyPlayerController.unitParamsClass [0].maxComboNum;
+		networkPlayerController.syncUnitId = lobbyPlayerController.unitParamsClass [0].unit_id;
+		networkPlayerController.syncUnitAccountId = lobbyPlayerController.unitParamsClass [0].unit_account_id;
+		networkPlayerController.syncUnitName = lobbyPlayerController.unitParamsClass [0].unit_name;
+		networkPlayerController.syncUnitIconUrl = lobbyPlayerController.unitParamsClass [0].unit_icon_url;
+		networkPlayerController.syncUnitAttack = lobbyPlayerController.unitParamsClass [0].attack;
+		networkPlayerController.syncUnitHitpoint = lobbyPlayerController.unitParamsClass [0].hitPoint;
+		networkPlayerController.syncUnitSpeed = lobbyPlayerController.unitParamsClass [0].speed;
+		networkPlayerController.syncUnitType = lobbyPlayerController.unitParamsClass [0].type;
+		networkPlayerController.syncUnitLevel = lobbyPlayerController.unitParamsClass [0].Level;
+		networkPlayerController.syncUnitCombo = lobbyPlayerController.unitParamsClass [0].combo;
+		networkPlayerController.syncUintAbbility_1 = lobbyPlayerController.unitParamsClass [0].ability_1;
+		networkPlayerController.syncUintAbbility_2 = lobbyPlayerController.unitParamsClass [0].ability_2;
+		networkPlayerController.syncUintAbbility_3 = lobbyPlayerController.unitParamsClass [0].ability_3;
+		networkPlayerController.syncUintStrikeShot = lobbyPlayerController.unitParamsClass [0].strikeShot;
+		networkPlayerController.syncUintComboType = lobbyPlayerController.unitParamsClass [0].comboType;
+		networkPlayerController.syncUintComboAttack = lobbyPlayerController.unitParamsClass [0].comboAttack;
+		networkPlayerController.syncUintMaxComboNum = lobbyPlayerController.unitParamsClass [0].maxComboNum;
 
 		return true;
 	}

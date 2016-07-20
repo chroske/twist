@@ -6,9 +6,6 @@ using UnityEngine.Networking;
 
 public class DuelLobbyPlayerController : NetworkBehaviour {
 
-	public class UnitParamsClass : SyncListStruct<UnitParams> {}
-	public UnitParamsClass unitParamsClass = new UnitParamsClass();
-
 	private GameObject LobbyPlayerListPrefab;
 	private bool setLobbyPlayerNodeFlag;
 	public int playerUniqueId; //ゲームのユニークID
@@ -18,30 +15,32 @@ public class DuelLobbyPlayerController : NetworkBehaviour {
 
 	[SyncVar] public string syncLobbyPlayerName;
 
-	public struct UnitParams
-	{
-		public int unit_id;
-		public string unit_account_id;
-		public string unit_name;
-		public string unit_icon_url;
-		public int attack;
-		public int hitPoint;
-		public float speed;
-		public int type;
-		public int Level;
-		public int combo;
-		public int ability_1;
-		public int ability_2;
-		public int ability_3;
-		public int strikeShot;
-		public int comboType;
-		public int comboAttack;
-		public int maxComboNum;
-	}
+	//public class UnitParamsClass : SyncListStruct<UnitParams> {}
+	public UnitParamsData unitParamsData = new UnitParamsData();
+//	public struct UnitParams
+//	{
+//		public int unit_id;
+//		public string unit_account_id;
+//		public string unit_name;
+//		public string unit_icon_url;
+//		public int attack;
+//		public int hitPoint;
+//		public float speed;
+//		public int type;
+//		public int Level;
+//		public int combo;
+//		public int ability_1;
+//		public int ability_2;
+//		public int ability_3;
+//		public int strikeShot;
+//		public int comboType;
+//		public int comboAttack;
+//		public int maxComboNum;
+//	}
 
 	void Update () {
 		if(syncLobbyPlayerName != ""){
-			CreateLobbyPlayerListPrefab (syncLobbyPlayerName + " " + unitParamsClass[0].unit_name.ToString(), unitParamsClass[0].unit_icon_url.ToString());
+			CreateLobbyPlayerListPrefab (syncLobbyPlayerName + " " + unitParamsData[0].unit_name.ToString(), unitParamsData[0].unit_icon_url.ToString());
 		}
 	}
 
@@ -53,7 +52,7 @@ public class DuelLobbyPlayerController : NetworkBehaviour {
 	//syncLobbyPlayerNameに値が入ったらNodeをprefabから作る 今は使われてない
 	void SyncLobbyPlayerNameValues(string playerName){
 		if(playerName != ""){
-			CreateLobbyPlayerListPrefab (playerName + unitParamsClass[0].unit_id.ToString(), unitParamsClass[0].unit_icon_url.ToString());
+			CreateLobbyPlayerListPrefab (playerName + unitParamsData[0].unit_id.ToString(), unitParamsData[0].unit_icon_url.ToString());
 		}
 	}
 
@@ -113,7 +112,7 @@ public class DuelLobbyPlayerController : NetworkBehaviour {
 		unitParams.comboAttack = _comboAttack;
 		unitParams.maxComboNum = _maxComboNum;
 
-		unitParamsClass.Add(unitParams);
+		unitParamsData.Add(unitParams);
 	}
 
 	[Command]

@@ -3253,7 +3253,7 @@ MonoBehaviour:
   m_LobbyScene: GameLobby
   m_PlayScene: GameDuel
   lobbySlots: []
-  headerAndTabbar: {fileID: 0}
+  headerAndTabbar: {fileID: 54497957}
   isHost: 0
   lobbyPlayerListNode: {fileID: 175594, guid: de715a5f74bf845c89d4363df8811af3, type: 2}
   battlePanelOnline: {fileID: 458385129}
