@@ -1,29 +1,29 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &193824
+--- !u!1 &177854
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 224: {fileID: 22450546}
-  - 222: {fileID: 22259812}
-  - 114: {fileID: 11447388}
-  - 114: {fileID: 11465300}
+  - 224: {fileID: 22430660}
+  - 222: {fileID: 22201366}
+  - 114: {fileID: 11411508}
+  - 114: {fileID: 11440344}
   m_Layer: 5
-  m_Name: Arrow
+  m_Name: DuelArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &11447388
+--- !u!114 &11411508
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 193824}
+  m_GameObject: {fileID: 177854}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
@@ -45,15 +45,15 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11465300
+--- !u!114 &11440344
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 193824}
+  m_GameObject: {fileID: 177854}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46e4253bc06114797b8cbcb48545f8a9, type: 3}
+  m_Script: {fileID: 11500000, guid: 415f3393683a8436990ac0dfc9f5bbf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 130
@@ -67,18 +67,18 @@ MonoBehaviour:
   tapFlag: 0
   myTurnFlag: 0
   shotVector: {x: 0, y: 0}
---- !u!222 &22259812
+--- !u!222 &22201366
 CanvasRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 193824}
---- !u!224 &22450546
+  m_GameObject: {fileID: 177854}
+--- !u!224 &22430660
 RectTransform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 193824}
+  m_GameObject: {fileID: 177854}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -99,5 +99,5 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 193824}
+  m_RootGameObject: {fileID: 177854}
   m_IsPrefabParent: 1

@@ -10,7 +10,7 @@ public class DuelGameSceneManager : NetworkBehaviour {
 	[SerializeField]
 	GameObject offlinePlayerManagerObj;
 	[SerializeField]
-	PullArrow pullArrow;
+	DuelPullArrow pullArrow;
 	[SerializeField]
 	CommandPanelManager CommandAreaUnit_1;
 	[SerializeField]
@@ -21,25 +21,12 @@ public class DuelGameSceneManager : NetworkBehaviour {
 	CommandPanelManager CommandAreaUnit_4;
 
 	[SerializeField]
-	GameObject myUnit_1;
-	[SerializeField]
-	GameObject myUnit_2;
-	[SerializeField]
-	GameObject myUnit_3;
-	[SerializeField]
-	GameObject myUnit_4;
-
-	[SerializeField]
-	GameObject enemyUnit_1;
-	[SerializeField]
-	GameObject enemyUnit_2;
-	[SerializeField]
-	GameObject enemyUnit_3;
-	[SerializeField]
-	GameObject enemyUnit_4;
-
-	[SerializeField]
 	GameObject turnEndText;
+
+	[SerializeField]
+	GameObject[] myUnit = new GameObject[4];
+	[SerializeField]
+	GameObject[] enemyUnit = new GameObject[4];
 
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
@@ -48,9 +35,16 @@ public class DuelGameSceneManager : NetworkBehaviour {
 	public int firstTurnPlayerId;
 	public bool turnEnd;
 	public bool offlineGame;
+	public int controllUnitNum;
+
+	public bool guestPlayerShotFlag;
+	public bool hostPlayerShotFlag;
+	public Vector2 guestShotVector = new Vector2();
+	public Vector2 hostShotVector = new Vector2();
 
 	private GameObject NetworkManager;
 	private List<GameObject> partyUnitList;
+	private List<GameObject> enemyUnitList;
 	private GameStateManager gameStateManager;
 	private CustomNetworkLobbyManager networkLobbyManager;
 	private DuelCustomNetworkLobbyManager duelNetworkLobbyManager;
@@ -73,14 +67,14 @@ public class DuelGameSceneManager : NetworkBehaviour {
 
 	public void TurnChange(int newTurnPlayerId){
 		//全ユニットの移動を完全に止める(変更後即判定されないようにするため)
-		myUnit_1.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		myUnit_2.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		myUnit_3.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		myUnit_4.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		enemyUnit_1.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		enemyUnit_2.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		enemyUnit_3.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		enemyUnit_4.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		myUnit[0].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		myUnit[1].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		myUnit[2].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		myUnit[3].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		enemyUnit[0].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		enemyUnit[1].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		enemyUnit[2].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		enemyUnit[3].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 
 		myTurnFlag = true;
 		pullArrow.myTurnFlag = true;
@@ -96,15 +90,16 @@ public class DuelGameSceneManager : NetworkBehaviour {
 //		}
 	}
 
+	//ゲーム画面反転
 	public void ReversalGameField(){
-		myUnit_1.transform.eulerAngles = new Vector3 (0, 0, 180);
-		myUnit_2.transform.eulerAngles = new Vector3 (0, 0, 180);
-		myUnit_3.transform.eulerAngles = new Vector3 (0, 0, 180);
-		myUnit_4.transform.eulerAngles = new Vector3 (0, 0, 180);
-		enemyUnit_1.transform.eulerAngles = new Vector3 (0, 0, 180);
-		enemyUnit_2.transform.eulerAngles = new Vector3 (0, 0, 180);
-		enemyUnit_3.transform.eulerAngles = new Vector3 (0, 0, 180);
-		enemyUnit_4.transform.eulerAngles = new Vector3 (0, 0, 180);
+		myUnit[0].transform.eulerAngles = new Vector3 (0, 0, 180);
+		myUnit[1].transform.eulerAngles = new Vector3 (0, 0, 180);
+		myUnit[2].transform.eulerAngles = new Vector3 (0, 0, 180);
+		myUnit[3].transform.eulerAngles = new Vector3 (0, 0, 180);
+		enemyUnit[0].transform.eulerAngles = new Vector3 (0, 0, 180);
+		enemyUnit[1].transform.eulerAngles = new Vector3 (0, 0, 180);
+		enemyUnit[2].transform.eulerAngles = new Vector3 (0, 0, 180);
+		enemyUnit[3].transform.eulerAngles = new Vector3 (0, 0, 180);
 
 		mainCamera.transform.eulerAngles = new Vector3 (0, 0, 180);
 	}
@@ -112,12 +107,16 @@ public class DuelGameSceneManager : NetworkBehaviour {
 	public void SetControllUnit(){
 		GameObject controllUnit = new GameObject();
 		if(myPlayerNetIdInt == 0){
-			controllUnit = myUnit_1;
-			partyUnitList = new List<GameObject> (){myUnit_2, myUnit_3, myUnit_4};
+			controllUnit = myUnit[0];
+			partyUnitList = new List<GameObject> (){myUnit[1], myUnit[2], myUnit[3]};
+			enemyUnitList = new List<GameObject> (){enemyUnit[0], enemyUnit[1], enemyUnit[2], enemyUnit[3]};
+			controllUnitNum = 0;
 		} else if(myPlayerNetIdInt == 1){
-			controllUnit = enemyUnit_1;
-			partyUnitList = new List<GameObject> (){enemyUnit_2, enemyUnit_3, enemyUnit_4};
-
+			controllUnit = enemyUnit[0];
+			partyUnitList = new List<GameObject> (){enemyUnit[1], enemyUnit[2], enemyUnit[3]};
+			enemyUnitList = new List<GameObject> (){myUnit[0], myUnit[1], myUnit[2], myUnit[3]};
+			controllUnitNum = 0;
+			//ゲーム画面反転
 			ReversalGameField ();
 		}
 
@@ -127,7 +126,7 @@ public class DuelGameSceneManager : NetworkBehaviour {
 			foreach (Transform child in controllUnit.transform){
 				child.tag = "controllUnit";
 			}
-			controllUnit.transform.GetComponent<MyPartyUnitController>().enabled =false;
+			controllUnit.transform.GetComponent<MyPartyUnitController>().enabled = false;
 			controllUnit.transform.GetComponent<MyUnitController>().enabled = true;
 
 			pullArrow.myUnit = controllUnit;
@@ -142,94 +141,106 @@ public class DuelGameSceneManager : NetworkBehaviour {
 				child.tag = "partyUnit";
 			}
 
-			partyUnit.transform.GetComponent<MyPartyUnitController>().enabled =true;
+			partyUnit.transform.GetComponent<MyPartyUnitController>().enabled = true;
 			partyUnit.transform.GetComponent<MyUnitController>().enabled = false;
+		}
+		//enemyUnit設定
+		foreach (GameObject enemyUnit in enemyUnitList)
+		{
+			//タグを切り替え
+			enemyUnit.tag = "enemyUnit";
+			foreach (Transform child in enemyUnit.transform){
+				child.tag = "enemyUnit";
+			}
+
+			enemyUnit.transform.GetComponent<MyPartyUnitController>().enabled = false;
+			enemyUnit.transform.GetComponent<MyUnitController>().enabled = false;
 		}
 	}
 
 	//全ユニットのComboNumを初期化
 	public void ResetComboNumAllUnit(){
-		myUnit_1.GetComponent<MyUnitController> ().ResetComboNum ();
-		myUnit_1.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+		myUnit[0].GetComponent<MyUnitController> ().ResetComboNum ();
+		myUnit[0].GetComponent<MyPartyUnitController> ().ResetComboNum ();
 
-		myUnit_2.GetComponent<MyUnitController> ().ResetComboNum ();
-		myUnit_2.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+		myUnit[1].GetComponent<MyUnitController> ().ResetComboNum ();
+		myUnit[1].GetComponent<MyPartyUnitController> ().ResetComboNum ();
 
-		myUnit_3.GetComponent<MyUnitController> ().ResetComboNum ();
-		myUnit_3.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+		myUnit[2].GetComponent<MyUnitController> ().ResetComboNum ();
+		myUnit[2].GetComponent<MyPartyUnitController> ().ResetComboNum ();
 
-		myUnit_4.GetComponent<MyUnitController> ().ResetComboNum ();
-		myUnit_4.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+		myUnit[3].GetComponent<MyUnitController> ().ResetComboNum ();
+		myUnit[3].GetComponent<MyPartyUnitController> ().ResetComboNum ();
 
-		enemyUnit_1.GetComponent<MyUnitController> ().ResetComboNum ();
-		enemyUnit_1.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+		enemyUnit[0].GetComponent<MyUnitController> ().ResetComboNum ();
+		enemyUnit[0].GetComponent<MyPartyUnitController> ().ResetComboNum ();
 
-		enemyUnit_2.GetComponent<MyUnitController> ().ResetComboNum ();
-		enemyUnit_2.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+		enemyUnit[1].GetComponent<MyUnitController> ().ResetComboNum ();
+		enemyUnit[1].GetComponent<MyPartyUnitController> ().ResetComboNum ();
 
-		enemyUnit_3.GetComponent<MyUnitController> ().ResetComboNum ();
-		enemyUnit_3.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+		enemyUnit[2].GetComponent<MyUnitController> ().ResetComboNum ();
+		enemyUnit[2].GetComponent<MyPartyUnitController> ().ResetComboNum ();
 
-		enemyUnit_4.GetComponent<MyUnitController> ().ResetComboNum ();
-		enemyUnit_4.GetComponent<MyPartyUnitController> ().ResetComboNum ();
+		enemyUnit[3].GetComponent<MyUnitController> ().ResetComboNum ();
+		enemyUnit[3].GetComponent<MyPartyUnitController> ().ResetComboNum ();
 	}
 
 	public void StopAllunitVelocity(){
-		myUnit_1.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		myUnit_2.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		myUnit_3.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		myUnit_4.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		myUnit[0].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		myUnit[1].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		myUnit[2].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		myUnit[3].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 
-		enemyUnit_1.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		enemyUnit_2.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		enemyUnit_3.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
-		enemyUnit_4.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		enemyUnit[0].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		enemyUnit[1].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		enemyUnit[2].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+		enemyUnit[3].GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 	}
 
 	//ユニットのパラメータとそれに対応するComboEffectをセット
 	public void SetUnitParamatorByNetId(int netId, List<OwnedUnitData> myUnitParam){
 		if (netId == 0) {
-			myUnit_1.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[0]);
-			myUnit_2.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[1]);
-			myUnit_3.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[2]);
-			myUnit_4.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[3]);
-			MyUnitController myUnitController_1 = myUnit_1.GetComponent<MyUnitController> ();
+			myUnit[0].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[0]);
+			myUnit[1].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[1]);
+			myUnit[2].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[2]);
+			myUnit[3].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[3]);
+			MyUnitController myUnitController_1 = myUnit[0].GetComponent<MyUnitController> ();
 			myUnitController_1.SetUnitIcon ();
 			myUnitController_1.SetComboEffect ();
-			myUnit_1.GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController myUnitController_2 = myUnit_2.GetComponent<MyUnitController> ();
+			myUnit[0].GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			MyUnitController myUnitController_2 = myUnit[1].GetComponent<MyUnitController> ();
 			myUnitController_2.SetUnitIcon ();
 			myUnitController_2.SetComboEffect ();
-			myUnit_2.GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController myUnitController_3 = myUnit_3.GetComponent<MyUnitController> ();
+			myUnit[1].GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			MyUnitController myUnitController_3 = myUnit[2].GetComponent<MyUnitController> ();
 			myUnitController_3.SetUnitIcon ();
 			myUnitController_3.SetComboEffect ();
-			myUnit_3.GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController myUnitController_4 = myUnit_4.GetComponent<MyUnitController> ();
+			myUnit[2].GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			MyUnitController myUnitController_4 = myUnit[3].GetComponent<MyUnitController> ();
 			myUnitController_4.SetUnitIcon ();
 			myUnitController_4.SetComboEffect ();
-			myUnit_4.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			myUnit[3].GetComponent<MyPartyUnitController> ().SetComboEffect ();
 		} else if(netId == 1){
-			enemyUnit_1.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[0]);
-			enemyUnit_2.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[1]);
-			enemyUnit_3.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[2]);
-			enemyUnit_4.GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[3]);
-			MyUnitController enemyUnitController_1 = enemyUnit_1.GetComponent<MyUnitController> ();
+			enemyUnit[0].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[0]);
+			enemyUnit[1].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[1]);
+			enemyUnit[2].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[2]);
+			enemyUnit[3].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[3]);
+			MyUnitController enemyUnitController_1 = enemyUnit[0].GetComponent<MyUnitController> ();
 			enemyUnitController_1.SetUnitIcon ();
 			enemyUnitController_1.SetComboEffect ();
-			enemyUnit_1.GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController enemyUnitController_2 = enemyUnit_2.GetComponent<MyUnitController> ();
+			enemyUnit[0].GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			MyUnitController enemyUnitController_2 = enemyUnit[1].GetComponent<MyUnitController> ();
 			enemyUnitController_2.SetUnitIcon ();
 			enemyUnitController_2.SetComboEffect ();
-			enemyUnit_2.GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController enemyUnitController_3 = enemyUnit_3.GetComponent<MyUnitController> ();
+			enemyUnit[1].GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			MyUnitController enemyUnitController_3 = enemyUnit[2].GetComponent<MyUnitController> ();
 			enemyUnitController_3.SetUnitIcon ();
 			enemyUnitController_3.SetComboEffect ();
-			enemyUnit_3.GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController enemyUnitController_4 = enemyUnit_4.GetComponent<MyUnitController> ();
+			enemyUnit[2].GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			MyUnitController enemyUnitController_4 = enemyUnit[3].GetComponent<MyUnitController> ();
 			enemyUnitController_4.SetUnitIcon ();
 			enemyUnitController_4.SetComboEffect ();
-			enemyUnit_4.GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			enemyUnit[3].GetComponent<MyPartyUnitController> ().SetComboEffect ();
 		}
 
 		if(netId == myPlayerNetIdInt){
@@ -270,6 +281,87 @@ public class DuelGameSceneManager : NetworkBehaviour {
 				}
 				duelNetworkLobbyManager.StopMatchMaker ();
 			}
+		}
+	}
+
+	public void RemoteShot(Vector2 hostShotVector, Vector2 guestShotVector){
+		//タグを切り替え
+		GameObject myShotUnit = myUnit [controllUnitNum];
+		myShotUnit.tag = "controllUnit";
+		foreach (Transform child in myShotUnit.transform){
+			child.tag = "controllUnit";
+		}
+		Rigidbody2D myUnitRigidbody2D = myUnit [controllUnitNum].GetComponent<Rigidbody2D> ();
+		myUnitRigidbody2D.AddForce(hostShotVector);
+
+		//タグを切り替え
+		GameObject enemyShotUnit = enemyUnit [controllUnitNum];
+		enemyShotUnit.tag = "controllUnit";
+		foreach (Transform child in enemyShotUnit.transform){
+			child.tag = "controllUnit";
+		}
+		Rigidbody2D enemyUnitRigidbody2D = enemyUnit [controllUnitNum].GetComponent<Rigidbody2D> ();
+		enemyUnitRigidbody2D.AddForce(guestShotVector);
+
+
+
+
+
+//		GameObject shotUnit = new GameObject ();
+//		if(isLocalPlayer){
+//			if(myPlayerNetIdInt == 0){
+//				shotUnit = myUnit [controllUnitNum];
+//			} else if(myPlayerNetIdInt == 1){
+//				shotUnit = enemyUnit [controllUnitNum];
+//			}
+//		} else {
+//			if(myPlayerNetIdInt == 0){
+//				shotUnit = enemyUnit [controllUnitNum];
+//			} else if(myPlayerNetIdInt == 1){
+//				shotUnit = myUnit [controllUnitNum];
+//			}
+//		}
+//
+//		//タグを切り替え
+//		shotUnit.tag = "controllUnit";
+//		foreach (Transform child in shotUnit.transform){
+//			child.tag = "controllUnit";
+//		}
+//		shotUnit.transform.GetComponent<MyUnitController>().enabled = true;
+//		Rigidbody2D myUnitRigidbody2D = shotUnit.GetComponent<Rigidbody2D> ();
+//		myUnitRigidbody2D.AddForce(shotVector);
+	}
+
+	public Vector3[] GetAllMyUnitPosition(){
+		Vector3[] myUnitPositionArray = new Vector3[myUnit.Length];
+		int i = 0;
+		foreach(GameObject myUnitData in myUnit){
+			myUnitPositionArray [i] = myUnitData.transform.position;
+			i++;
+		}
+		return myUnitPositionArray;
+	}
+
+	public Vector3[] GetAllEnemyUnitPosition(){
+		Vector3[] enemyUnitPositionArray = new Vector3[enemyUnit.Length];
+		int i = 0;
+		foreach(GameObject enemyUnitData in enemyUnit){
+			enemyUnitPositionArray [i] = enemyUnitData.transform.position;
+			i++;
+		}
+		return enemyUnitPositionArray;
+	}
+
+	public void SyncAllUnitPosition(Vector3[] myUnitPositionList, Vector3[] enemyUnitPositionList){
+		int i = 0;
+		foreach(Vector3 myUnitPosition in myUnitPositionList){
+			myUnit [i].transform.position = myUnitPosition;
+			i++;
+		}
+		int j = 0;
+		foreach(Vector3 enemyUnitPosition in enemyUnitPositionList){
+			enemyUnit [j].transform.position = enemyUnitPosition;
+			j++;
 		}
 	}
 }

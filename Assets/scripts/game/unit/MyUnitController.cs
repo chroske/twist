@@ -105,8 +105,7 @@ public class MyUnitController : MonoBehaviour {
 		}
 	}
 
-	IEnumerator DelayNextCombo()
-	{
+	IEnumerator DelayNextCombo(){
 		yield return new WaitForSeconds(effectDestroyTime);
 		startEffectFlag = true;
 	}

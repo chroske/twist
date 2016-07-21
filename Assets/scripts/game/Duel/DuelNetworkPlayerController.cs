@@ -21,7 +21,7 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 
 	//ゲームオブジェクトとコンポーネント
 	private GameObject arrow;
-	private PullArrow pullArrow;
+	private DuelPullArrow pullArrow;
 	private DuelGameSceneManager gameSceneManager;
 	private NetworkManager networkManager;
 
@@ -39,8 +39,8 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 	void Awake () {
 		//自分の名前を取得する時に使う
 		gameSceneManager = GameObject.Find("/GameSceneManager").GetComponent<DuelGameSceneManager>();
-		arrow = GameObject.Find("/GameCanvas/Arrow");
-		pullArrow = arrow.GetComponent<PullArrow> ();
+		arrow = GameObject.Find("/GameCanvas/DuelArrow");
+		pullArrow = arrow.GetComponent<DuelPullArrow> ();
 		networkManager = GameObject.Find("/MainCanvas/BattlePanel/BattlePanelOnlineDuel").GetComponent<NetworkLobbyManager>();
 
 		//サーバに初期データセット
@@ -94,7 +94,7 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 		//このスクリプトの付随するオブジェクトが別のネットワーク端末から作られたものでないことの確認
 		if (isLocalPlayer) {
 			//自分のターンならArrowのパラメータをサーバに送る
-			if(gameSceneManager.myTurnFlag && syncPlayerNetID == gameSceneManager.turnPlayerId){
+			if(gameSceneManager.myTurnFlag/* && syncPlayerNetID == gameSceneManager.turnPlayerId*/){
 				TransmitArrowData();
 			}
 		}
@@ -148,11 +148,12 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 
 	//フラグを受け取ったらショットする
 	void ReceveShotFlag(Vector2 shotVector){
-		if(!isLocalPlayer){
+		//if(!isLocalPlayer){
 			if (shotVector != Vector2.zero) {
-				pullArrow.RemoteShot (shotVector);
+				//pullArrow.RemoteShot (shotVector);
+				//gameSceneManager.RemoteShot(shotVector);
 			}
-		}
+		//}
 	}
 
 	//Unitが発射後の停止を確認
@@ -191,7 +192,7 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 			arrowDistance = new Vector2 (pullArrow.dx, pullArrow.dy);
 
 			//サーバにパラメータ送信
-			CmdProvideArrowDataToServer (arrowPos, arrowRot, arrowSize, arrowShotFlag, arrowDistance);
+			CmdProvideArrowDataToServer (arrowPos, arrowRot, arrowSize, arrowShotFlag, arrowDistance, gameSceneManager.myPlayerNetIdInt);
 		} else {
 			//Turnプレイヤーのタップがはなれた時点でArrowのSizeを0にしてその時点のarrowDistanceをsyncに入れる
 			if(arrowPos != Vector3.zero && arrowSize != Vector2.zero){
@@ -199,22 +200,42 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 				arrowShotFlag = pullArrow.shotFlag;
 
 				//サーバにパラメータ送信
-				CmdProvideArrowDataToServer (arrowPos, arrowRot, arrowSize, arrowShotFlag, pullArrow.shotVector);
+				CmdProvideArrowDataToServer (arrowPos, arrowRot, arrowSize, arrowShotFlag, pullArrow.shotVector, gameSceneManager.myPlayerNetIdInt);
 			}
 		}
 	}
 
 
+	private Vector2 guestArrowDistance = new Vector2();
+	private Vector2 hostArrowDistance = new Vector2();
+
 	////////////////////////////////////////////////////////[Command]/////////////////////////////////////////////////////////////////
 	//クライアント側から受け取ったパラメータをサーバ側でsyncにつめる
 	[Command]
-	void CmdProvideArrowDataToServer (Vector3 arrowPos, Quaternion arrowRot, Vector2 arrowSize, bool arrowShotFlag, Vector2 arrowDistance){
+	void CmdProvideArrowDataToServer (Vector3 arrowPos, Quaternion arrowRot, Vector2 arrowSize, bool arrowShotFlag, Vector2 arrowDistance, int netId){
 		syncArrowPos = arrowPos;
 		syncArrowRot = arrowRot;
 		syncArrowSize = arrowSize;
 
 		if(arrowShotFlag){
-			syncArrowDistance = arrowDistance;
+			//syncArrowDistance = arrowDistance;
+
+			if (netId == 0) {
+				gameSceneManager.hostPlayerShotFlag = true;
+				gameSceneManager.hostShotVector = arrowDistance;
+				Debug.Log ("shotPlayerIsLocal ");
+			} else if(netId == 1) {
+				gameSceneManager.guestPlayerShotFlag = true;
+				gameSceneManager.guestShotVector = arrowDistance;
+				Debug.Log ("not shotPlayerIsLocal ");
+			}
+			//お互いshot済みならばRpcShot実行で全クライアントでshot
+			if (gameSceneManager.hostPlayerShotFlag && gameSceneManager.guestPlayerShotFlag) {
+				Debug.Log ("RpcShot");
+				RpcShot (gameSceneManager.hostShotVector, gameSceneManager.guestShotVector);
+				gameSceneManager.hostPlayerShotFlag = false;
+				gameSceneManager.guestPlayerShotFlag = false;
+			}
 		}
 		syncArrowShotFlag = arrowShotFlag;
 	}
@@ -224,8 +245,13 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 		if(syncPlayerNetID == gameSceneManager.turnPlayerId){
 			//次のplayerIdを生成
 			int nextTurnPlayerId = InclementTurnPlayerId(gameSceneManager.turnPlayerId);
+
+			//サーバのユニットのポジションを取得
+			Vector3[] myUnitPositionArray = gameSceneManager.GetAllMyUnitPosition();
+			Vector3[] enemyUnitPositionArray = gameSceneManager.GetAllEnemyUnitPosition();
+
 			//全クライアントをターンエンドさせる
-			RpcTurnEndClient(unitPos, nextTurnPlayerId);
+			RpcTurnEndClient(myUnitPositionArray, enemyUnitPositionArray, nextTurnPlayerId);
 		}
 	}
 
@@ -233,13 +259,14 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 
 	//全クライアントをターンエンドさせる
 	[ClientRpc]
-	void RpcTurnEndClient(Vector3 unitPos, int nextTurnPlayerId){
+	void RpcTurnEndClient(Vector3[] myUnitPosition, Vector3[] enemyUnitPosition, int nextTurnPlayerId){
 		//ターン終了をお知らせ
 		Debug.Log("turn end");
 		StartCoroutine (gameSceneManager.DisplayTurnEndText(0.7f));
 
 		//サーバの停止位置を反映
-		pullArrow.myUnit.transform.position = unitPos;
+		//pullArrow.myUnit.transform.position = unitPos;
+		gameSceneManager.SyncAllUnitPosition(myUnitPosition, enemyUnitPosition);
 		//移動してたら止める
 		pullArrow.myUnit.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 		//shotFlagをfalse(まだshotしてない)に
@@ -250,5 +277,10 @@ public class DuelNetworkPlayerController : NetworkBehaviour {
 		gameSceneManager.TurnChange (gameSceneManager.turnPlayerId);
 		//全ユニットのComboNumを初期化
 		gameSceneManager.ResetComboNumAllUnit ();
+	}
+
+	[ClientRpc]
+	void RpcShot(Vector2 hostShotVector, Vector2 guestShotVector){
+		gameSceneManager.RemoteShot(hostShotVector, guestShotVector);
 	}
 }

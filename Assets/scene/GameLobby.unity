@@ -262,7 +262,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 457934, guid: 4e1e0e591975e488d8a9bb5254b7a89b, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 11466358, guid: 4e1e0e591975e488d8a9bb5254b7a89b, type: 2}
       propertyPath: test_uint_attack
