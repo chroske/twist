@@ -32,6 +32,8 @@ public class DuelPullArrow : MonoBehaviour {
 
 	public Vector2 shotVector;
 
+	public bool isHost;
+
 
 	// Use this for initialization
 	void Start () {
@@ -60,7 +62,13 @@ public class DuelPullArrow : MonoBehaviour {
 				dx = Input.mousePosition.x - mouseDownPositionX;
 				dy = Input.mousePosition.y - mouseDownPositionY;
 
-				float rad = Mathf.Atan2 (dx, -dy);
+				float rad;
+				if (isHost) {
+					rad = Mathf.Atan2 (dx, -dy);
+				} else {
+					rad = Mathf.Atan2 (-dx, dy);
+				}
+				//float rad = Mathf.Atan2 (dx, -dy);
 				steerAngle = rad * Mathf.Rad2Deg;
 
 				//rad(角度)から発射用ベクトルを作成
@@ -79,7 +87,7 @@ public class DuelPullArrow : MonoBehaviour {
 					tapFlag = false;
 					shotFlag = true;
 
-					Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
+					//Rigidbody2D myUnitRigidbody2D = myUnit.GetComponent<Rigidbody2D> ();
 					//myUnitRigidbody2D.AddForce(shotVector);
 
 					arrowDistance = 0;

@@ -12,21 +12,21 @@ public class DuelGameSceneManager : NetworkBehaviour {
 	[SerializeField]
 	DuelPullArrow pullArrow;
 	[SerializeField]
-	CommandPanelManager CommandAreaUnit_1;
+	CommandPanelController CommandAreaUnit_1;
 	[SerializeField]
-	CommandPanelManager CommandAreaUnit_2;
+	CommandPanelController CommandAreaUnit_2;
 	[SerializeField]
-	CommandPanelManager CommandAreaUnit_3;
+	CommandPanelController CommandAreaUnit_3;
 	[SerializeField]
-	CommandPanelManager CommandAreaUnit_4;
+	CommandPanelController CommandAreaUnit_4;
 
 	[SerializeField]
 	GameObject turnEndText;
 
 	[SerializeField]
-	GameObject[] myUnit = new GameObject[4];
+	public GameObject[] myUnit = new GameObject[4];
 	[SerializeField]
-	GameObject[] enemyUnit = new GameObject[4];
+	public GameObject[] enemyUnit = new GameObject[4];
 
 	public bool myTurnFlag;
 	public int myPlayerNetIdInt;
@@ -41,6 +41,8 @@ public class DuelGameSceneManager : NetworkBehaviour {
 	public bool hostPlayerShotFlag;
 	public Vector2 guestShotVector = new Vector2();
 	public Vector2 hostShotVector = new Vector2();
+	public int guestShotUnitNum;
+	public int hostShotUnitNum;
 
 	private GameObject NetworkManager;
 	private List<GameObject> partyUnitList;
@@ -78,16 +80,6 @@ public class DuelGameSceneManager : NetworkBehaviour {
 
 		myTurnFlag = true;
 		pullArrow.myTurnFlag = true;
-
-//		turnPlayerId = newTurnPlayerId;
-//
-//		if (myPlayerNetIdInt == newTurnPlayerId) {
-//			myTurnFlag = true;
-//			pullArrow.myTurnFlag = true;
-//		} else {
-//			myTurnFlag = false;
-//			pullArrow.myTurnFlag = false;
-//		}
 	}
 
 	//ゲーム画面反転
@@ -103,58 +95,48 @@ public class DuelGameSceneManager : NetworkBehaviour {
 
 		mainCamera.transform.eulerAngles = new Vector3 (0, 0, 180);
 	}
-		
-	public void SetControllUnit(){
-		GameObject controllUnit = new GameObject();
-		if(myPlayerNetIdInt == 0){
-			controllUnit = myUnit[0];
-			partyUnitList = new List<GameObject> (){myUnit[1], myUnit[2], myUnit[3]};
-			enemyUnitList = new List<GameObject> (){enemyUnit[0], enemyUnit[1], enemyUnit[2], enemyUnit[3]};
-			controllUnitNum = 0;
-		} else if(myPlayerNetIdInt == 1){
-			controllUnit = enemyUnit[0];
-			partyUnitList = new List<GameObject> (){enemyUnit[1], enemyUnit[2], enemyUnit[3]};
-			enemyUnitList = new List<GameObject> (){myUnit[0], myUnit[1], myUnit[2], myUnit[3]};
-			controllUnitNum = 0;
-			//ゲーム画面反転
-			ReversalGameField ();
+
+	public void SetArrowParameter(){
+		if (myPlayerNetIdInt == 0) {
+			pullArrow.isHost = true;
+		} else {
+			pullArrow.isHost = false;
 		}
+	}
 
-		if (controllUnit != null) {
-			//controllUnit設定
-			controllUnit.tag = "controllUnit";
-			foreach (Transform child in controllUnit.transform){
-				child.tag = "controllUnit";
-			}
-			controllUnit.transform.GetComponent<MyPartyUnitController>().enabled = false;
-			controllUnit.transform.GetComponent<MyUnitController>().enabled = true;
-
-			pullArrow.myUnit = controllUnit;
+	public void ChangeControllUnit(int unitNum){
+		controllUnitNum = unitNum;
+		if (myPlayerNetIdInt == 0) {
+			pullArrow.myUnit = myUnit [controllUnitNum];
+		} else if(myPlayerNetIdInt == 1) {
+			pullArrow.myUnit = enemyUnit [controllUnitNum];
 		}
+	}
 
+	public void ResetUnit(){
 		//partyUnit設定
-		foreach (GameObject partyUnit in partyUnitList)
-		{
+		foreach (GameObject myUnitObj in myUnit) {
 			//タグを切り替え
-			partyUnit.tag = "partyUnit";
-			foreach (Transform child in partyUnit.transform){
+			myUnitObj.tag = "partyUnit";
+			foreach (Transform child in myUnitObj.transform){
 				child.tag = "partyUnit";
 			}
-
-			partyUnit.transform.GetComponent<MyPartyUnitController>().enabled = true;
-			partyUnit.transform.GetComponent<MyUnitController>().enabled = false;
+			myUnitObj.transform.GetComponent<MyPartyUnitController>().enabled = true;
+			myUnitObj.transform.GetComponent<MyUnitController>().enabled = false;
+			myUnitObj.transform.GetComponent<EnemyUnitController>().enabled = false;
+			myUnitObj.transform.GetComponent<EnemyPartyUnitController>().enabled = false;
 		}
-		//enemyUnit設定
-		foreach (GameObject enemyUnit in enemyUnitList)
-		{
+		//enemyPartyUnit設定
+		foreach (GameObject enemyUnitObj in enemyUnit){
 			//タグを切り替え
-			enemyUnit.tag = "enemyUnit";
-			foreach (Transform child in enemyUnit.transform){
-				child.tag = "enemyUnit";
+			enemyUnitObj.tag = "enemyPartyUnit";
+			foreach (Transform child in enemyUnitObj.transform){
+				child.tag = "enemyPartyUnit";
 			}
-
-			enemyUnit.transform.GetComponent<MyPartyUnitController>().enabled = false;
-			enemyUnit.transform.GetComponent<MyUnitController>().enabled = false;
+			enemyUnitObj.transform.GetComponent<MyPartyUnitController>().enabled = false;
+			enemyUnitObj.transform.GetComponent<MyUnitController>().enabled = false;
+			enemyUnitObj.transform.GetComponent<EnemyUnitController>().enabled = false;
+			enemyUnitObj.transform.GetComponent<EnemyPartyUnitController>().enabled = true;
 		}
 	}
 
@@ -225,22 +207,22 @@ public class DuelGameSceneManager : NetworkBehaviour {
 			enemyUnit[1].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[1]);
 			enemyUnit[2].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[2]);
 			enemyUnit[3].GetComponentInChildren<UnitParamManager> ().SetParameter (myUnitParam[3]);
-			MyUnitController enemyUnitController_1 = enemyUnit[0].GetComponent<MyUnitController> ();
+			EnemyUnitController enemyUnitController_1 = enemyUnit[0].GetComponent<EnemyUnitController> ();
 			enemyUnitController_1.SetUnitIcon ();
 			enemyUnitController_1.SetComboEffect ();
-			enemyUnit[0].GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController enemyUnitController_2 = enemyUnit[1].GetComponent<MyUnitController> ();
+			enemyUnit[0].GetComponent<EnemyPartyUnitController> ().SetComboEffect ();
+			EnemyUnitController enemyUnitController_2 = enemyUnit[1].GetComponent<EnemyUnitController> ();
 			enemyUnitController_2.SetUnitIcon ();
 			enemyUnitController_2.SetComboEffect ();
-			enemyUnit[1].GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController enemyUnitController_3 = enemyUnit[2].GetComponent<MyUnitController> ();
+			enemyUnit[1].GetComponent<EnemyPartyUnitController> ().SetComboEffect ();
+			EnemyUnitController enemyUnitController_3 = enemyUnit[2].GetComponent<EnemyUnitController> ();
 			enemyUnitController_3.SetUnitIcon ();
 			enemyUnitController_3.SetComboEffect ();
-			enemyUnit[2].GetComponent<MyPartyUnitController> ().SetComboEffect ();
-			MyUnitController enemyUnitController_4 = enemyUnit[3].GetComponent<MyUnitController> ();
+			enemyUnit[2].GetComponent<EnemyPartyUnitController> ().SetComboEffect ();
+			EnemyUnitController enemyUnitController_4 = enemyUnit[3].GetComponent<EnemyUnitController> ();
 			enemyUnitController_4.SetUnitIcon ();
 			enemyUnitController_4.SetComboEffect ();
-			enemyUnit[3].GetComponent<MyPartyUnitController> ().SetComboEffect ();
+			enemyUnit[3].GetComponent<EnemyPartyUnitController> ().SetComboEffect ();
 		}
 
 		if(netId == myPlayerNetIdInt){
@@ -284,52 +266,38 @@ public class DuelGameSceneManager : NetworkBehaviour {
 		}
 	}
 
-	public void RemoteShot(Vector2 hostShotVector, Vector2 guestShotVector){
+	public void RemoteShot(Vector2 hostShotVector, Vector2 guestShotVector, int hostShotNum,  int guestShotNum){
+		int myControllUnitNum = 0;
+		int enemyControllUnitNum = 0;
+		if (myPlayerNetIdInt == 0) {
+			myControllUnitNum = hostShotNum;
+			enemyControllUnitNum = guestShotNum;
+		} else if(myPlayerNetIdInt == 1) {
+			myControllUnitNum = hostShotNum;
+			enemyControllUnitNum = guestShotNum;
+		}
+
 		//タグを切り替え
-		GameObject myShotUnit = myUnit [controllUnitNum];
+		GameObject myShotUnit = myUnit [myControllUnitNum];
 		myShotUnit.tag = "controllUnit";
 		foreach (Transform child in myShotUnit.transform){
 			child.tag = "controllUnit";
 		}
-		Rigidbody2D myUnitRigidbody2D = myUnit [controllUnitNum].GetComponent<Rigidbody2D> ();
+		myShotUnit.transform.GetComponent<MyUnitController>().enabled = true;
+		myShotUnit.transform.GetComponent<MyPartyUnitController>().enabled = false;
+		Rigidbody2D myUnitRigidbody2D = myUnit [myControllUnitNum].GetComponent<Rigidbody2D> ();
 		myUnitRigidbody2D.AddForce(hostShotVector);
 
 		//タグを切り替え
-		GameObject enemyShotUnit = enemyUnit [controllUnitNum];
-		enemyShotUnit.tag = "controllUnit";
+		GameObject enemyShotUnit = enemyUnit [enemyControllUnitNum];
+		enemyShotUnit.tag = "enemyUnit";
 		foreach (Transform child in enemyShotUnit.transform){
-			child.tag = "controllUnit";
+			child.tag = "enemyUnit";
 		}
-		Rigidbody2D enemyUnitRigidbody2D = enemyUnit [controllUnitNum].GetComponent<Rigidbody2D> ();
+		enemyShotUnit.transform.GetComponent<EnemyUnitController>().enabled = true;
+		enemyShotUnit.transform.GetComponent<EnemyPartyUnitController>().enabled = false;
+		Rigidbody2D enemyUnitRigidbody2D = enemyUnit [enemyControllUnitNum].GetComponent<Rigidbody2D> ();
 		enemyUnitRigidbody2D.AddForce(guestShotVector);
-
-
-
-
-
-//		GameObject shotUnit = new GameObject ();
-//		if(isLocalPlayer){
-//			if(myPlayerNetIdInt == 0){
-//				shotUnit = myUnit [controllUnitNum];
-//			} else if(myPlayerNetIdInt == 1){
-//				shotUnit = enemyUnit [controllUnitNum];
-//			}
-//		} else {
-//			if(myPlayerNetIdInt == 0){
-//				shotUnit = enemyUnit [controllUnitNum];
-//			} else if(myPlayerNetIdInt == 1){
-//				shotUnit = myUnit [controllUnitNum];
-//			}
-//		}
-//
-//		//タグを切り替え
-//		shotUnit.tag = "controllUnit";
-//		foreach (Transform child in shotUnit.transform){
-//			child.tag = "controllUnit";
-//		}
-//		shotUnit.transform.GetComponent<MyUnitController>().enabled = true;
-//		Rigidbody2D myUnitRigidbody2D = shotUnit.GetComponent<Rigidbody2D> ();
-//		myUnitRigidbody2D.AddForce(shotVector);
 	}
 
 	public Vector3[] GetAllMyUnitPosition(){

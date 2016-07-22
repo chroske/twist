@@ -27,6 +27,8 @@ GameObject:
   - 50: {fileID: 5097996}
   - 114: {fileID: 11472334}
   - 114: {fileID: 11427848}
+  - 114: {fileID: 11485420}
+  - 114: {fileID: 11468238}
   m_Layer: 8
   m_Name: myUnit
   m_TagString: controllUnit
@@ -296,12 +298,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d2c963e9c98b4ce89994e18062e7ec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitIconSprite: {fileID: 0}
+  unitIconSprite: {fileID: 21253026}
   wallHitEffect: {fileID: 179246, guid: 41be393b9bebe4b9a9f9b3420d04e905, type: 2}
   explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 173930}
+--- !u!114 &11468238
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 113430}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1aa74bc0c40345b4bec1bfd6c58f80c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitIconSprite: {fileID: 21253026}
+  unitParamManager: {fileID: 11480302}
+  wallHitEffect: {fileID: 100000, guid: 4f2b448ece6bb4940be1ce4a87b8e110, type: 2}
+  explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
+  beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
+  beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
 --- !u!114 &11469304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -327,8 +346,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitNum: 1
-  unitIconSprite: {fileID: 0}
-  mask: {fileID: 0}
+  unitIconSprite: {fileID: 21253026}
+  mask: {fileID: 21236210}
   enemyHitEffect: {fileID: 100000, guid: 3c1f0555cc3fd4e1d87382fbaa007f8f, type: 2}
   wallHitEffect: {fileID: 100000, guid: 4f2b448ece6bb4940be1ce4a87b8e110, type: 2}
   explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
@@ -363,6 +382,26 @@ MonoBehaviour:
   comboType: 0
   comboAttack: 3
   maxComboNum: 15
+--- !u!114 &11485420
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 113430}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6df36cbc93d4a02b4c36f0f6715ecc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitIconSprite: {fileID: 21253026}
+  mask: {fileID: 21253026}
+  unitParamManager: {fileID: 11480302}
+  enemyHitEffect: {fileID: 100000, guid: 3c1f0555cc3fd4e1d87382fbaa007f8f, type: 2}
+  wallHitEffect: {fileID: 100000, guid: 4f2b448ece6bb4940be1ce4a87b8e110, type: 2}
+  explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
+  beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
+  beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
+  unitNum: 0
 --- !u!212 &21232554
 SpriteRenderer:
   m_ObjectHideFlags: 1

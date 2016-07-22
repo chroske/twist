@@ -10,13 +10,13 @@ public class GameSceneManager : NetworkBehaviour {
 	[SerializeField]
 	PullArrow pullArrow;
 	[SerializeField]
-	CommandPanelManager CommandAreaUnit_1;
+	CommandPanelController CommandAreaUnit_1;
 	[SerializeField]
-	CommandPanelManager CommandAreaUnit_2;
+	CommandPanelController CommandAreaUnit_2;
 	[SerializeField]
-	CommandPanelManager CommandAreaUnit_3;
+	CommandPanelController CommandAreaUnit_3;
 	[SerializeField]
-	CommandPanelManager CommandAreaUnit_4;
+	CommandPanelController CommandAreaUnit_4;
 
 	[SerializeField]
 	GameObject Unit_1;
@@ -184,7 +184,7 @@ public class GameSceneManager : NetworkBehaviour {
 	//ユニットのパラメータとそれに対応するComboEffectをセット
 	public void SetUnitParamatorByNetId(int netId, OwnedUnitData myUnitParam){
 		GameObject controllUnit = new GameObject();
-		CommandPanelManager controllUnitCommand = new CommandPanelManager ();
+		CommandPanelController controllUnitCommand = new CommandPanelController ();
 		if (netId == 0) {
 			controllUnit = Unit_1;
 			controllUnitCommand = CommandAreaUnit_1;
@@ -210,7 +210,7 @@ public class GameSceneManager : NetworkBehaviour {
 
 		//自分のユニットのコマンドパネルにパラメータセット
 		if(controllUnitCommand != null){
-			controllUnitCommand.GetComponent<CommandPanelManager>().SetCommandPanelParam(myUnitParam);
+			controllUnitCommand.GetComponent<CommandPanelController>().SetCommandPanelParam(myUnitParam);
 		}
 	}
 

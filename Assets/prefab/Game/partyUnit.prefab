@@ -43,6 +43,8 @@ GameObject:
   - 50: {fileID: 5038936}
   - 114: {fileID: 11431258}
   - 114: {fileID: 11476352}
+  - 114: {fileID: 11432688}
+  - 114: {fileID: 11410882}
   m_Layer: 8
   m_Name: partyUnit
   m_TagString: partyUnit
@@ -108,7 +110,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 423040}
   - 114: {fileID: 11454616}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: UnitParamManager
   m_TagString: partyUnit
   m_Icon: {fileID: 0}
@@ -151,7 +153,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 170244}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.9102416, y: -2.236364, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 499542}
@@ -213,7 +215,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 102638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.51, y: -2.33, z: 20}
+  m_LocalPosition: {x: 0.7, y: -3.17, z: 20}
   m_LocalScale: {x: 0.18, y: 0.18, z: 1}
   m_Children:
   - {fileID: 452098}
@@ -298,6 +300,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pullArrow: {fileID: 0}
   pullDistance: 0
+--- !u!114 &11410882
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 102638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1aa74bc0c40345b4bec1bfd6c58f80c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitIconSprite: {fileID: 21207156}
+  unitParamManager: {fileID: 11454616}
+  wallHitEffect: {fileID: 179246, guid: 41be393b9bebe4b9a9f9b3420d04e905, type: 2}
+  explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
+  beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
+  beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
 --- !u!114 &11431258
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -315,6 +334,26 @@ MonoBehaviour:
   beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
   beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
   UnitParamManager: {fileID: 170244}
+--- !u!114 &11432688
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 102638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6df36cbc93d4a02b4c36f0f6715ecc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitIconSprite: {fileID: 21207156}
+  mask: {fileID: 21244456}
+  unitParamManager: {fileID: 11454616}
+  enemyHitEffect: {fileID: 165614, guid: fadbe3bb23b0649c1b1e50b24d7b14bc, type: 2}
+  wallHitEffect: {fileID: 179246, guid: 41be393b9bebe4b9a9f9b3420d04e905, type: 2}
+  explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
+  beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
+  beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
+  unitNum: 0
 --- !u!114 &11454616
 MonoBehaviour:
   m_ObjectHideFlags: 1

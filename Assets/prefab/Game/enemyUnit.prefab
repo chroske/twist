@@ -9,9 +9,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 460648}
   - 50: {fileID: 5079368}
+  - 114: {fileID: 11461754}
+  - 114: {fileID: 11453592}
+  - 114: {fileID: 11445182}
+  - 114: {fileID: 11462086}
   m_Layer: 8
   m_Name: enemyUnit
-  m_TagString: controllUnit
+  m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,7 +31,7 @@ GameObject:
   - 114: {fileID: 11400546}
   m_Layer: 8
   m_Name: UnitParamManager
-  m_TagString: controllUnit
+  m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,7 +47,7 @@ GameObject:
   - 58: {fileID: 5833318}
   m_Layer: 0
   m_Name: UnitTriggerCollider
-  m_TagString: controllUnit
+  m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,7 +64,7 @@ GameObject:
   - 222: {fileID: 22238068}
   m_Layer: 8
   m_Name: UnitSprite
-  m_TagString: controllUnit
+  m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -77,7 +81,7 @@ GameObject:
   - 114: {fileID: 11433514}
   m_Layer: 8
   m_Name: Icon
-  m_TagString: controllUnit
+  m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,7 +97,7 @@ GameObject:
   - 212: {fileID: 21225662}
   m_Layer: 8
   m_Name: Mask
-  m_TagString: Untagged
+  m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +113,7 @@ GameObject:
   - 58: {fileID: 5893390}
   m_Layer: 8
   m_Name: UnitCollider
-  m_TagString: controllUnit
+  m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,7 +129,7 @@ GameObject:
   - 212: {fileID: 21245292}
   m_Layer: 8
   m_Name: Shadow
-  m_TagString: controllUnit
+  m_TagString: partyUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,7 +165,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 106250}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.02, y: -3.12, z: 20}
+  m_LocalPosition: {x: -1.92, y: 2.95, z: 20}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children:
   - {fileID: 473260}
@@ -324,6 +328,80 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pullArrow: {fileID: 0}
   pullDistance: 0
+--- !u!114 &11445182
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 106250}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3d072e0c5ffa4935a91ac54d9774226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitNum: 0
+  unitIconSprite: {fileID: 21240586}
+  mask: {fileID: 21225662}
+  enemyHitEffect: {fileID: 100000, guid: 3c1f0555cc3fd4e1d87382fbaa007f8f, type: 2}
+  wallHitEffect: {fileID: 100000, guid: 4f2b448ece6bb4940be1ce4a87b8e110, type: 2}
+  explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
+  beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
+  beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
+  UnitParamManager: {fileID: 129118}
+--- !u!114 &11453592
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 106250}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1aa74bc0c40345b4bec1bfd6c58f80c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitIconSprite: {fileID: 21240586}
+  unitParamManager: {fileID: 11400546}
+  wallHitEffect: {fileID: 100000, guid: 4f2b448ece6bb4940be1ce4a87b8e110, type: 2}
+  explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
+  beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
+  beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
+--- !u!114 &11461754
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 106250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6df36cbc93d4a02b4c36f0f6715ecc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitIconSprite: {fileID: 21240586}
+  mask: {fileID: 21225662}
+  unitParamManager: {fileID: 0}
+  enemyHitEffect: {fileID: 100000, guid: 3c1f0555cc3fd4e1d87382fbaa007f8f, type: 2}
+  wallHitEffect: {fileID: 100000, guid: 4f2b448ece6bb4940be1ce4a87b8e110, type: 2}
+  explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
+  beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
+  beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
+  unitNum: 5
+--- !u!114 &11462086
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 106250}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2c963e9c98b4ce89994e18062e7ec9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitIconSprite: {fileID: 21240586}
+  wallHitEffect: {fileID: 100000, guid: 4f2b448ece6bb4940be1ce4a87b8e110, type: 2}
+  explosion: {fileID: 178404, guid: 59c512a173bc54b30b146ee5d65f0522, type: 2}
+  beam: {fileID: 167266, guid: cd3d9c6cb1945449abe7e2b380d25990, type: 2}
+  beamType2: {fileID: 114410, guid: 9f5f31847c252496aaa1011a603bc490, type: 2}
+  UnitParamManager: {fileID: 129118}
 --- !u!212 &21225662
 SpriteRenderer:
   m_ObjectHideFlags: 1

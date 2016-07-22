@@ -3,9 +3,13 @@ using UnityEngine.UI;
 using System.Collections;
 using System.IO;
 
-public class CommandPanelManager : MonoBehaviour {
+public class CommandPanelController : MonoBehaviour {
 	[SerializeField]
 	RawImage iconImage;
+	[SerializeField]
+	DuelGameSceneManager gameSceneManager;
+
+	public int commandPanelNum;
 
 	public void SetCommandPanelParam(OwnedUnitData unitParam){
 		StartCoroutine(SetCommandPanelIcon (unitParam.unit_icon_url));
@@ -39,5 +43,9 @@ public class CommandPanelManager : MonoBehaviour {
 				Debug.Log ("load bmp failed");
 			}
 		}
+	}
+
+	public void OnClickCommandPanelButton(){
+		gameSceneManager.ChangeControllUnit (commandPanelNum);
 	}
 }

@@ -4926,7 +4926,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 153295146}
+  m_TargetGraphic: {fileID: 420653395}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -16739,9 +16739,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStateManager: {fileID: 492227632}
-  customNetworkLobbyManager: {fileID: 0}
+  customNetworkLobbyManager: {fileID: 458385132}
   lobbyPlayer: {fileID: 11499662, guid: e14e2e52d6df848b781ace1b9721ce20, type: 2}
-  duelLobbyPlayer: {fileID: 0}
+  duelLobbyPlayer: {fileID: 11448120, guid: 0f530b44c9ca2455dbd91b94c2d32c58, type: 2}
   networkPlayerManager: {fileID: 172698, guid: 33be396e6a1574d5f93704c22c2d1ba6, type: 2}
   duelNetworkPlayerManager: {fileID: 159676, guid: d61b6172d29da437181d546540465d36,
     type: 2}
