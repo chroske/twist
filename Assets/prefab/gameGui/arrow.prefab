@@ -12,7 +12,7 @@ GameObject:
   - 114: {fileID: 11447388}
   - 114: {fileID: 11465300}
   m_Layer: 5
-  m_Name: Arrow
+  m_Name: arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
